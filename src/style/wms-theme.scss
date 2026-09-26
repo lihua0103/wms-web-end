@@ -1,0 +1,471 @@
+/* ==========================================================================
+   WMS 专属设计系统 —— 「深航蓝 × 仓储橙」
+   深蓝导航（仓储夜航）+ 科技蓝主色 + 仓储橙强调，圆角卡片化工作区，
+   胶囊状态标签（带语义圆点），数字化表格。仅作用域 light 模式与 default 侧边栏，
+   不侵入 dark 模式与 pure-admin 主题切换机制。
+   设计规范文档见 docs/UI设计规范.md
+   ========================================================================== */
+
+/* ---------- 1. 设计令牌 ---------- */
+html:not(.dark) {
+  --wms-bg: #f3f5fa;            // 工作区背景（冷灰蓝）
+  --wms-card: #ffffff;          // 卡片
+  --wms-border: #e9edf5;        // 分隔线
+  --wms-card-shadow:
+    0 1px 2px rgb(16 34 68 / 4%),
+    0 4px 14px -6px rgb(16 34 68 / 8%);
+  --wms-radius-card: 12px;
+  --wms-radius-control: 6px;
+  --wms-text-title: #1e293b;
+  --wms-text-secondary: #64748b;
+  /* 语义色（更现代的一套） */
+  --el-color-success: #10b981;
+  --el-color-warning: #f59e0b;
+  --el-color-danger: #ef4444;
+  --el-color-error: #ef4444;
+  --el-color-info: #64748b;
+  /* 控件圆角 */
+  --el-border-radius-base: 6px;
+}
+
+/* 主色系 light/dark 派生（与 #2563EB 匹配，避免主题切换生硬） */
+html:not(.dark) {
+  --el-color-primary: #2563eb;
+  --el-color-primary-light-3: #5b84f0;
+  --el-color-primary-light-5: #8aa6f5;
+  --el-color-primary-light-7: #b9c9f9;
+  --el-color-primary-light-8: #d2ddfb;
+  --el-color-primary-light-9: #ecf1fe;
+  --el-color-primary-dark-2: #1d4fd1;
+}
+
+/* ---------- 2. 工作区与卡片化布局 ---------- */
+html:not(.dark) {
+  body {
+    background: var(--wms-bg);
+  }
+
+  .app-main,
+  .app-main-nofixed-header .main-container,
+  .main-container {
+    background: var(--wms-bg);
+  }
+
+  /* 全局数字使用等宽数字，单号/数量列更整齐 */
+  .el-table .cell,
+  .el-statistic__number,
+  .el-card__body {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 搜索区：白卡片 */
+  .main .search-form {
+    background: var(--wms-card);
+    border: 1px solid var(--wms-border);
+    border-radius: var(--wms-radius-card);
+    box-shadow: var(--wms-card-shadow);
+    padding: 16px 20px 0 12px;
+    margin: 0 2px 2px;
+
+    .el-form-item__label {
+      color: var(--wms-text-secondary);
+      font-weight: 500;
+    }
+  }
+
+  /* PureTableBar 容器（表格卡片）：与搜索区连成一张卡 */
+  .main > .bg-bg_color:not(.search-form) {
+    background: var(--wms-card);
+    border: 1px solid var(--wms-border);
+    border-radius: var(--wms-radius-card);
+    box-shadow: var(--wms-card-shadow);
+    padding: 4px 8px 8px;
+  }
+
+  /* 页面主标题（PureTableBar 的 title） */
+  .main .font-bold.truncate,
+  .main p.font-bold {
+    font-size: 15px;
+    color: var(--wms-text-title);
+    position: relative;
+    padding-left: 12px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 16px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #2563eb, #5b84f0);
+    }
+  }
+
+  /* el-card 统一卡片化 */
+  .el-card {
+    border: 1px solid var(--wms-border);
+    border-radius: var(--wms-radius-card);
+    box-shadow: var(--wms-card-shadow);
+
+    .el-card__header {
+      font-weight: 600;
+      color: var(--wms-text-title);
+      border-bottom-color: var(--wms-border);
+    }
+  }
+}
+
+/* ---------- 3. 表格 ---------- */
+html:not(.dark) {
+  .el-table {
+    --el-table-header-bg-color: #f6f8fc;
+    --el-table-header-text-color: #475569;
+    --el-table-row-hover-bg-color: #f2f6ff;
+    --el-table-border-color: #eef1f7;
+
+    th.el-table__cell {
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .el-table__header th.el-table__cell {
+      background: var(--el-table-header-bg-color);
+    }
+
+    /* 操作列链接按钮收紧字距 */
+    .el-button.is-link {
+      font-weight: 500;
+    }
+  }
+
+  /* 分页条右对齐留白 */
+  .el-pagination {
+    padding: 10px 4px 2px;
+    justify-content: flex-end;
+  }
+}
+
+/* ---------- 4. 胶囊状态标签（带语义圆点） ---------- */
+html:not(.dark) {
+  .el-tag {
+    border-radius: 999px;
+    font-weight: 500;
+    padding-inline: 10px;
+  }
+
+  /* light 型标签前置圆点，强化"单据状态"语义 */
+  .el-table .el-tag.el-tag--light,
+  .el-descriptions .el-tag.el-tag--light,
+  .el-dialog .el-tag.el-tag--light {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    padding-inline: 10px;
+
+    &::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* ---------- 5. 弹窗 / 抽屉 / 消息框 ---------- */
+html:not(.dark) {
+  .el-dialog,
+  .el-message-box {
+    border-radius: 14px;
+    box-shadow:
+      0 6px 16px rgb(16 34 68 / 8%),
+      0 24px 48px -12px rgb(16 34 68 / 18%);
+
+    .el-dialog__title,
+    .el-message-box__title {
+      font-weight: 600;
+      color: var(--wms-text-title);
+    }
+  }
+
+  .el-drawer {
+    .el-drawer__title {
+      font-weight: 600;
+      color: var(--wms-text-title);
+    }
+  }
+
+  /* 表单弹窗统一圆角输入 */
+  .el-dialog .el-input__wrapper,
+  .el-dialog .el-select__wrapper,
+  .el-dialog .el-textarea__inner {
+    border-radius: var(--wms-radius-control);
+  }
+}
+
+/* ---------- 6. 侧边栏「仓储夜航蓝」+ 顶栏 ---------- */
+html[data-theme="default"] {
+  --pure-theme-menu-bg: linear-gradient(180deg, #0d1b39 0%, #12275a 100%);
+  --pure-theme-sidebar-logo: #0c1834;
+  --pure-theme-menu-hover: rgb(91 132 240 / 18%);
+  --pure-theme-menu-active-before: #4d8bff;
+  --pure-theme-menu-text: rgb(255 255 255 / 62%);
+  --pure-theme-sub-menu-active-text: #fff;
+  --pure-theme-menu-title-hover: #fff;
+  --pure-theme-sub-menu-bg: #0a1730;
+
+  .sidebar-container {
+    .sidebar-logo-container .sidebar-logo-link .sidebar-logo-title {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* 菜单项：圆角悬浮高亮，激活项品牌蓝渐变胶囊 */
+    .el-menu-item,
+    .el-sub-menu__title {
+      border-radius: 8px;
+      margin-inline: 10px;
+      height: 44px;
+      line-height: 44px;
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+    }
+
+    .el-menu-item.is-active {
+      background: linear-gradient(
+        90deg,
+        rgb(37 99 235 / 90%),
+        rgb(77 139 255 / 62%)
+      ) !important;
+      box-shadow: 0 4px 10px -2px rgb(37 99 235 / 45%);
+      color: #fff !important;
+    }
+
+    .el-menu--inline .el-menu-item {
+      font-size: 13.5px;
+    }
+  }
+}
+
+html:not(.dark) {
+  .navbar {
+    border-bottom: 1px solid var(--wms-border);
+    box-shadow: none;
+  }
+
+  /* 多标签页：白底胶囊化激活项 */
+  .tags-view {
+    .scroll-item {
+      border-radius: 6px;
+
+      &.is-active {
+        border-color: #2563eb;
+        box-shadow: 0 2px 8px -2px rgb(37 99 235 / 35%);
+      }
+    }
+  }
+}
+
+/* ---------- 7. KPI 统计卡（工作台/看板） ---------- */
+html:not(.dark) {
+  .wms-kpi-card {
+    border: 1px solid var(--wms-border);
+    border-radius: var(--wms-radius-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 4px 10px rgb(16 34 68 / 6%),
+        0 12px 28px -8px rgb(16 34 68 / 14%);
+    }
+
+    .wms-kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+
+      &.blue {
+        background: linear-gradient(135deg, #2563eb, #5b84f0);
+      }
+
+      &.green {
+        background: linear-gradient(135deg, #0ea371, #34d399);
+      }
+
+      &.orange {
+        background: linear-gradient(135deg, #ea8a00, #fbbf24);
+      }
+
+      &.red {
+        background: linear-gradient(135deg, #dc4b4b, #f87171);
+      }
+    }
+
+    .wms-kpi-title {
+      color: var(--wms-text-secondary);
+      font-size: 13px;
+    }
+
+    .wms-kpi-value {
+      color: var(--wms-text-title);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+/* ---------- 8. 基础组件设计（按钮/输入框/表格/分页/描述列表） ---------- */
+html:not(.dark) {
+  /* 主按钮：品牌渐变 + 投影 */
+  .el-button {
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .el-button--primary:not(.is-link):not(.is-text) {
+    background: linear-gradient(135deg, #2563eb, #3b76f2);
+    border: none;
+
+    &:hover,
+    &:focus {
+      background: linear-gradient(135deg, #3b76f2, #5b84f0);
+      box-shadow: 0 4px 14px -2px rgb(37 99 235 / 50%);
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px -2px rgb(37 99 235 / 45%);
+    }
+
+    &.is-disabled {
+      background: #a8c0f5;
+      box-shadow: none;
+    }
+  }
+
+  /* 次按钮：描边淡入 */
+  .el-button--default:not(.is-link):not(.is-text) {
+    border-color: #d8dfea;
+    color: #475569;
+
+    &:hover,
+    &:focus {
+      color: #2563eb;
+      border-color: #93b0f5;
+      background: #f5f8ff;
+    }
+  }
+
+  /* 输入框 / 选择器 */
+  .el-input__wrapper,
+  .el-select__wrapper,
+  .el-textarea__inner {
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px #dde4ef inset !important;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 0 0 1px #b6c6f3 inset !important;
+    }
+  }
+
+  .el-input__wrapper.is-focus,
+  .el-select__wrapper.is-focused {
+    box-shadow: 0 0 0 1.5px #2563eb inset !important;
+  }
+
+  /* 表格：密度与细节 */
+  .el-table {
+    --el-table-row-hover-bg-color: #f4f8ff;
+
+    td.el-table__cell {
+      padding: 11px 0;
+      color: #334155;
+    }
+
+    th.el-table__cell {
+      height: 46px;
+    }
+
+    .el-table__empty-block {
+      background: #fbfcfe;
+    }
+
+    /* 边框模式整体圆角裁切 */
+    &.el-table--border {
+      border-radius: 10px;
+      overflow: hidden;
+
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  /* 分页 */
+  .el-pagination {
+    .el-pager li,
+    button.btn-prev,
+    button.btn-next {
+      border-radius: 8px;
+      transition: all 0.2s;
+
+      &:hover {
+        color: #2563eb;
+      }
+    }
+
+    .el-pager li.is-active {
+      background: linear-gradient(135deg, #2563eb, #3b76f2);
+      color: #fff;
+      border-radius: 8px;
+    }
+  }
+
+  /* 描述列表（详情抽屉） */
+  .el-descriptions {
+    --el-descriptions-item-bordered-label-background: #f6f8fc;
+
+    .el-descriptions__label {
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .el-descriptions__body {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  }
+
+  /* 对话框按钮宽度统一 */
+  .el-dialog__footer .el-button,
+  .el-message-box__btns .el-button {
+    min-width: 84px;
+    border-radius: 8px;
+  }
+
+  /* 时间线 */
+  .el-timeline-item__node {
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
+  }
+
+  /* 进度条圆角 */
+  .el-progress-bar__outer,
+  .el-progress-bar__inner {
+    border-radius: 999px;
+  }
+}

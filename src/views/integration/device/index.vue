@@ -1,0 +1,191 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { useDevice } from "./utils/hook";
+import { PureTableBar } from "@/components/RePureTableBar";
+import { PureTable } from "@pureadmin/table";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { deviceTypeOptions, deviceStatusOptions } from "@/constants/wms";
+import AddFill from "~icons/ep/plus";
+import SearchIcon from "~icons/ep/search";
+import RefreshIcon from "~icons/ep/refresh";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import SwitchBtn from "~icons/ep/switch-button";
+
+defineOptions({ name: "IntegrationDevice" });
+
+const searchFormRef = ref();
+
+const {
+  form,
+  loading,
+  columns,
+  dataList,
+  pagination,
+  onSearch,
+  resetForm,
+  openDialog,
+  handleToggle,
+  handleDelete,
+  handleSizeChange,
+  handleCurrentChange
+} = useDevice();
+
+const warehouseOptions = [
+  { value: "WH001", label: "WH001 上海主仓" },
+  { value: "WH002", label: "WH002 广州华南仓" },
+  { value: "WH003", label: "WH003 成都西南仓" }
+];
+</script>
+
+<template>
+  <div class="main">
+    <el-form
+      ref="searchFormRef"
+      :inline="true"
+      :model="form"
+      class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
+    >
+      <el-form-item label="编码" prop="code">
+        <el-input
+          v-model="form.code"
+          placeholder="设备编码"
+          clearable
+          style="width: 140px"
+          @keyup.enter="onSearch"
+        />
+      </el-form-item>
+      <el-form-item label="名称" prop="name">
+        <el-input
+          v-model="form.name"
+          placeholder="设备名称"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
+      </el-form-item>
+      <el-form-item label="类型" prop="deviceType">
+        <el-select
+          v-model="form.deviceType"
+          placeholder="全部"
+          clearable
+          style="width: 130px"
+        >
+          <el-option
+            v-for="d in deviceTypeOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="仓库" prop="warehouseCode">
+        <el-select
+          v-model="form.warehouseCode"
+          placeholder="全部"
+          clearable
+          style="width: 160px"
+        >
+          <el-option
+            v-for="w in warehouseOptions"
+            :key="w.value"
+            :label="w.label"
+            :value="w.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select
+          v-model="form.status"
+          placeholder="全部"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in deviceStatusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >搜索</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >重置</el-button
+        >
+      </el-form-item>
+    </el-form>
+
+    <PureTableBar title="设备管理" :columns="columns" @refresh="onSearch">
+      <template #buttons>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="openDialog('新增设备')"
+        >
+          新增设备
+        </el-button>
+      </template>
+      <template v-slot="{ size, dynamicColumns }">
+        <pure-table
+          border
+          align-whole="center"
+          row-key="id"
+          show-overflow-tooltip
+          :data="dataList"
+          :columns="dynamicColumns"
+          :pagination="pagination"
+          :loading="loading"
+          :size="size"
+          adaptive
+          :adaptiveConfig="{ offsetBottom: 120 }"
+          @page-size-change="handleSizeChange"
+          @page-current-change="handleCurrentChange"
+        >
+          <template #operation="{ row }">
+            <el-button
+              link
+              type="primary"
+              :icon="useRenderIcon(EditPen)"
+              @click="openDialog('编辑设备', row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              link
+              :type="row.status === 'offline' ? 'success' : 'warning'"
+              :icon="useRenderIcon(SwitchBtn)"
+              @click="handleToggle(row)"
+            >
+              {{ row.status === "offline" ? "启用" : "停用" }}
+            </el-button>
+            <el-button
+              link
+              type="danger"
+              :icon="useRenderIcon(Delete)"
+              @click="handleDelete(row)"
+            >
+              删除
+            </el-button>
+          </template>
+        </pure-table>
+      </template>
+    </PureTableBar>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.search-form {
+  :deep(.el-form-item) {
+    margin-bottom: 12px;
+  }
+}
+</style>
