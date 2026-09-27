@@ -3,11 +3,17 @@ import { getLogPage } from "@/api/system";
 import type { LogItem } from "@/api/system";
 import type { DictItem } from "@/constants/wms";
 import { dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import View from "~icons/ep/view";
 
 /** 执行结果选项 */
 export const logStatusOptions: DictItem[] = [
-  { label: "成功", value: 1, tag: "success" },
-  { label: "失败", value: 0, tag: "danger" }
+  { label: $t("system.log.success"), value: 1, tag: "success" },
+  { label: $t("system.log.failure"), value: 0, tag: "danger" }
 ];
 
 export function useLog() {
@@ -27,12 +33,12 @@ export function useLog() {
   });
 
   const columns: TableColumnList = [
-    { label: "操作人", prop: "username", minWidth: 90 },
-    { label: "模块", prop: "module", minWidth: 100 },
-    { label: "操作", prop: "action", minWidth: 80 },
-    { label: "IP 地址", prop: "ip", minWidth: 120 },
+    { label: $t("system.log.operator"), prop: "username", minWidth: 90 },
+    { label: $t("system.log.module"), prop: "module", minWidth: 100 },
+    { label: $t("system.log.action"), prop: "action", minWidth: 80 },
+    { label: $t("system.log.ip"), prop: "ip", minWidth: 120 },
     {
-      label: "执行结果",
+      label: $t("system.log.result"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(logStatusOptions, row.status)}>
@@ -41,13 +47,31 @@ export function useLog() {
       )
     },
     {
-      label: "耗时(ms)",
+      label: $t("system.log.durationMs"),
       prop: "duration",
       minWidth: 80
     },
-    { label: "操作时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 90, slot: "operation" }
+    { label: $t("system.log.time"), prop: "createdAt", minWidth: 140 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: LogItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.detail"),
+        icon: View,
+        onClick: () => openDetail(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;

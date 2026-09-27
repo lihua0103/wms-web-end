@@ -8,6 +8,7 @@ import { useNav } from "@/layout/hooks/useNav";
 import { useEventListener } from "@vueuse/core";
 import type { FormInstance } from "element-plus";
 import { useLayout } from "@/layout/hooks/useLayout";
+import { $t } from "@/plugins/i18n";
 import { useUserStoreHook } from "@/store/modules/user";
 import { initRouter, getTopMenu } from "@/router/utils";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
@@ -55,7 +56,7 @@ const agreed = ref(true);
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   if (!agreed.value) {
-    message("请先阅读并同意《用户协议》和《隐私政策》", { type: "warning" });
+    message($t("login.agreeFirst"), { type: "warning" });
     return;
   }
   await formEl.validate(valid => {
@@ -79,12 +80,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
               router
                 .push(getTopMenu(true).path)
                 .then(() => {
-                  message("登录成功", { type: "success" });
+                  message($t("login.success"), { type: "success" });
                 })
                 .finally(() => (disabled.value = false));
             });
           } else {
-            message("登录失败", { type: "error" });
+            message($t("login.failed"), { type: "error" });
           }
         })
         .finally(() => (loading.value = false));
@@ -109,21 +110,41 @@ useEventListener(document, "keydown", ({ code }) => {
 
 /** 品牌展示数据（静态演示） */
 const features = [
-  { icon: Download, title: "入库协同", sub: "预约 · 收货 · 质检" },
-  { icon: Upload, title: "出库履约", sub: "波次 · 拣货 · 发运" },
-  { icon: BoxIcon, title: "库存管控", sub: "批次 · 序列号 · 效期" },
-  { icon: Monitor, title: "设备调度", sub: "AGV · 立库 · 输送线" },
-  { icon: DataLine, title: "数据洞察", sub: "看板 · 大屏 · 绩效" }
+  {
+    icon: Download,
+    title: $t("login.features.inbound"),
+    sub: $t("login.features.inboundSub")
+  },
+  {
+    icon: Upload,
+    title: $t("login.features.outbound"),
+    sub: $t("login.features.outboundSub")
+  },
+  {
+    icon: BoxIcon,
+    title: $t("login.features.inventory"),
+    sub: $t("login.features.inventorySub")
+  },
+  {
+    icon: Monitor,
+    title: $t("login.features.equipment"),
+    sub: $t("login.features.equipmentSub")
+  },
+  {
+    icon: DataLine,
+    title: $t("login.features.insight"),
+    sub: $t("login.features.insightSub")
+  }
 ];
 
 const weekBars = [
-  { d: "周一", v: 62 },
-  { d: "周二", v: 78 },
-  { d: "周三", v: 55 },
-  { d: "周四", v: 90 },
-  { d: "周五", v: 72 },
-  { d: "周六", v: 40 },
-  { d: "周日", v: 30 }
+  { d: $t("login.week.mon"), v: 62 },
+  { d: $t("login.week.tue"), v: 78 },
+  { d: $t("login.week.wed"), v: 55 },
+  { d: $t("login.week.thu"), v: 90 },
+  { d: $t("login.week.fri"), v: 72 },
+  { d: $t("login.week.sat"), v: 40 },
+  { d: $t("login.week.sun"), v: 30 }
 ];
 </script>
 
@@ -144,16 +165,16 @@ const weekBars = [
       <!-- 左侧品牌展示区 -->
       <div class="brand-panel">
         <div class="brand-logo">
-          <div class="brand-mark">仓</div>
+          <div class="brand-mark">{{ $t("login.brandMark") }}</div>
           <span class="brand-name">{{ title }}</span>
         </div>
 
         <h1 class="brand-title">
-          智联仓储<br />
-          <span class="brand-title-accent">一体化管理平台</span>
+          {{ $t("login.brandTitle") }}<br />
+          <span class="brand-title-accent">{{ $t("app.subtitle") }}</span>
         </h1>
         <p class="brand-tagline">
-          让每一件货物的入库、存储、拣选与发运，全程在线、清晰可控
+          {{ $t("login.brandTagline") }}
         </p>
 
         <!-- 特性图标行 -->
@@ -172,41 +193,51 @@ const weekBars = [
         <!-- 迷你数据看板 -->
         <div class="mini-dashboard">
           <div class="mini-card kpi">
-            <div class="mini-card-head">今日作业</div>
+            <div class="mini-card-head">
+              {{ $t("login.dashboard.todayWork") }}
+            </div>
             <div class="mini-kpi-row">
               <div>
                 <div class="mini-kpi-num blue">326</div>
-                <div class="mini-kpi-label">入库单</div>
+                <div class="mini-kpi-label">
+                  {{ $t("login.dashboard.inboundOrders") }}
+                </div>
               </div>
               <div class="mini-kpi-divider" />
               <div>
                 <div class="mini-kpi-num green">512</div>
-                <div class="mini-kpi-label">出库单</div>
+                <div class="mini-kpi-label">
+                  {{ $t("login.dashboard.outboundOrders") }}
+                </div>
               </div>
             </div>
           </div>
 
           <div class="mini-card chart">
-            <div class="mini-card-head">近 7 日出入库量</div>
+            <div class="mini-card-head">
+              {{ $t("login.dashboard.last7Days") }}
+            </div>
             <div class="bar-chart">
               <div v-for="b in weekBars" :key="b.d" class="bar-col">
                 <div class="bar" :style="{ height: b.v + '%' }" />
-                <div class="bar-label">{{ b.d.slice(1) }}</div>
+                <div class="bar-label">{{ b.d }}</div>
               </div>
             </div>
           </div>
 
           <div class="mini-card ring">
-            <div class="mini-card-head">库区填充率</div>
+            <div class="mini-card-head">
+              {{ $t("login.dashboard.fillRate") }}
+            </div>
             <div
               class="ring-chart"
               style="--p: 78"
               role="img"
-              aria-label="库区填充率 78%"
+              :aria-label="$t('login.dashboard.fillRateAria')"
             >
               <div class="ring-inner">
                 <b>78%</b>
-                <span>占用率</span>
+                <span>{{ $t("login.dashboard.occupancy") }}</span>
               </div>
             </div>
           </div>
@@ -216,10 +247,12 @@ const weekBars = [
       <!-- 右侧登录卡 -->
       <div class="login-card">
         <div class="login-card-logo">
-          <div class="brand-mark small">仓</div>
+          <div class="brand-mark small">{{ $t("login.brandMark") }}</div>
           <div>
-            <div class="welcome-title">欢迎登录 {{ title }}</div>
-            <div class="welcome-sub">登录以继续</div>
+            <div class="welcome-title">
+              {{ $t("login.welcomeTitle", { title }) }}
+            </div>
+            <div class="welcome-sub">{{ $t("login.continueHint") }}</div>
           </div>
         </div>
 
@@ -231,39 +264,44 @@ const weekBars = [
           label-position="top"
           @submit.prevent
         >
-          <div class="field-label">账号</div>
+          <div class="field-label">{{ $t("login.username") }}</div>
           <el-form-item prop="username">
             <el-input
               v-model="ruleForm.username"
               clearable
-              placeholder="请输入账号"
+              :placeholder="$t('login.usernamePlaceholder')"
               :prefix-icon="useRenderIcon(User)"
             />
           </el-form-item>
 
-          <div class="field-label">密码</div>
+          <div class="field-label">{{ $t("login.password") }}</div>
           <el-form-item prop="password">
             <el-input
               v-model="ruleForm.password"
               clearable
               show-password
-              placeholder="请输入密码"
+              :placeholder="$t('login.passwordPlaceholder')"
               :prefix-icon="useRenderIcon(Lock)"
             />
           </el-form-item>
 
           <div class="form-row">
-            <el-checkbox v-model="remember">记住我</el-checkbox>
-            <span class="forgot-link" @click="message('请联系管理员重置密码', { type: 'info' })">
-              忘记密码?
+            <el-checkbox v-model="remember">
+              {{ $t("login.rememberMe") }}
+            </el-checkbox>
+            <span
+              class="forgot-link"
+              @click="message($t('login.contactAdminReset'), { type: 'info' })"
+            >
+              {{ $t("login.forgotPassword") }}
             </span>
           </div>
 
           <el-checkbox v-model="agreed" class="agree-check">
-            我已阅读并同意
-            <span class="agreement-link">《用户协议》</span>
-            和
-            <span class="agreement-link">《隐私政策》</span>
+            {{ $t("login.agreePrefix") }}
+            <span class="agreement-link">{{ $t("login.userAgreement") }}</span>
+            {{ $t("login.agreeAnd") }}
+            <span class="agreement-link">{{ $t("login.privacyPolicy") }}</span>
           </el-checkbox>
 
           <el-button
@@ -274,16 +312,16 @@ const weekBars = [
             :disabled="disabled"
             @click="onLogin(ruleFormRef)"
           >
-            登 录
+            {{ $t("common.buttons.login") }}
           </el-button>
 
           <div class="secure-note">
             <el-icon :size="14"><Lock /></el-icon>
-            安全访问 · 仅限授权用户
+            {{ $t("login.secureNote") }}
           </div>
 
           <div class="demo-tip">
-            演示账号：admin / admin123
+            {{ $t("login.demoAccount") }}
           </div>
         </el-form>
       </div>
@@ -291,17 +329,49 @@ const weekBars = [
 
     <!-- 底部版权 -->
     <div class="login-footer">
-      <span>隐私政策</span>
+      <span>{{ $t("login.footerPrivacy") }}</span>
       <i>|</i>
-      <span>使用条款</span>
+      <span>{{ $t("login.footerTerms") }}</span>
       <i>|</i>
-      <span>帮助</span>
-      <span class="copyright">版权所有 © 2026 智联物流集团</span>
+      <span>{{ $t("login.footerHelp") }}</span>
+      <span class="copyright">{{ $t("login.copyright") }}</span>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+/* 窄屏适配 */
+@media (width <= 1100px) {
+  .login-body {
+    flex-direction: column;
+    gap: 32px;
+    padding: 72px 20px 16px;
+  }
+
+  .brand-panel {
+    max-width: 640px;
+  }
+
+  .brand-title {
+    font-size: 36px;
+  }
+
+  .feature-row {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .mini-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .login-card {
+    flex: none;
+    width: 100%;
+    max-width: 460px;
+  }
+}
+
 .login-page {
   display: flex;
   flex-direction: column;
@@ -309,7 +379,7 @@ const weekBars = [
   min-height: 100vh;
   overflow: auto;
   background-color: #eef2f9;
-  background-image: radial-gradient(rgb(37 99 235 / 7%) 1px, transparent 1px);
+  background-image: radial-gradient(rgb(14 116 144 / 7%) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
@@ -355,9 +425,9 @@ const weekBars = [
   font-size: 20px;
   font-weight: 700;
   color: #fff;
+  background: linear-gradient(135deg, #0e7490, #2aa9cc);
   border-radius: 12px;
-  background: linear-gradient(135deg, #2563eb, #4d8bff);
-  box-shadow: 0 6px 16px -4px rgb(37 99 235 / 45%);
+  box-shadow: 0 6px 16px -4px rgb(14 116 144 / 45%);
 
   &.small {
     width: 40px;
@@ -369,7 +439,7 @@ const weekBars = [
 .brand-name {
   font-size: 20px;
   font-weight: 700;
-  color: #0f2b66;
+  color: #0f3547;
   letter-spacing: 1px;
 }
 
@@ -378,15 +448,14 @@ const weekBars = [
   font-size: 52px;
   font-weight: 800;
   line-height: 1.15;
-  color: #0f2b66;
+  color: #0f3547;
   letter-spacing: 2px;
 }
 
 .brand-title-accent {
-  background: linear-gradient(90deg, #2563eb, #4d8bff);
-  background-clip: text;
+  background: linear-gradient(90deg, #0e7490, #2aa9cc);
   text-fill-color: transparent;
-  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .brand-tagline {
@@ -401,8 +470,8 @@ const weekBars = [
   justify-content: space-between;
   padding: 20px 8px;
   margin-bottom: 28px;
-  border-top: 1px solid rgb(37 99 235 / 12%);
-  border-bottom: 1px solid rgb(37 99 235 / 12%);
+  border-top: 1px solid rgb(14 116 144 / 12%);
+  border-bottom: 1px solid rgb(14 116 144 / 12%);
 }
 
 .feature-item {
@@ -417,9 +486,9 @@ const weekBars = [
   width: 40px;
   height: 40px;
   margin-bottom: 8px;
-  color: #2563eb;
+  color: #0e7490;
+  background: rgb(14 116 144 / 8%);
   border-radius: 10px;
-  background: rgb(37 99 235 / 8%);
 }
 
 .feature-title {
@@ -471,7 +540,7 @@ const weekBars = [
   font-variant-numeric: tabular-nums;
 
   &.blue {
-    color: #2563eb;
+    color: #0e7490;
   }
 
   &.green {
@@ -509,8 +578,8 @@ const weekBars = [
 .bar {
   width: 14px;
   margin-top: auto;
+  background: linear-gradient(180deg, #2aa9cc, #0e7490);
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #4d8bff, #2563eb);
 }
 
 .bar-label {
@@ -525,11 +594,11 @@ const weekBars = [
   width: 84px;
   height: 84px;
   margin: 0 auto;
-  border-radius: 50%;
   background: conic-gradient(
-    #2563eb 0 calc(var(--p) * 1%),
+    #0e7490 0 calc(var(--p) * 1%),
     #e4eaf4 calc(var(--p) * 1%) 100%
   );
+  border-radius: 50%;
 }
 
 .ring-inner {
@@ -544,7 +613,7 @@ const weekBars = [
 
   b {
     font-size: 17px;
-    color: #0f2b66;
+    color: #0f3547;
   }
 
   span {
@@ -574,7 +643,7 @@ const weekBars = [
 .welcome-title {
   font-size: 20px;
   font-weight: 700;
-  color: #0f2b66;
+  color: #0f3547;
 }
 
 .welcome-sub {
@@ -607,7 +676,7 @@ const weekBars = [
 
 .forgot-link {
   font-size: 13px;
-  color: #2563eb;
+  color: #0e7490;
   cursor: pointer;
 
   &:hover {
@@ -625,7 +694,7 @@ const weekBars = [
 }
 
 .agreement-link {
-  color: #2563eb;
+  color: #0e7490;
   cursor: pointer;
 }
 
@@ -652,9 +721,9 @@ const weekBars = [
   padding: 8px 12px;
   margin-top: 14px;
   font-size: 12px;
-  color: #2563eb;
+  color: #0e7490;
   text-align: center;
-  background: rgb(37 99 235 / 6%);
+  background: rgb(14 116 144 / 6%);
   border-radius: 8px;
 }
 
@@ -677,45 +746,13 @@ const weekBars = [
     cursor: pointer;
 
     &:hover {
-      color: #2563eb;
+      color: #0e7490;
     }
   }
 
   .copyright {
     margin-left: 12px;
     color: #b0bacb;
-  }
-}
-
-/* 窄屏适配 */
-@media (width <= 1100px) {
-  .login-body {
-    flex-direction: column;
-    gap: 32px;
-    padding: 72px 20px 16px;
-  }
-
-  .brand-panel {
-    max-width: 640px;
-  }
-
-  .brand-title {
-    font-size: 36px;
-  }
-
-  .feature-row {
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .mini-dashboard {
-    grid-template-columns: 1fr;
-  }
-
-  .login-card {
-    flex: none;
-    width: 100%;
-    max-width: 460px;
   }
 }
 </style>

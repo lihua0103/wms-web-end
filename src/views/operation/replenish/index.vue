@@ -4,10 +4,10 @@ import { useReplenish } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { $t } from "@/plugins/i18n";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 import AddFill from "~icons/ep/plus";
-import CircleCheck from "~icons/ep/circle-check";
 
 defineOptions({ name: "OperationReplenish" });
 
@@ -23,15 +23,14 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleFinish,
   handleSizeChange,
   handleCurrentChange
 } = useReplenish();
 
 const warehouseOptions = [
-  { value: "WH001", label: "WH001 上海主仓" },
-  { value: "WH002", label: "WH002 广州华南仓" },
-  { value: "WH003", label: "WH003 成都西南仓" }
+  { value: "WH001", label: $t("operation.replenish.wh001") },
+  { value: "WH002", label: $t("operation.replenish.wh002") },
+  { value: "WH003", label: $t("operation.replenish.wh003") }
 ];
 </script>
 
@@ -43,29 +42,75 @@ const warehouseOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
-        <el-input v-model="form.code" placeholder="补货单号" clearable style="width: 160px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('operation.replenish.orderNo')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('operation.replenish.code')"
+          clearable
+          style="width: 160px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="仓库" prop="warehouseCode">
-        <el-select v-model="form.warehouseCode" placeholder="全部" clearable style="width: 160px">
-          <el-option v-for="w in warehouseOptions" :key="w.value" :label="w.label" :value="w.value" />
+      <el-form-item
+        :label="$t('common.columns.warehouse')"
+        prop="warehouseCode"
+      >
+        <el-select
+          v-model="form.warehouseCode"
+          :placeholder="$t('operation.replenish.all')"
+          clearable
+          style="width: 160px"
+        >
+          <el-option
+            v-for="w in warehouseOptions"
+            :key="w.value"
+            :label="w.label"
+            :value="w.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in statusOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('operation.replenish.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in statusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="补货管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('operation.replenish.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)" @click="openDialog">
-          手动补货
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="openDialog"
+        >
+          {{ $t("operation.replenish.manualReplenish") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -83,19 +128,7 @@ const warehouseOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="['pending', 'processing'].includes(row.status)"
-              link
-              type="success"
-              :icon="useRenderIcon(CircleCheck)"
-              @click="handleFinish(row)"
-            >
-              完成
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

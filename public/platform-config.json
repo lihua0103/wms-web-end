@@ -15,12 +15,15 @@
   "HideFooter": false,
   "Stretch": false,
   "SidebarStatus": true,
-  "EpThemeColor": "#2563EB",
+  "EpThemeColor": "#0E7490",
   "ShowLogo": true,
   "ShowModel": "smart",
   "MenuArrowIconNoTransition": false,
   "CachingAsyncRoutes": false,
   "TooltipEffect": "light",
-  "ResponsiveStorageNameSpace": "responsive-",
-  "MenuSearchHistory": 6
+  "ResponsiveStorageNameSpace": "responsive-wms-",
+  "MenuSearchHistory": 6,
+  "AiEnabled": true,
+  "AiEndpoint": "",
+  "AiModel": "GLM-4.7"
 }

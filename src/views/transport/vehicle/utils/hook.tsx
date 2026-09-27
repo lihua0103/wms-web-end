@@ -2,6 +2,11 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getVehiclePage,
   addVehicle,
@@ -9,6 +14,8 @@ import {
   deleteVehicle
 } from "@/api/transport";
 import type { VehicleItem } from "@/api/transport";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 const statusTag: Record<string, string> = {
@@ -33,27 +40,64 @@ export function useVehicle() {
   });
 
   const columns: TableColumnList = [
-    { label: "车牌号", prop: "vehicleNo", minWidth: 100 },
-    { label: "司机", prop: "driverName", minWidth: 90 },
-    { label: "电话", prop: "phone", minWidth: 110 },
-    { label: "车型", prop: "vehicleType", minWidth: 70 },
     {
-      label: "载重(吨)",
+      label: $t("transport.vehicle.licensePlate"),
+      prop: "vehicleNo",
+      minWidth: 100
+    },
+    { label: $t("transport.vehicle.driver"), prop: "driverName", minWidth: 90 },
+    { label: $t("transport.vehicle.phone"), prop: "phone", minWidth: 110 },
+    {
+      label: $t("transport.vehicle.vehicleType"),
+      prop: "vehicleType",
+      minWidth: 70
+    },
+    {
+      label: $t("transport.vehicle.loadTon"),
       prop: "maxLoad",
       minWidth: 80,
-      formatter: row => (row.maxLoad ? `${row.maxLoad} 吨` : "-")
+      formatter: row =>
+        row.maxLoad ? `${row.maxLoad} ${$t("transport.vehicle.ton")}` : "-"
     },
-    { label: "所属承运商", prop: "carrierName", minWidth: 100 },
     {
-      label: "状态",
+      label: $t("transport.vehicle.carrier"),
+      prop: "carrierName",
+      minWidth: 100
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={statusTag[row.status] || "info"}>{row.status}</el-tag>
       )
     },
-    { label: "备注", prop: "remark", minWidth: 100 },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    { label: $t("common.columns.remark"), prop: "remark", minWidth: 100 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: VehicleItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("transport.vehicle.edit"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -109,9 +153,16 @@ export function useVehicle() {
         const formInline = (
           options.props as { formInline: Partial<VehicleItem> }
         ).formInline;
-        const req = formInline.id ? updateVehicle(formInline) : addVehicle(formInline);
+        const req = formInline.id
+          ? updateVehicle(formInline)
+          : addVehicle(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("transport.vehicle.updateSuccess")
+              : $t("transport.vehicle.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -120,11 +171,15 @@ export function useVehicle() {
   }
 
   function handleDelete(row: VehicleItem) {
-    ElMessageBox.confirm(`确认删除车辆「${row.vehicleNo}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("transport.vehicle.confirmDelete", { vehicleNo: row.vehicleNo }),
+      $t("transport.vehicle.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteVehicle([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

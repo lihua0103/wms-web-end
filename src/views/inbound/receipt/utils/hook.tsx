@@ -1,14 +1,17 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
-  getReceiptPage,
-  auditReceipt,
-  registerReceipt
-} from "@/api/inbound";
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { getReceiptPage, auditReceipt, registerReceipt } from "@/api/inbound";
 import type { ReceiptItem } from "@/api/inbound";
 import { inboundStatusOptions, dictTag, dictLabel } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import CircleCheck from "~icons/ep/circle-check";
 import formComp from "../form.vue";
 
 export function useReceipt() {
@@ -28,18 +31,46 @@ export function useReceipt() {
   });
 
   const columns: TableColumnList = [
-    { label: "收货单号", prop: "code", minWidth: 130 },
-    { label: "预约单号", prop: "asnCode", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "供应商", prop: "supplierName", minWidth: 120 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 110 },
-    { label: "批次", prop: "batchNo", minWidth: 80 },
-    { label: "实收", prop: "receivedQty", minWidth: 60 },
-    { label: "合格", prop: "qualifiedQty", minWidth: 60 },
-    { label: "不合格", prop: "rejectedQty", minWidth: 60 },
+    { label: $t("inbound.receipt.receiptNo"), prop: "code", minWidth: 130 },
+    { label: $t("inbound.receipt.asnNo"), prop: "asnCode", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("inbound.receipt.supplier"),
+      prop: "supplierName",
+      minWidth: 120
+    },
+    {
+      label: $t("inbound.receipt.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("inbound.receipt.materialName"),
+      prop: "materialName",
+      minWidth: 110
+    },
+    { label: $t("inbound.receipt.batch"), prop: "batchNo", minWidth: 80 },
+    {
+      label: $t("inbound.receipt.received"),
+      prop: "receivedQty",
+      minWidth: 60
+    },
+    {
+      label: $t("inbound.receipt.qualified"),
+      prop: "qualifiedQty",
+      minWidth: 60
+    },
+    {
+      label: $t("inbound.receipt.rejected"),
+      prop: "rejectedQty",
+      minWidth: 60
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(inboundStatusOptions, row.status)}>
@@ -47,9 +78,36 @@ export function useReceipt() {
         </el-tag>
       )
     },
-    { label: "收货人", prop: "receiver", minWidth: 70 },
-    { fixed: "right", label: "操作", width: 170, slot: "operation" }
+    { label: $t("inbound.receipt.receiver"), prop: "receiver", minWidth: 70 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ReceiptItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("common.buttons.audit"),
+        icon: CircleCheck,
+        onClick: () => handleAudit(row)
+      });
+    }
+    if (["waiting", "receiving"].includes(row.status)) {
+      buttons.push({
+        label: $t("inbound.receipt.register"),
+        icon: EditPen,
+        onClick: () => openRegisterDialog(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -83,11 +141,15 @@ export function useReceipt() {
 
   /** 审核（待审核→待到货） */
   function handleAudit(row: ReceiptItem) {
-    ElMessageBox.confirm(`确认审核通过「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("inbound.receipt.confirmApprove", { code: row.code }),
+      $t("inbound.receipt.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       auditReceipt(row.id).then(() => {
-        message("审核通过", { type: "success" });
+        message($t("inbound.receipt.auditSuccess"), { type: "success" });
         onSearch();
       });
     });
@@ -96,7 +158,7 @@ export function useReceipt() {
   /** 收货登记 */
   function openRegisterDialog(row: ReceiptItem) {
     addDialog({
-      title: "收货登记",
+      title: $t("inbound.receipt.register"),
       width: "36%",
       draggable: true,
       closeOnClickModal: false,
@@ -123,7 +185,7 @@ export function useReceipt() {
           }
         ).formInline;
         registerReceipt(formInline).then(() => {
-          message("收货登记成功", { type: "success" });
+          message($t("inbound.receipt.registerSuccess"), { type: "success" });
           done();
           onSearch();
         });

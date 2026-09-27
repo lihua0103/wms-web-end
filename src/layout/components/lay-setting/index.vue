@@ -12,6 +12,7 @@ import {
 import { emitter } from "@/utils/mitt";
 import LayPanel from "../lay-panel/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
+import { $t } from "@/plugins/i18n";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import Segmented, { type OptionsType } from "@/components/ReSegmented";
@@ -145,13 +146,13 @@ function setFalse(Doms): any {
 const stretchTypeOptions = computed<Array<OptionsType>>(() => {
   return [
     {
-      label: "固定",
-      tip: "紧凑页面，轻松找到所需信息",
+      label: $t("panels.stretch.fixed"),
+      tip: $t("panels.stretch.fixedTip"),
       value: "fixed"
     },
     {
-      label: "自定义",
-      tip: "最小1280、最大1600",
+      label: $t("panels.stretch.custom"),
+      tip: $t("panels.stretch.customTip"),
       value: "custom"
     }
   ];
@@ -193,24 +194,24 @@ const pClass = computed(() => {
 const themeOptions = computed<Array<OptionsType>>(() => {
   return [
     {
-      label: "浅色",
+      label: $t("panels.theme.light"),
       icon: DayIcon,
       theme: "light",
-      tip: "清新启航，点亮舒适的工作界面",
+      tip: $t("panels.theme.lightTip"),
       iconAttrs: { fill: isDark.value ? "#fff" : "#000" }
     },
     {
-      label: "深色",
+      label: $t("panels.theme.dark"),
       icon: DarkIcon,
       theme: "dark",
-      tip: "月光序曲，沉醉于夜的静谧雅致",
+      tip: $t("panels.theme.darkTip"),
       iconAttrs: { fill: isDark.value ? "#fff" : "#000" }
     },
     {
-      label: "自动",
+      label: $t("panels.theme.system"),
       icon: SystemIcon,
       theme: "system",
-      tip: "同步时光，界面随晨昏自然呼应",
+      tip: $t("panels.theme.systemTip"),
       iconAttrs: { fill: isDark.value ? "#fff" : "#000" }
     }
   ];
@@ -219,18 +220,18 @@ const themeOptions = computed<Array<OptionsType>>(() => {
 const markOptions = computed<Array<OptionsType>>(() => {
   return [
     {
-      label: "灵动",
-      tip: "灵动标签，添趣生辉",
+      label: $t("panels.tabsStyle.smart"),
+      tip: $t("panels.tabsStyle.smartTip"),
       value: "smart"
     },
     {
-      label: "卡片",
-      tip: "卡片标签，高效浏览",
+      label: $t("panels.tabsStyle.card"),
+      tip: $t("panels.tabsStyle.cardTip"),
       value: "card"
     },
     {
-      label: "谷歌",
-      tip: "谷歌风格，经典美观",
+      label: $t("panels.tabsStyle.chrome"),
+      tip: $t("panels.tabsStyle.chromeTip"),
       value: "chrome"
     }
   ];
@@ -315,7 +316,7 @@ onUnmounted(() => removeMatchMedia);
 <template>
   <LayPanel>
     <div class="p-5">
-      <p :class="pClass">整体风格</p>
+      <p :class="pClass">{{ $t("panels.overallStyle") }}</p>
       <Segmented
         resize
         class="select-none"
@@ -333,7 +334,7 @@ onUnmounted(() => removeMatchMedia);
         "
       />
 
-      <p :class="['mt-5!', pClass]">主题色</p>
+      <p :class="['mt-5!', pClass]">{{ $t("panels.themeColor") }}</p>
       <ul class="theme-color">
         <li
           v-for="(item, index) in themeColors"
@@ -352,12 +353,12 @@ onUnmounted(() => removeMatchMedia);
         </li>
       </ul>
 
-      <p :class="['mt-5!', pClass]">导航模式</p>
+      <p :class="['mt-5!', pClass]">{{ $t("panels.layoutModel") }}</p>
       <ul class="pure-theme">
         <li
           ref="verticalRef"
           v-tippy="{
-            content: '左侧菜单，亲切熟悉',
+            content: $t('panels.layout.verticalTip'),
             zIndex: 41000
           }"
           :class="layoutTheme.layout === 'vertical' ? 'is-select' : ''"
@@ -370,7 +371,7 @@ onUnmounted(() => removeMatchMedia);
           v-if="device !== 'mobile'"
           ref="horizontalRef"
           v-tippy="{
-            content: '顶部菜单，简洁概览',
+            content: $t('panels.layout.horizontalTip'),
             zIndex: 41000
           }"
           :class="layoutTheme.layout === 'horizontal' ? 'is-select' : ''"
@@ -383,7 +384,7 @@ onUnmounted(() => removeMatchMedia);
           v-if="device !== 'mobile'"
           ref="mixRef"
           v-tippy="{
-            content: '混合菜单，灵活多变',
+            content: $t('panels.layout.mixTip'),
             zIndex: 41000
           }"
           :class="layoutTheme.layout === 'mix' ? 'is-select' : ''"
@@ -395,7 +396,7 @@ onUnmounted(() => removeMatchMedia);
       </ul>
 
       <span v-if="useAppStoreHook().getViewportWidth > 1280">
-        <p :class="['mt-5!', pClass]">页宽</p>
+        <p :class="['mt-5!', pClass]">{{ $t("panels.stretch.title") }}</p>
         <Segmented
           resize
           class="mb-2 select-none"
@@ -436,7 +437,7 @@ onUnmounted(() => removeMatchMedia);
         </button>
       </span>
 
-      <p :class="['mt-4!', pClass]">页签风格</p>
+      <p :class="['mt-4!', pClass]">{{ $t("panels.tabsStyle.title") }}</p>
       <Segmented
         resize
         class="select-none"
@@ -445,45 +446,47 @@ onUnmounted(() => removeMatchMedia);
         @change="onChange"
       />
 
-      <p class="mt-5! font-medium text-sm dark:text-white">界面显示</p>
+      <p class="mt-5! font-medium text-sm dark:text-white">
+        {{ $t("panels.interfaceDisplay") }}
+      </p>
       <ul class="setting">
         <li>
-          <span class="dark:text-white">灰色模式</span>
+          <span class="dark:text-white">{{ $t("panels.greyMode") }}</span>
           <el-switch
             v-model="settings.greyVal"
             inline-prompt
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="greyChange"
           />
         </li>
         <li>
-          <span class="dark:text-white">色弱模式</span>
+          <span class="dark:text-white">{{ $t("panels.weakMode") }}</span>
           <el-switch
             v-model="settings.weakVal"
             inline-prompt
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="weekChange"
           />
         </li>
         <li>
-          <span class="dark:text-white">隐藏标签页</span>
+          <span class="dark:text-white">{{ $t("panels.hideTabs") }}</span>
           <el-switch
             v-model="settings.tabsVal"
             inline-prompt
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="tagsChange"
           />
         </li>
         <li>
-          <span class="dark:text-white">隐藏页脚</span>
+          <span class="dark:text-white">{{ $t("panels.hideFooter") }}</span>
           <el-switch
             v-model="settings.hideFooter"
             inline-prompt
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="hideFooterChange"
           />
         </li>
@@ -494,18 +497,18 @@ onUnmounted(() => removeMatchMedia);
             inline-prompt
             :active-value="true"
             :inactive-value="false"
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="logoChange"
           />
         </li>
         <li>
-          <span class="dark:text-white">页签持久化</span>
+          <span class="dark:text-white">{{ $t("panels.tabsCache") }}</span>
           <el-switch
             v-model="settings.multiTagsCache"
             inline-prompt
-            active-text="开"
-            inactive-text="关"
+            :active-text="$t('panels.on')"
+            :inactive-text="$t('panels.off')"
             @change="multiTagsCacheChange"
           />
         </li>

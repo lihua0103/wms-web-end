@@ -2,17 +2,25 @@ import { ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getOrgTree, addOrg, updateOrg, deleteOrg } from "@/api/system";
 import type { OrgItem } from "@/api/system";
 import type { DictItem } from "@/constants/wms";
 import { dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import Plus from "~icons/ep/plus";
 import formComp from "../form.vue";
 
 /** 组织类型选项 */
 export const orgTypeOptions: DictItem[] = [
-  { label: "公司", value: "company", tag: "" },
-  { label: "仓库", value: "warehouse", tag: "success" },
-  { label: "部门", value: "dept", tag: "warning" }
+  { label: $t("system.org.typeCompany"), value: "company", tag: "" },
+  { label: $t("system.org.typeWarehouse"), value: "warehouse", tag: "success" },
+  { label: $t("system.org.typeDept"), value: "dept", tag: "warning" }
 ];
 
 /** 将组织树拍平为上级组织下拉选项 */
@@ -36,9 +44,9 @@ export function useOrg() {
   const dataList = ref<OrgItem[]>([]);
 
   const columns: TableColumnList = [
-    { label: "组织名称", prop: "name", minWidth: 180 },
+    { label: $t("system.org.name"), prop: "name", minWidth: 180 },
     {
-      label: "类型",
+      label: $t("common.columns.type"),
       prop: "type",
       minWidth: 80,
       cellRenderer: ({ row }) => (
@@ -47,10 +55,39 @@ export function useOrg() {
         </el-tag>
       )
     },
-    { label: "负责人", prop: "leader", minWidth: 100 },
-    { label: "联系电话", prop: "phone", minWidth: 120 },
-    { fixed: "right", label: "操作", width: 220, slot: "operation" }
+    { label: $t("system.org.leader"), prop: "leader", minWidth: 100 },
+    { label: $t("system.org.phone"), prop: "phone", minWidth: 120 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: OrgItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("system.org.addChild"),
+        icon: Plus,
+        onClick: () => openDialog($t("system.org.addChildOrg"), undefined, row)
+      },
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("system.org.editOrg"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -87,7 +124,12 @@ export function useOrg() {
           .formInline;
         const req = formInline.id ? updateOrg(formInline) : addOrg(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("system.org.editSuccess")
+              : $t("system.org.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -97,12 +139,12 @@ export function useOrg() {
 
   function handleDelete(row: OrgItem) {
     ElMessageBox.confirm(
-      `确认删除组织「${row.name}」吗？其下级组织将一并失效`,
-      "提示",
+      $t("system.org.deleteConfirm", { name: row.name }),
+      $t("system.org.tip"),
       { type: "warning" }
     ).then(() => {
       deleteOrg([Number(row.id)]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

@@ -2,9 +2,21 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getTaskPage, assignTask, cancelTask } from "@/api/operation";
 import type { TaskItem } from "@/api/operation";
-import { taskTypeOptions, taskStatusOptions, dictLabel, dictTag } from "@/constants/wms";
+import {
+  taskTypeOptions,
+  taskStatusOptions,
+  dictLabel,
+  dictTag
+} from "@/constants/wms";
+import User from "~icons/ep/user";
+import CircleClose from "~icons/ep/circle-close";
 import formComp from "../form.vue";
 
 export function useTask() {
@@ -24,20 +36,36 @@ export function useTask() {
   });
 
   const columns: TableColumnList = [
-    { label: "任务号", prop: "taskNo", minWidth: 130 },
+    { label: $t("operation.task.taskNo"), prop: "taskNo", minWidth: 130 },
     {
-      label: "任务类型",
+      label: $t("operation.task.taskType"),
       minWidth: 80,
       cellRenderer: ({ row }) => dictLabel(taskTypeOptions, row.taskType)
     },
-    { label: "关联单据", prop: "bizNo", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "库位", prop: "locationCode", minWidth: 80 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "数量", prop: "qty", minWidth: 60 },
+    { label: $t("operation.task.bizNo"), prop: "bizNo", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("common.columns.location"),
+      prop: "locationCode",
+      minWidth: 80
+    },
+    {
+      label: $t("operation.task.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("operation.task.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 60 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(taskStatusOptions, row.status)}>
@@ -45,10 +73,42 @@ export function useTask() {
         </el-tag>
       )
     },
-    { label: "执行人", prop: "assignee", minWidth: 80 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 150, slot: "operation" }
+    { label: $t("operation.task.assignee"), prop: "assignee", minWidth: 80 },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: TaskItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (["pending", "processing", "error"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.assign"),
+        icon: User,
+        onClick: () => openAssignDialog(row)
+      });
+    }
+    if (["pending", "error"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.cancel"),
+        type: "danger",
+        icon: CircleClose,
+        onClick: () => handleCancel(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -83,7 +143,7 @@ export function useTask() {
   /** 分配任务 */
   function openAssignDialog(row: TaskItem) {
     addDialog({
-      title: "分配任务",
+      title: $t("operation.task.assignTitle"),
       width: "32%",
       draggable: true,
       closeOnClickModal: false,
@@ -100,7 +160,7 @@ export function useTask() {
           options.props as { formInline: { id: number; assignee: string } }
         ).formInline;
         assignTask(formInline.id, formInline.assignee).then(() => {
-          message("分配成功", { type: "success" });
+          message($t("operation.task.assignSuccess"), { type: "success" });
           done();
           onSearch();
         });
@@ -110,11 +170,15 @@ export function useTask() {
 
   /** 取消任务 */
   function handleCancel(row: TaskItem) {
-    ElMessageBox.confirm(`确认取消任务「${row.taskNo}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("operation.task.cancelConfirm", { taskNo: row.taskNo }),
+      $t("operation.task.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       cancelTask(row.id).then(() => {
-        message("已取消", { type: "success" });
+        message($t("operation.task.cancelSuccess"), { type: "success" });
         onSearch();
       });
     });

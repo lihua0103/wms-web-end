@@ -3,13 +3,25 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
+import {
   getContainerPage,
   addContainer,
   updateContainer,
   deleteContainer
 } from "@/api/master";
 import type { ContainerItem } from "@/api/master";
-import { containerTypeOptions, containerStatusOptions, dictLabel, dictTag } from "@/constants/wms";
+import {
+  containerTypeOptions,
+  containerStatusOptions,
+  dictLabel,
+  dictTag
+} from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useContainer() {
@@ -24,15 +36,20 @@ export function useContainer() {
   const pagination = reactive({ pageSize: 10, currentPage: 1, total: 0 });
 
   const columns: TableColumnList = [
-    { label: "容器编码", prop: "code", minWidth: 110 },
+    { label: $t("master.container.code"), prop: "code", minWidth: 110 },
     {
-      label: "容器类型",
+      label: $t("master.container.containerType"),
       minWidth: 80,
-      cellRenderer: ({ row }) => dictLabel(containerTypeOptions, row.containerType)
+      cellRenderer: ({ row }) =>
+        dictLabel(containerTypeOptions, row.containerType)
     },
-    { label: "仓库", prop: "warehouseCode", minWidth: 80 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(containerStatusOptions, row.status)}>
@@ -40,11 +57,44 @@ export function useContainer() {
         </el-tag>
       )
     },
-    { label: "绑定物料", prop: "materialCode", minWidth: 100 },
-    { label: "所在库位", prop: "locationCode", minWidth: 110 },
-    { label: "备注", prop: "remark", minWidth: 100 },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      label: $t("master.container.bindingMaterial"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("master.container.currentLocation"),
+      prop: "locationCode",
+      minWidth: 110
+    },
+    { label: $t("common.columns.remark"), prop: "remark", minWidth: 100 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ContainerItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.container.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -99,9 +149,16 @@ export function useContainer() {
         const formInline = (
           options.props as { formInline: Partial<ContainerItem> }
         ).formInline;
-        const req = formInline.id ? updateContainer(formInline) : addContainer(formInline);
+        const req = formInline.id
+          ? updateContainer(formInline)
+          : addContainer(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.container.editSuccess")
+              : $t("master.container.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -110,11 +167,15 @@ export function useContainer() {
   }
 
   function handleDelete(row: ContainerItem) {
-    ElMessageBox.confirm(`确认删除容器「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.container.delTip", { code: row.code }),
+      $t("master.container.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteContainer([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

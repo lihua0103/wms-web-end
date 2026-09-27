@@ -2,11 +2,14 @@
  * WMS 业务字典（前端本地字典）
  * 后端就绪后可切换为 /wms/system/dict 接口下发，页面代码无需变更（仅需替换取值处）。
  * tag 为 el-tag 的 type：'' | 'success' | 'warning' | 'danger' | 'info'
+ * label 走 i18n（src/locales/*.yaml 的 dict 分组），切换语言后整页刷新重建。
  */
+import { $t } from "@/plugins/i18n";
+
 export interface DictItem {
   label: string;
   value: string | number;
-  tag?: "" | "success" | "warning" | "danger" | "info";
+  tag?: "" | "primary" | "success" | "warning" | "danger" | "info";
 }
 
 /** 由字典值取 label */
@@ -15,320 +18,727 @@ export function dictLabel(options: DictItem[], value: any): string {
   return hit ? hit.label : (value ?? "-");
 }
 
-/** 由字典值取 tag 类型 */
-export function dictTag(options: DictItem[], value: any) {
+/** 由字典值取 tag 类型（el-tag 的 type，不含空串） */
+export function dictTag(
+  options: DictItem[],
+  value: any
+): Exclude<DictItem["tag"], ""> {
   const hit = options.find(o => String(o.value) === String(value));
-  return hit?.tag ?? "info";
+  return (hit?.tag || "info") as Exclude<DictItem["tag"], "">;
 }
 
 // ========================= 通用 =========================
 
 /** 用户状态 */
 export const userStatusOptions: DictItem[] = [
-  { label: "启用", value: 1, tag: "success" },
-  { label: "停用", value: 0, tag: "danger" }
+  { label: $t("dict.userStatus.1"), value: 1, tag: "success" },
+  { label: $t("dict.userStatus.0"), value: 0, tag: "danger" }
 ];
 
 /** 通用单据状态（草稿-审核-执行-完成） */
 export const docStatusOptions: DictItem[] = [
-  { label: "草稿", value: "draft", tag: "info" },
-  { label: "待审核", value: "pending", tag: "warning" },
-  { label: "已审核", value: "approved", tag: "primary" },
-  { label: "执行中", value: "processing", tag: "primary" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" }
+  { label: $t("dict.docStatus.draft"), value: "draft", tag: "info" },
+  { label: $t("dict.docStatus.pending"), value: "pending", tag: "warning" },
+  { label: $t("dict.docStatus.approved"), value: "approved", tag: "primary" },
+  {
+    label: $t("dict.docStatus.processing"),
+    value: "processing",
+    tag: "primary"
+  },
+  { label: $t("dict.docStatus.finished"), value: "finished", tag: "success" },
+  { label: $t("dict.docStatus.cancelled"), value: "cancelled", tag: "danger" }
 ];
 
 // ========================= 主数据 =========================
 
 /** 库区类型 */
 export const zoneTypeOptions: DictItem[] = [
-  { label: "收货区", value: "receiving" },
-  { label: "存储区", value: "storage" },
-  { label: "拣货区", value: "picking" },
-  { label: "暂存区", value: "buffer" },
-  { label: "发货区", value: "shipping" },
-  { label: "退货区", value: "return" },
-  { label: "不合格品区", value: "reject" },
-  { label: "加工区", value: "process" }
+  { label: $t("dict.zoneType.receiving"), value: "receiving" },
+  { label: $t("dict.zoneType.storage"), value: "storage" },
+  { label: $t("dict.zoneType.picking"), value: "picking" },
+  { label: $t("dict.zoneType.buffer"), value: "buffer" },
+  { label: $t("dict.zoneType.shipping"), value: "shipping" },
+  { label: $t("dict.zoneType.return"), value: "return" },
+  { label: $t("dict.zoneType.reject"), value: "reject" },
+  { label: $t("dict.zoneType.process"), value: "process" }
 ];
 
 /** 库位类型 */
 export const locationTypeOptions: DictItem[] = [
-  { label: "地堆位", value: "floor", tag: "info" },
-  { label: "货架位", value: "shelf" },
-  { label: "立库位", value: "stereo", tag: "warning" },
-  { label: "拣货位", value: "pick", tag: "success" },
-  { label: "缓存位", value: "cache", tag: "info" }
+  { label: $t("dict.locationType.floor"), value: "floor", tag: "info" },
+  { label: $t("dict.locationType.shelf"), value: "shelf" },
+  { label: $t("dict.locationType.stereo"), value: "stereo", tag: "warning" },
+  { label: $t("dict.locationType.pick"), value: "pick", tag: "success" },
+  { label: $t("dict.locationType.cache"), value: "cache", tag: "info" }
 ];
 
 /** 物料分类 */
 export const materialCategoryOptions: DictItem[] = [
-  { label: "原材料", value: "raw" },
-  { label: "半成品", value: "semi" },
-  { label: "成品", value: "finished" },
-  { label: "包材", value: "packing" },
-  { label: "耗材", value: "consumable" },
-  { label: "备品备件", value: "spare" }
+  { label: $t("dict.materialCategory.raw"), value: "raw" },
+  { label: $t("dict.materialCategory.semi"), value: "semi" },
+  { label: $t("dict.materialCategory.finished"), value: "finished" },
+  { label: $t("dict.materialCategory.packing"), value: "packing" },
+  { label: $t("dict.materialCategory.consumable"), value: "consumable" },
+  { label: $t("dict.materialCategory.spare"), value: "spare" }
 ];
 
 /** 容器类型 */
 export const containerTypeOptions: DictItem[] = [
-  { label: "托盘", value: "pallet" },
-  { label: "周转箱", value: "box" },
-  { label: "料箱", value: "bin" },
-  { label: "笼车", value: "cage" }
+  { label: $t("dict.containerType.pallet"), value: "pallet" },
+  { label: $t("dict.containerType.box"), value: "box" },
+  { label: $t("dict.containerType.bin"), value: "bin" },
+  { label: $t("dict.containerType.cage"), value: "cage" }
 ];
 
 /** 容器状态 */
 export const containerStatusOptions: DictItem[] = [
-  { label: "空闲", value: "idle", tag: "info" },
-  { label: "占用", value: "occupied", tag: "primary" },
-  { label: "在库", value: "instock", tag: "success" },
-  { label: "发运", value: "shipping", tag: "warning" },
-  { label: "报废", value: "scrapped", tag: "danger" }
+  { label: $t("dict.containerStatus.idle"), value: "idle", tag: "info" },
+  {
+    label: $t("dict.containerStatus.occupied"),
+    value: "occupied",
+    tag: "primary"
+  },
+  {
+    label: $t("dict.containerStatus.instock"),
+    value: "instock",
+    tag: "success"
+  },
+  {
+    label: $t("dict.containerStatus.shipping"),
+    value: "shipping",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.containerStatus.scrapped"),
+    value: "scrapped",
+    tag: "danger"
+  }
 ];
 
 // ========================= 入库 =========================
 
 /** 入库单类型 */
 export const inboundTypeOptions: DictItem[] = [
-  { label: "采购入库", value: "purchase" },
-  { label: "退货入库", value: "return" },
-  { label: "调拨入库", value: "transfer" },
-  { label: "盘盈入库", value: "gain" },
-  { label: "其他入库", value: "other" }
+  { label: $t("dict.inboundType.purchase"), value: "purchase" },
+  { label: $t("dict.inboundType.return"), value: "return" },
+  { label: $t("dict.inboundType.transfer"), value: "transfer" },
+  { label: $t("dict.inboundType.gain"), value: "gain" },
+  { label: $t("dict.inboundType.other"), value: "other" }
 ];
 
 /** 入库单状态 */
 export const inboundStatusOptions: DictItem[] = [
-  { label: "待审核", value: "pending", tag: "warning" },
-  { label: "待到货", value: "waiting", tag: "info" },
-  { label: "收货中", value: "receiving", tag: "primary" },
-  { label: "待质检", value: "qc", tag: "warning" },
-  { label: "待上架", value: "putaway", tag: "warning" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" }
+  { label: $t("dict.inboundStatus.pending"), value: "pending", tag: "warning" },
+  { label: $t("dict.inboundStatus.waiting"), value: "waiting", tag: "info" },
+  {
+    label: $t("dict.inboundStatus.receiving"),
+    value: "receiving",
+    tag: "primary"
+  },
+  { label: $t("dict.inboundStatus.qc"), value: "qc", tag: "warning" },
+  { label: $t("dict.inboundStatus.putaway"), value: "putaway", tag: "warning" },
+  {
+    label: $t("dict.inboundStatus.finished"),
+    value: "finished",
+    tag: "success"
+  },
+  {
+    label: $t("dict.inboundStatus.cancelled"),
+    value: "cancelled",
+    tag: "danger"
+  }
 ];
 
 /** 质检结果 */
 export const qcResultOptions: DictItem[] = [
-  { label: "待检", value: "waiting", tag: "warning" },
-  { label: "合格", value: "pass", tag: "success" },
-  { label: "不合格", value: "fail", tag: "danger" },
-  { label: "让步接收", value: "concession", tag: "warning" }
+  { label: $t("dict.qcResult.waiting"), value: "waiting", tag: "warning" },
+  { label: $t("dict.qcResult.pass"), value: "pass", tag: "success" },
+  { label: $t("dict.qcResult.fail"), value: "fail", tag: "danger" },
+  { label: $t("dict.qcResult.concession"), value: "concession", tag: "warning" }
 ];
 
 // ========================= 出库 =========================
 
 /** 出库单类型 */
 export const outboundTypeOptions: DictItem[] = [
-  { label: "销售出库", value: "sales" },
-  { label: "调拨出库", value: "transfer" },
-  { label: "领用出库", value: "internal" },
-  { label: "报废出库", value: "scrap" },
-  { label: "其他出库", value: "other" }
+  { label: $t("dict.outboundType.sales"), value: "sales" },
+  { label: $t("dict.outboundType.transfer"), value: "transfer" },
+  { label: $t("dict.outboundType.internal"), value: "internal" },
+  { label: $t("dict.outboundType.scrap"), value: "scrap" },
+  { label: $t("dict.outboundType.other"), value: "other" }
 ];
 
 /** 出库单状态 */
 export const outboundStatusOptions: DictItem[] = [
-  { label: "待审核", value: "pending", tag: "warning" },
-  { label: "待分配", value: "allocating", tag: "info" },
-  { label: "待拣货", value: "picking_wait", tag: "info" },
-  { label: "拣货中", value: "picking", tag: "primary" },
-  { label: "待复核", value: "review", tag: "warning" },
-  { label: "待发货", value: "shipping_wait", tag: "warning" },
-  { label: "已发货", value: "shipped", tag: "success" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" },
-  { label: "缺货", value: "stockout", tag: "danger" }
+  {
+    label: $t("dict.outboundStatus.pending"),
+    value: "pending",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.outboundStatus.allocating"),
+    value: "allocating",
+    tag: "info"
+  },
+  {
+    label: $t("dict.outboundStatus.picking_wait"),
+    value: "picking_wait",
+    tag: "info"
+  },
+  {
+    label: $t("dict.outboundStatus.picking"),
+    value: "picking",
+    tag: "primary"
+  },
+  { label: $t("dict.outboundStatus.review"), value: "review", tag: "warning" },
+  {
+    label: $t("dict.outboundStatus.shipping_wait"),
+    value: "shipping_wait",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.outboundStatus.shipped"),
+    value: "shipped",
+    tag: "success"
+  },
+  {
+    label: $t("dict.outboundStatus.finished"),
+    value: "finished",
+    tag: "success"
+  },
+  {
+    label: $t("dict.outboundStatus.cancelled"),
+    value: "cancelled",
+    tag: "danger"
+  },
+  {
+    label: $t("dict.outboundStatus.stockout"),
+    value: "stockout",
+    tag: "danger"
+  }
 ];
 
 /** 优先级 */
 export const priorityOptions: DictItem[] = [
-  { label: "紧急", value: "urgent", tag: "danger" },
-  { label: "高", value: "high", tag: "warning" },
-  { label: "普通", value: "normal", tag: "info" },
-  { label: "低", value: "low", tag: "info" }
+  { label: $t("dict.priority.urgent"), value: "urgent", tag: "danger" },
+  { label: $t("dict.priority.high"), value: "high", tag: "warning" },
+  { label: $t("dict.priority.normal"), value: "normal", tag: "info" },
+  { label: $t("dict.priority.low"), value: "low", tag: "info" }
 ];
 
 // ========================= 库存 =========================
 
 /** 库存状态 */
 export const stockStatusOptions: DictItem[] = [
-  { label: "合格", value: "qualified", tag: "success" },
-  { label: "待检", value: "inspecting", tag: "warning" },
-  { label: "冻结", value: "frozen", tag: "danger" },
-  { label: "不合格", value: "unqualified", tag: "danger" }
+  {
+    label: $t("dict.stockStatus.qualified"),
+    value: "qualified",
+    tag: "success"
+  },
+  {
+    label: $t("dict.stockStatus.inspecting"),
+    value: "inspecting",
+    tag: "warning"
+  },
+  { label: $t("dict.stockStatus.frozen"), value: "frozen", tag: "danger" },
+  {
+    label: $t("dict.stockStatus.unqualified"),
+    value: "unqualified",
+    tag: "danger"
+  }
 ];
 
 /** 移库类型 */
 export const moveTypeOptions: DictItem[] = [
-  { label: "库位移库", value: "location" },
-  { label: "容器移库", value: "container" },
-  { label: "仓库调拨", value: "transfer" }
+  { label: $t("dict.moveType.location"), value: "location" },
+  { label: $t("dict.moveType.container"), value: "container" },
+  { label: $t("dict.moveType.transfer"), value: "transfer" }
 ];
 
 /** 盘点状态 */
 export const stocktakeStatusOptions: DictItem[] = [
-  { label: "草稿", value: "draft", tag: "info" },
-  { label: "盘点中", value: "counting", tag: "primary" },
-  { label: "待处理差异", value: "diff", tag: "warning" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" }
+  { label: $t("dict.stocktakeStatus.draft"), value: "draft", tag: "info" },
+  {
+    label: $t("dict.stocktakeStatus.counting"),
+    value: "counting",
+    tag: "primary"
+  },
+  { label: $t("dict.stocktakeStatus.diff"), value: "diff", tag: "warning" },
+  {
+    label: $t("dict.stocktakeStatus.finished"),
+    value: "finished",
+    tag: "success"
+  },
+  {
+    label: $t("dict.stocktakeStatus.cancelled"),
+    value: "cancelled",
+    tag: "danger"
+  }
 ];
 
 /** 盘点方式 */
 export const stocktakeModeOptions: DictItem[] = [
-  { label: "全盘", value: "full" },
-  { label: "循环盘点", value: "cycle" },
-  { label: "抽盘", value: "spot" },
-  { label: "动碰盘点", value: "moving" }
+  { label: $t("dict.stocktakeMode.full"), value: "full" },
+  { label: $t("dict.stocktakeMode.cycle"), value: "cycle" },
+  { label: $t("dict.stocktakeMode.spot"), value: "spot" },
+  { label: $t("dict.stocktakeMode.moving"), value: "moving" }
 ];
 
 /** 库存事务类型（流水） */
 export const transactionTypeOptions: DictItem[] = [
-  { label: "收货入库", value: "receive", tag: "success" },
-  { label: "上架入库", value: "putaway", tag: "success" },
-  { label: "销售出库", value: "sales", tag: "danger" },
-  { label: "调拨出库", value: "transfer_out", tag: "danger" },
-  { label: "调拨入库", value: "transfer_in", tag: "success" },
-  { label: "移库", value: "move", tag: "primary" },
-  { label: "补货", value: "replenish", tag: "primary" },
-  { label: "盘点调整", value: "stocktake", tag: "warning" },
-  { label: "报溢", value: "gain", tag: "success" },
-  { label: "报损", value: "loss", tag: "danger" },
-  { label: "冻结", value: "freeze", tag: "warning" },
-  { label: "解冻", value: "unfreeze", tag: "success" }
+  {
+    label: $t("dict.transactionType.receive"),
+    value: "receive",
+    tag: "success"
+  },
+  {
+    label: $t("dict.transactionType.putaway"),
+    value: "putaway",
+    tag: "success"
+  },
+  { label: $t("dict.transactionType.sales"), value: "sales", tag: "danger" },
+  {
+    label: $t("dict.transactionType.transfer_out"),
+    value: "transfer_out",
+    tag: "danger"
+  },
+  {
+    label: $t("dict.transactionType.transfer_in"),
+    value: "transfer_in",
+    tag: "success"
+  },
+  { label: $t("dict.transactionType.move"), value: "move", tag: "primary" },
+  {
+    label: $t("dict.transactionType.replenish"),
+    value: "replenish",
+    tag: "primary"
+  },
+  {
+    label: $t("dict.transactionType.stocktake"),
+    value: "stocktake",
+    tag: "warning"
+  },
+  { label: $t("dict.transactionType.gain"), value: "gain", tag: "success" },
+  { label: $t("dict.transactionType.loss"), value: "loss", tag: "danger" },
+  { label: $t("dict.transactionType.freeze"), value: "freeze", tag: "warning" },
+  {
+    label: $t("dict.transactionType.unfreeze"),
+    value: "unfreeze",
+    tag: "success"
+  }
 ];
 
 /** 预警类型 */
 export const warningTypeOptions: DictItem[] = [
-  { label: "低于安全库存", value: "low", tag: "danger" },
-  { label: "超储", value: "over", tag: "warning" },
-  { label: "呆滞库存", value: "dead", tag: "info" },
-  { label: "临期", value: "expiring", tag: "warning" },
-  { label: "已过期", value: "expired", tag: "danger" }
+  { label: $t("dict.warningType.low"), value: "low", tag: "danger" },
+  { label: $t("dict.warningType.over"), value: "over", tag: "warning" },
+  { label: $t("dict.warningType.dead"), value: "dead", tag: "info" },
+  { label: $t("dict.warningType.expiring"), value: "expiring", tag: "warning" },
+  { label: $t("dict.warningType.expired"), value: "expired", tag: "danger" }
 ];
 
 /** 序列号状态 */
 export const serialStatusOptions: DictItem[] = [
-  { label: "在库", value: "instock", tag: "success" },
-  { label: "已分配", value: "allocated", tag: "warning" },
-  { label: "已出库", value: "outbound", tag: "info" },
-  { label: "已报废", value: "scrapped", tag: "danger" },
-  { label: "维修中", value: "repairing", tag: "warning" }
+  { label: $t("dict.serialStatus.instock"), value: "instock", tag: "success" },
+  {
+    label: $t("dict.serialStatus.allocated"),
+    value: "allocated",
+    tag: "warning"
+  },
+  { label: $t("dict.serialStatus.outbound"), value: "outbound", tag: "info" },
+  { label: $t("dict.serialStatus.scrapped"), value: "scrapped", tag: "danger" },
+  {
+    label: $t("dict.serialStatus.repairing"),
+    value: "repairing",
+    tag: "warning"
+  }
 ];
 
 // ========================= 库内作业 =========================
 
 /** 任务类型 */
 export const taskTypeOptions: DictItem[] = [
-  { label: "收货", value: "receive" },
-  { label: "质检", value: "qc" },
-  { label: "上架", value: "putaway" },
-  { label: "补货", value: "replenish" },
-  { label: "拣货", value: "picking" },
-  { label: "复核", value: "review" },
-  { label: "移库", value: "move" },
-  { label: "盘点", value: "stocktake" }
+  { label: $t("dict.taskType.receive"), value: "receive" },
+  { label: $t("dict.taskType.qc"), value: "qc" },
+  { label: $t("dict.taskType.putaway"), value: "putaway" },
+  { label: $t("dict.taskType.replenish"), value: "replenish" },
+  { label: $t("dict.taskType.picking"), value: "picking" },
+  { label: $t("dict.taskType.review"), value: "review" },
+  { label: $t("dict.taskType.move"), value: "move" },
+  { label: $t("dict.taskType.stocktake"), value: "stocktake" }
 ];
 
 /** 任务状态 */
 export const taskStatusOptions: DictItem[] = [
-  { label: "待分配", value: "pending", tag: "info" },
-  { label: "执行中", value: "processing", tag: "primary" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" },
-  { label: "异常", value: "error", tag: "danger" }
+  { label: $t("dict.taskStatus.pending"), value: "pending", tag: "info" },
+  {
+    label: $t("dict.taskStatus.processing"),
+    value: "processing",
+    tag: "primary"
+  },
+  { label: $t("dict.taskStatus.finished"), value: "finished", tag: "success" },
+  { label: $t("dict.taskStatus.cancelled"), value: "cancelled", tag: "danger" },
+  { label: $t("dict.taskStatus.error"), value: "error", tag: "danger" }
 ];
 
 // ========================= 运输 =========================
 
 /** 承运商类型 */
 export const carrierTypeOptions: DictItem[] = [
-  { label: "自有车队", value: "self" },
-  { label: "第三方物流", value: "third" }
+  { label: $t("dict.carrierType.self"), value: "self" },
+  { label: $t("dict.carrierType.third"), value: "third" }
 ];
 
 /** 配送单状态 */
 export const deliveryStatusOptions: DictItem[] = [
-  { label: "待调度", value: "pending", tag: "info" },
-  { label: "已调度", value: "dispatched", tag: "primary" },
-  { label: "配送中", value: "delivering", tag: "warning" },
-  { label: "已签收", value: "signed", tag: "success" },
-  { label: "异常", value: "error", tag: "danger" }
+  { label: $t("dict.deliveryStatus.pending"), value: "pending", tag: "info" },
+  {
+    label: $t("dict.deliveryStatus.dispatched"),
+    value: "dispatched",
+    tag: "primary"
+  },
+  {
+    label: $t("dict.deliveryStatus.delivering"),
+    value: "delivering",
+    tag: "warning"
+  },
+  { label: $t("dict.deliveryStatus.signed"), value: "signed", tag: "success" },
+  { label: $t("dict.deliveryStatus.error"), value: "error", tag: "danger" }
 ];
 
 // ========================= 计费 =========================
 
 /** 费用类型 */
 export const feeTypeOptions: DictItem[] = [
-  { label: "仓储费", value: "storage" },
-  { label: "操作费", value: "operation" },
-  { label: "装卸费", value: "handling" },
-  { label: "耗材费", value: "material" },
-  { label: "运输费", value: "transport" }
+  { label: $t("dict.feeType.storage"), value: "storage" },
+  { label: $t("dict.feeType.operation"), value: "operation" },
+  { label: $t("dict.feeType.handling"), value: "handling" },
+  { label: $t("dict.feeType.material"), value: "material" },
+  { label: $t("dict.feeType.transport"), value: "transport" }
 ];
 
 /** 账单状态 */
 export const billStatusOptions: DictItem[] = [
-  { label: "待确认", value: "pending", tag: "warning" },
-  { label: "已确认", value: "confirmed", tag: "primary" },
-  { label: "已开票", value: "invoiced", tag: "success" },
-  { label: "已结算", value: "settled", tag: "success" },
-  { label: "异议中", value: "disputed", tag: "danger" }
+  { label: $t("dict.billStatus.pending"), value: "pending", tag: "warning" },
+  {
+    label: $t("dict.billStatus.confirmed"),
+    value: "confirmed",
+    tag: "primary"
+  },
+  { label: $t("dict.billStatus.invoiced"), value: "invoiced", tag: "success" },
+  { label: $t("dict.billStatus.settled"), value: "settled", tag: "success" },
+  { label: $t("dict.billStatus.disputed"), value: "disputed", tag: "danger" }
 ];
 
 // ========================= 设备集成 =========================
 
 /** 设备类型 */
 export const deviceTypeOptions: DictItem[] = [
-  { label: "AGV 小车", value: "agv" },
-  { label: "堆垛机", value: "stacker" },
-  { label: "输送线", value: "conveyor" },
-  { label: "电子标签", value: "ptl" },
-  { label: "分拣机", value: "sorter" },
-  { label: "自动库门", value: "door" }
+  { label: $t("dict.deviceType.agv"), value: "agv" },
+  { label: $t("dict.deviceType.stacker"), value: "stacker" },
+  { label: $t("dict.deviceType.conveyor"), value: "conveyor" },
+  { label: $t("dict.deviceType.ptl"), value: "ptl" },
+  { label: $t("dict.deviceType.sorter"), value: "sorter" },
+  { label: $t("dict.deviceType.door"), value: "door" }
 ];
 
 /** 设备状态 */
 export const deviceStatusOptions: DictItem[] = [
-  { label: "在线", value: "online", tag: "success" },
-  { label: "离线", value: "offline", tag: "info" },
-  { label: "故障", value: "error", tag: "danger" },
-  { label: "维修中", value: "repairing", tag: "warning" },
-  { label: "充电中", value: "charging", tag: "warning" },
-  { label: "作业中", value: "working", tag: "primary" }
+  { label: $t("dict.deviceStatus.online"), value: "online", tag: "success" },
+  { label: $t("dict.deviceStatus.offline"), value: "offline", tag: "info" },
+  { label: $t("dict.deviceStatus.error"), value: "error", tag: "danger" },
+  {
+    label: $t("dict.deviceStatus.repairing"),
+    value: "repairing",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.deviceStatus.charging"),
+    value: "charging",
+    tag: "warning"
+  },
+  { label: $t("dict.deviceStatus.working"), value: "working", tag: "primary" }
 ];
 
 /** 设备任务状态 */
 export const deviceTaskStatusOptions: DictItem[] = [
-  { label: "排队中", value: "queued", tag: "info" },
-  { label: "执行中", value: "executing", tag: "primary" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "失败", value: "failed", tag: "danger" },
-  { label: "已取消", value: "cancelled", tag: "info" }
+  { label: $t("dict.deviceTaskStatus.queued"), value: "queued", tag: "info" },
+  {
+    label: $t("dict.deviceTaskStatus.executing"),
+    value: "executing",
+    tag: "primary"
+  },
+  {
+    label: $t("dict.deviceTaskStatus.finished"),
+    value: "finished",
+    tag: "success"
+  },
+  { label: $t("dict.deviceTaskStatus.failed"), value: "failed", tag: "danger" },
+  {
+    label: $t("dict.deviceTaskStatus.cancelled"),
+    value: "cancelled",
+    tag: "info"
+  }
 ];
 
 /** 集成系统类型 */
 export const integrationTypeOptions: DictItem[] = [
-  { label: "ERP", value: "erp" },
-  { label: "OMS", value: "oms" },
-  { label: "TMS", value: "tms" },
-  { label: "WCS 设备层", value: "wcs" },
-  { label: "电商平台", value: "ecom" }
+  { label: $t("dict.integrationType.erp"), value: "erp" },
+  { label: $t("dict.integrationType.oms"), value: "oms" },
+  { label: $t("dict.integrationType.tms"), value: "tms" },
+  { label: $t("dict.integrationType.wcs"), value: "wcs" },
+  { label: $t("dict.integrationType.ecom"), value: "ecom" }
 ];
 
 /** 接口方向 */
 export const apiDirectionOptions: DictItem[] = [
-  { label: "下行（外部→WMS）", value: "down" },
-  { label: "上行（WMS→外部）", value: "up" }
+  { label: $t("dict.apiDirection.down"), value: "down" },
+  { label: $t("dict.apiDirection.up"), value: "up" }
 ];
 
 /** 接口状态 */
 export const apiLogStatusOptions: DictItem[] = [
-  { label: "成功", value: "success", tag: "success" },
-  { label: "失败", value: "fail", tag: "danger" },
-  { label: "重试中", value: "retry", tag: "warning" }
+  { label: $t("dict.apiLogStatus.success"), value: "success", tag: "success" },
+  { label: $t("dict.apiLogStatus.fail"), value: "fail", tag: "danger" },
+  { label: $t("dict.apiLogStatus.retry"), value: "retry", tag: "warning" }
+];
+
+// ========================= 海关对接 =========================
+
+/** 账册类型 */
+export const customsLedgerTypeOptions: DictItem[] = [
+  {
+    label: $t("dict.customsLedgerType.bonded_logistics"),
+    value: "bonded_logistics"
+  },
+  {
+    label: $t("dict.customsLedgerType.process_trade"),
+    value: "process_trade"
+  },
+  {
+    label: $t("dict.customsLedgerType.export_warehouse"),
+    value: "export_warehouse"
+  }
+];
+
+/** 账册状态 */
+export const customsLedgerStatusOptions: DictItem[] = [
+  {
+    label: $t("dict.customsLedgerStatus.active"),
+    value: "active",
+    tag: "success"
+  },
+  {
+    label: $t("dict.customsLedgerStatus.changing"),
+    value: "changing",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.customsLedgerStatus.expired"),
+    value: "expired",
+    tag: "danger"
+  },
+  {
+    label: $t("dict.customsLedgerStatus.cancelled"),
+    value: "cancelled",
+    tag: "info"
+  }
+];
+
+/** 监管方式 */
+export const supervisionModeOptions: DictItem[] = [
+  { label: $t("dict.supervisionMode.1210"), value: "1210" },
+  { label: $t("dict.supervisionMode.1239"), value: "1239" },
+  { label: $t("dict.supervisionMode.1233"), value: "1233" },
+  { label: $t("dict.supervisionMode.0110"), value: "0110" },
+  { label: $t("dict.supervisionMode.5034"), value: "5034" }
+];
+
+/** 核注清单类型 */
+export const customsVerifyTypeOptions: DictItem[] = [
+  { label: $t("dict.customsVerifyType.in"), value: "in", tag: "success" },
+  { label: $t("dict.customsVerifyType.out"), value: "out", tag: "warning" }
+];
+
+/** 核注清单状态 */
+export const customsVerifyStatusOptions: DictItem[] = [
+  { label: $t("dict.customsVerifyStatus.draft"), value: "draft", tag: "info" },
+  {
+    label: $t("dict.customsVerifyStatus.declared"),
+    value: "declared",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.customsVerifyStatus.passed"),
+    value: "passed",
+    tag: "primary"
+  },
+  {
+    label: $t("dict.customsVerifyStatus.deducted"),
+    value: "deducted",
+    tag: "success"
+  },
+  {
+    label: $t("dict.customsVerifyStatus.refused"),
+    value: "refused",
+    tag: "danger"
+  },
+  {
+    label: $t("dict.customsVerifyStatus.cancelled"),
+    value: "cancelled",
+    tag: "info"
+  }
+];
+
+/** 核放单方向 */
+export const releaseDirectionOptions: DictItem[] = [
+  { label: $t("dict.releaseDirection.in"), value: "in", tag: "success" },
+  { label: $t("dict.releaseDirection.out"), value: "out", tag: "warning" }
+];
+
+/** 核放单状态 */
+export const releaseStatusOptions: DictItem[] = [
+  { label: $t("dict.releaseStatus.draft"), value: "draft", tag: "info" },
+  {
+    label: $t("dict.releaseStatus.declared"),
+    value: "declared",
+    tag: "warning"
+  },
+  {
+    label: $t("dict.releaseStatus.released"),
+    value: "released",
+    tag: "primary"
+  },
+  { label: $t("dict.releaseStatus.crossed"), value: "crossed", tag: "success" },
+  {
+    label: $t("dict.releaseStatus.cancelled"),
+    value: "cancelled",
+    tag: "danger"
+  }
+];
+
+/** 三单类型 */
+export const tripleDocTypeOptions: DictItem[] = [
+  { label: $t("dict.tripleDocType.order"), value: "order", tag: "primary" },
+  { label: $t("dict.tripleDocType.payment"), value: "payment", tag: "warning" },
+  {
+    label: $t("dict.tripleDocType.logistics"),
+    value: "logistics",
+    tag: "success"
+  }
+];
+
+/** 三单对碰状态 */
+export const tripleStatusOptions: DictItem[] = [
+  { label: $t("dict.tripleStatus.pending"), value: "pending", tag: "info" },
+  { label: $t("dict.tripleStatus.pushed"), value: "pushed", tag: "warning" },
+  { label: $t("dict.tripleStatus.matched"), value: "matched", tag: "success" },
+  { label: $t("dict.tripleStatus.failed"), value: "failed", tag: "danger" }
+];
+
+/** 跨境电商平台 */
+export const triplePlatformOptions: DictItem[] = [
+  { label: $t("dict.triplePlatform.tmall"), value: "tmall" },
+  { label: $t("dict.triplePlatform.jd"), value: "jd" },
+  { label: $t("dict.triplePlatform.pdd"), value: "pdd" },
+  { label: $t("dict.triplePlatform.douyin"), value: "douyin" },
+  { label: $t("dict.triplePlatform.kaola"), value: "kaola" }
+];
+
+/** 海关报文类型 */
+export const customsMsgTypeOptions: DictItem[] = [
+  { label: $t("dict.customsMsgType.verify"), value: "verify" },
+  { label: $t("dict.customsMsgType.release"), value: "release" },
+  { label: $t("dict.customsMsgType.triple"), value: "triple" },
+  { label: $t("dict.customsMsgType.summary"), value: "summary" },
+  { label: $t("dict.customsMsgType.ledger"), value: "ledger" }
+];
+
+/** 海关申报通道 */
+export const customsChannelOptions: DictItem[] = [
+  { label: $t("dict.customsChannel.single_window"), value: "single_window" },
+  {
+    label: $t("dict.customsChannel.golden_phase2"),
+    value: "golden_phase2"
+  },
+  { label: $t("dict.customsChannel.ceb_platform"), value: "ceb_platform" }
+];
+
+/** 报文方向 */
+export const customsMsgDirectionOptions: DictItem[] = [
+  { label: $t("dict.customsMsgDirection.up"), value: "up" },
+  { label: $t("dict.customsMsgDirection.down"), value: "down" }
+];
+
+/** 报文状态 */
+export const customsMsgStatusOptions: DictItem[] = [
+  {
+    label: $t("dict.customsMsgStatus.success"),
+    value: "success",
+    tag: "success"
+  },
+  { label: $t("dict.customsMsgStatus.fail"), value: "fail", tag: "danger" },
+  {
+    label: $t("dict.customsMsgStatus.pending"),
+    value: "pending",
+    tag: "warning"
+  },
+  { label: $t("dict.customsMsgStatus.resend"), value: "resend", tag: "warning" }
+];
+
+// ========================= 智能体 =========================
+
+/** 智能体工作流业务场景 */
+export const aiSceneOptions: DictItem[] = [
+  { label: $t("dict.aiScene.inventory"), value: "inventory" },
+  { label: $t("dict.aiScene.operation"), value: "operation" },
+  { label: $t("dict.aiScene.transport"), value: "transport" },
+  { label: $t("dict.aiScene.billing"), value: "billing" },
+  { label: $t("dict.aiScene.customs"), value: "customs" },
+  { label: $t("dict.aiScene.report"), value: "report" }
+];
+
+/** 智能体工作流触发方式 */
+export const aiTriggerOptions: DictItem[] = [
+  { label: $t("dict.aiTrigger.manual"), value: "manual", tag: "info" },
+  { label: $t("dict.aiTrigger.scheduled"), value: "scheduled", tag: "warning" },
+  { label: $t("dict.aiTrigger.event"), value: "event", tag: "success" }
+];
+
+/** 智能体运行状态 */
+export const aiRunStatusOptions: DictItem[] = [
+  { label: $t("dict.aiRunStatus.running"), value: "running", tag: "warning" },
+  { label: $t("dict.aiRunStatus.success"), value: "success", tag: "success" },
+  { label: $t("dict.aiRunStatus.failed"), value: "failed", tag: "danger" }
+];
+
+/** 智能体工作流节点类型 */
+export const aiNodeTypeOptions: DictItem[] = [
+  { label: $t("dict.aiNodeType.start"), value: "start", tag: "info" },
+  { label: $t("dict.aiNodeType.llm"), value: "llm", tag: "success" },
+  { label: $t("dict.aiNodeType.tool"), value: "tool", tag: "warning" },
+  { label: $t("dict.aiNodeType.condition"), value: "condition", tag: "danger" },
+  { label: $t("dict.aiNodeType.end"), value: "end", tag: "info" }
+];
+
+/** 智能体可用模型（型号名不翻译） */
+export const aiModelOptions: DictItem[] = [
+  { label: "GLM-4.7", value: "glm-4.7" },
+  { label: "GLM-4.5-Air", value: "glm-4.5-air" },
+  { label: "DeepSeek-V3.2", value: "deepseek-v3.2" },
+  { label: "Qwen3-Max", value: "qwen3-max" }
+];
+
+/** 智能体工作流启停状态 */
+export const aiWorkflowStatusOptions: DictItem[] = [
+  {
+    label: $t("dict.aiWorkflowStatus.enabled"),
+    value: "enabled",
+    tag: "success"
+  },
+  {
+    label: $t("dict.aiWorkflowStatus.disabled"),
+    value: "disabled",
+    tag: "info"
+  }
 ];

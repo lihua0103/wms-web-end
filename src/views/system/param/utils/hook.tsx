@@ -2,16 +2,23 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getParamPage, addParam, updateParam, deleteParam } from "@/api/system";
 import type { ParamItem } from "@/api/system";
 import type { DictItem } from "@/constants/wms";
 import { dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 /** 参数来源选项 */
 export const builtInOptions: DictItem[] = [
-  { label: "内置", value: 1, tag: "warning" },
-  { label: "自定义", value: 0, tag: "info" }
+  { label: $t("system.param.builtIn"), value: 1, tag: "warning" },
+  { label: $t("system.param.custom"), value: 0, tag: "info" }
 ];
 
 export function useParams() {
@@ -29,11 +36,11 @@ export function useParams() {
   });
 
   const columns: TableColumnList = [
-    { label: "参数名称", prop: "name", minWidth: 140 },
-    { label: "参数键", prop: "key", minWidth: 150 },
-    { label: "参数值", prop: "value", minWidth: 100 },
+    { label: $t("system.param.name"), prop: "name", minWidth: 140 },
+    { label: $t("system.param.key"), prop: "key", minWidth: 150 },
+    { label: $t("system.param.value"), prop: "value", minWidth: 100 },
     {
-      label: "来源",
+      label: $t("system.param.source"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(builtInOptions, row.builtIn)}>
@@ -41,10 +48,38 @@ export function useParams() {
         </el-tag>
       )
     },
-    { label: "备注", prop: "remark", minWidth: 110 },
-    { label: "更新时间", prop: "updatedAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 160, slot: "operation" }
+    { label: $t("common.columns.remark"), prop: "remark", minWidth: 110 },
+    {
+      label: $t("common.columns.updateTime"),
+      prop: "updatedAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ParamItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("system.param.editParam"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -102,7 +137,12 @@ export function useParams() {
           ? updateParam(formInline)
           : addParam(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("system.param.editSuccess")
+              : $t("system.param.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -111,11 +151,15 @@ export function useParams() {
   }
 
   function handleDelete(row: ParamItem) {
-    ElMessageBox.confirm(`确认删除参数「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("system.param.deleteConfirm", { name: row.name }),
+      $t("system.param.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteParam([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

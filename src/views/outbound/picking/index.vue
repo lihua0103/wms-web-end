@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import { usePicking } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
@@ -7,8 +8,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { taskStatusOptions } from "@/constants/wms";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import VideoPlay from "~icons/ep/video-play";
-import CircleCheck from "~icons/ep/circle-check";
 
 defineOptions({ name: "OutboundPicking" });
 
@@ -22,16 +21,14 @@ const {
   pagination,
   onSearch,
   resetForm,
-  handleStart,
-  handleFinish,
   handleSizeChange,
   handleCurrentChange
 } = usePicking();
 
 const warehouseOptions = [
-  { value: "WH001", label: "WH001 上海主仓" },
-  { value: "WH002", label: "WH002 广州华南仓" },
-  { value: "WH003", label: "WH003 成都西南仓" }
+  { value: "WH001", label: $t("outbound.picking.whShanghai") },
+  { value: "WH002", label: $t("outbound.picking.whGuangzhou") },
+  { value: "WH003", label: $t("outbound.picking.whChengdu") }
 ];
 </script>
 
@@ -43,26 +40,68 @@ const warehouseOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="任务号" prop="taskNo">
-        <el-input v-model="form.taskNo" placeholder="任务号" clearable style="width: 150px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('outbound.picking.taskNo')" prop="taskNo">
+        <el-input
+          v-model="form.taskNo"
+          :placeholder="$t('outbound.picking.taskNo')"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="仓库" prop="warehouseCode">
-        <el-select v-model="form.warehouseCode" placeholder="全部" clearable style="width: 150px">
-          <el-option v-for="w in warehouseOptions" :key="w.value" :label="w.label" :value="w.value" />
+      <el-form-item
+        :label="$t('common.columns.warehouse')"
+        prop="warehouseCode"
+      >
+        <el-select
+          v-model="form.warehouseCode"
+          :placeholder="$t('outbound.picking.all')"
+          clearable
+          style="width: 150px"
+        >
+          <el-option
+            v-for="w in warehouseOptions"
+            :key="w.value"
+            :label="w.label"
+            :value="w.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in taskStatusOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('outbound.picking.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in taskStatusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="拣货任务" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('outbound.picking.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -78,28 +117,7 @@ const warehouseOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="row.status === 'pending'"
-              link
-              type="primary"
-              :icon="useRenderIcon(VideoPlay)"
-              @click="handleStart(row)"
-            >
-              开始
-            </el-button>
-            <el-button
-              v-if="row.status === 'processing'"
-              link
-              type="success"
-              :icon="useRenderIcon(CircleCheck)"
-              @click="handleFinish(row)"
-            >
-              完成
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

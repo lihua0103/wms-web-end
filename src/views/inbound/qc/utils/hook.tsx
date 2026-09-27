@@ -1,9 +1,15 @@
 import { reactive, ref, onMounted } from "vue";
+import { $t } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { message } from "@/utils/message";
 import { getQcPage, submitQc } from "@/api/inbound";
 import type { QcItem } from "@/api/inbound";
 import { qcResultOptions, dictTag, dictLabel } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
 import formComp from "../form.vue";
 
 export function useQc() {
@@ -23,14 +29,22 @@ export function useQc() {
   });
 
   const columns: TableColumnList = [
-    { label: "质检单号", prop: "code", minWidth: 130 },
-    { label: "收货单号", prop: "receiptCode", minWidth: 130 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "批次", prop: "batchNo", minWidth: 80 },
-    { label: "质检数量", prop: "qcQty", minWidth: 80 },
+    { label: $t("inbound.qc.qcNo"), prop: "code", minWidth: 130 },
+    { label: $t("inbound.qc.receiptNo"), prop: "receiptCode", minWidth: 130 },
     {
-      label: "质检结果",
+      label: $t("inbound.qc.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("inbound.qc.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("inbound.qc.batch"), prop: "batchNo", minWidth: 80 },
+    { label: $t("inbound.qc.qcQty"), prop: "qcQty", minWidth: 80 },
+    {
+      label: $t("inbound.qc.qcResult"),
       minWidth: 90,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(qcResultOptions, row.qcResult)}>
@@ -38,10 +52,32 @@ export function useQc() {
         </el-tag>
       )
     },
-    { label: "质检员", prop: "qcUser", minWidth: 70 },
-    { label: "质检时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 100, slot: "operation" }
+    { label: $t("inbound.qc.qcUser"), prop: "qcUser", minWidth: 70 },
+    { label: $t("inbound.qc.qcTime"), prop: "createdAt", minWidth: 140 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: QcItem): TableOperationButton[] {
+    return [
+      {
+        label: $t(
+          row.qcResult === "waiting"
+            ? "inbound.qc.enterResult"
+            : "inbound.qc.editResult"
+        ),
+        icon: EditPen,
+        onClick: () => openSubmitDialog(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -76,7 +112,7 @@ export function useQc() {
   /** 录入质检结果 */
   function openSubmitDialog(row: QcItem) {
     addDialog({
-      title: "录入质检结果",
+      title: $t("inbound.qc.enterTitle"),
       width: "36%",
       draggable: true,
       closeOnClickModal: false,
@@ -96,7 +132,7 @@ export function useQc() {
           }
         ).formInline;
         submitQc(formInline).then(() => {
-          message("质检结果已提交", { type: "success" });
+          message($t("inbound.qc.submitSuccess"), { type: "success" });
           done();
           onSearch();
         });

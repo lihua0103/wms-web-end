@@ -1,18 +1,26 @@
 import { reactive, ref, onMounted } from "vue";
+import { $t } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { message } from "@/utils/message";
 import { getPackingPage, checkPacking } from "@/api/outbound";
 import type { PackingItem } from "@/api/outbound";
-import { dictTag } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
 import formComp from "../form.vue";
 
-const statusMap: Record<string, { label: string; tag: string }> = {
-  waiting: { label: "待复核", tag: "warning" },
-  processing: { label: "复核中", tag: "primary" },
-  finished: { label: "已完成", tag: "success" }
-};
-
 export function usePacking() {
+  const statusMap: Record<string, { label: string; tag: string }> = {
+    waiting: { label: $t("outbound.packing.statusWaiting"), tag: "warning" },
+    processing: {
+      label: $t("outbound.packing.statusProcessing"),
+      tag: "primary"
+    },
+    finished: { label: $t("outbound.packing.statusFinished"), tag: "success" }
+  };
+
   const form = reactive({
     code: "",
     warehouseCode: "",
@@ -28,17 +36,25 @@ export function usePacking() {
   });
 
   const columns: TableColumnList = [
-    { label: "复核单号", prop: "code", minWidth: 130 },
-    { label: "出库单号", prop: "orderCode", minWidth: 130 },
-    { label: "波次号", prop: "waveCode", minWidth: 130 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 110 },
-    { label: "应复核", prop: "qty", minWidth: 70 },
-    { label: "已复核", prop: "checkedQty", minWidth: 70 },
-    { label: "重量(kg)", prop: "weight", minWidth: 80 },
-    { label: "箱号", prop: "boxNo", minWidth: 100 },
+    { label: $t("outbound.packing.code"), prop: "code", minWidth: 130 },
+    { label: $t("outbound.packing.orderNo"), prop: "orderCode", minWidth: 130 },
+    { label: $t("outbound.packing.waveNo"), prop: "waveCode", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("outbound.packing.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("outbound.packing.materialName"),
+      prop: "materialName",
+      minWidth: 110
+    },
+    { label: $t("outbound.packing.expected"), prop: "qty", minWidth: 70 },
+    { label: $t("outbound.packing.checked"), prop: "checkedQty", minWidth: 70 },
+    { label: $t("outbound.packing.weight"), prop: "weight", minWidth: 80 },
+    { label: $t("outbound.packing.boxNo"), prop: "boxNo", minWidth: 100 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={statusMap[row.status]?.tag || "info"}>
@@ -46,9 +62,29 @@ export function usePacking() {
         </el-tag>
       )
     },
-    { label: "操作员", prop: "operator", minWidth: 70 },
-    { fixed: "right", label: "操作", width: 100, slot: "operation" }
+    { label: $t("outbound.packing.operator"), prop: "operator", minWidth: 70 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: PackingItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status !== "finished") {
+      buttons.push({
+        label: $t("outbound.packing.review"),
+        icon: EditPen,
+        onClick: () => openCheckDialog(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -83,7 +119,7 @@ export function usePacking() {
   /** 复核打包 */
   function openCheckDialog(row: PackingItem) {
     addDialog({
-      title: "复核打包",
+      title: $t("outbound.packing.title"),
       width: "34%",
       draggable: true,
       closeOnClickModal: false,
@@ -104,7 +140,7 @@ export function usePacking() {
           }
         ).formInline;
         checkPacking(formInline).then(() => {
-          message("复核完成", { type: "success" });
+          message($t("outbound.packing.reviewed"), { type: "success" });
           done();
           onSearch();
         });

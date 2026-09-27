@@ -47,6 +47,7 @@ export interface ProcessOrderItem {
   materialName: string;
   inputQty: number;
   outputQty: number;
+  remark?: string;
   status: string; // pending/processing/finished/cancelled
   createdAt?: string;
 }
@@ -68,51 +69,93 @@ export interface CrossdockItem {
 // ========================= 任务池 =========================
 
 export const getTaskPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<TaskItem>>>("get", "/wms/operation/task/page", { params });
+  http.request<ApiResult<PageResult<TaskItem>>>(
+    "get",
+    "/wms/operation/task/page",
+    { params }
+  );
 
 /** 分配任务 */
 export const assignTask = (id: number, assignee: string) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/task/assign", { data: { id, assignee } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/task/assign", {
+    data: { id, assignee }
+  });
 
 /** 取消任务 */
 export const cancelTask = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/task/cancel", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/task/cancel", {
+    data: { id }
+  });
 
 // ========================= 补货管理 =========================
 
 export const getReplenishPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ReplenishItem>>>("get", "/wms/operation/replenish/page", { params });
+  http.request<ApiResult<PageResult<ReplenishItem>>>(
+    "get",
+    "/wms/operation/replenish/page",
+    { params }
+  );
 
 export const addReplenish = (data: Partial<ReplenishItem>) =>
-  http.request<ApiResult<ReplenishItem>>("post", "/wms/operation/replenish/add", { data });
+  http.request<ApiResult<ReplenishItem>>(
+    "post",
+    "/wms/operation/replenish/add",
+    { data }
+  );
 
 export const finishReplenish = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/replenish/finish", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/replenish/finish", {
+    data: { id }
+  });
 
 // ========================= 加工管理 =========================
 
 export const getProcessPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ProcessOrderItem>>>("get", "/wms/operation/process/page", { params });
+  http.request<ApiResult<PageResult<ProcessOrderItem>>>(
+    "get",
+    "/wms/operation/process/page",
+    { params }
+  );
 
 export const addProcess = (data: Partial<ProcessOrderItem>) =>
-  http.request<ApiResult<ProcessOrderItem>>("post", "/wms/operation/process/add", { data });
+  http.request<ApiResult<ProcessOrderItem>>(
+    "post",
+    "/wms/operation/process/add",
+    { data }
+  );
 
 export const updateProcess = (data: Partial<ProcessOrderItem>) =>
-  http.request<ApiResult<ProcessOrderItem>>("post", "/wms/operation/process/update", { data });
+  http.request<ApiResult<ProcessOrderItem>>(
+    "post",
+    "/wms/operation/process/update",
+    { data }
+  );
 
 export const deleteProcess = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/process/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/process/delete", {
+    data: { ids }
+  });
 
 export const startProcess = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/process/start", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/process/start", {
+    data: { id }
+  });
 
 export const finishProcess = (id: number, outputQty: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/process/finish", { data: { id, outputQty } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/process/finish", {
+    data: { id, outputQty }
+  });
 
 // ========================= 越库作业 =========================
 
 export const getCrossdockPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<CrossdockItem>>>("get", "/wms/operation/crossdock/page", { params });
+  http.request<ApiResult<PageResult<CrossdockItem>>>(
+    "get",
+    "/wms/operation/crossdock/page",
+    { params }
+  );
 
 export const executeCrossdock = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/operation/crossdock/execute", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/operation/crossdock/execute", {
+    data: { id }
+  });

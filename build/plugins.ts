@@ -11,9 +11,11 @@ import { configCompressPlugin } from "./compress";
 import removeNoMatch from "vite-plugin-router-warn";
 import { visualizer } from "rollup-plugin-visualizer";
 import removeConsole from "vite-plugin-remove-console";
-import { codeInspectorPlugin } from "code-inspector-plugin";
+// code-inspector 已禁用（见下方注释），保留此行以备恢复
+// import { codeInspectorPlugin } from "code-inspector-plugin";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
-import { root } from "./utils";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
+import { root, pathResolve } from "./utils";
 
 export function getPluginsList(
   VITE_CDN: boolean,
@@ -33,11 +35,12 @@ export function getPluginsList(
      * Mac 默认组合键 Option + Shift
      * Windows 默认组合键 Alt + Shift
      * 更多用法看 https://inspector.fe-dev.cn/guide/start.html
+     * 已禁用：@code-inspector/core 内部定时任务会因空响应 JSON 解析崩溃，导致 dev server 整个退出
      */
-    codeInspectorPlugin({
-      bundler: "vite",
-      hideConsole: true
-    }),
+    // codeInspectorPlugin({
+    //   bundler: "vite",
+    //   hideConsole: true
+    // }),
     viteBuildInfo(),
     /**
      * 开发环境下移除非必要的vue-router动态路由警告No match found for location with path
@@ -54,6 +57,10 @@ export function getPluginsList(
           enableProd: true
         })
       : null,
+    // i18n：语言包（src/locales/*.yaml）预编译，@intlify/unplugin-vue-i18n/locales 虚拟模块读取
+    VueI18nPlugin({
+      include: [pathResolve("../src/locales/**", import.meta.url)]
+    }),
     // svg组件化支持
     svgLoader(),
     // 自动按需加载图标

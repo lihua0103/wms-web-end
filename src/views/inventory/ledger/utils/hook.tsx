@@ -3,6 +3,13 @@ import { message } from "@/utils/message";
 import { getLedgerPage, freezeStock } from "@/api/inventory";
 import type { LedgerItem } from "@/api/inventory";
 import { stockStatusOptions, dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import Lock from "~icons/ep/lock";
+import Unlock from "~icons/ep/unlock";
 
 export function useLedger() {
   const form = reactive({
@@ -25,13 +32,29 @@ export function useLedger() {
   });
 
   const columns: TableColumnList = [
-    { label: "仓库", prop: "warehouseName", minWidth: 100 },
-    { label: "库位", prop: "locationCode", minWidth: 80 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 130 },
-    { label: "批次", prop: "batchNo", minWidth: 90 },
     {
-      label: "库存状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseName",
+      minWidth: 100
+    },
+    {
+      label: $t("common.columns.location"),
+      prop: "locationCode",
+      minWidth: 80
+    },
+    {
+      label: $t("inventory.ledger.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("inventory.ledger.materialName"),
+      prop: "materialName",
+      minWidth: 130
+    },
+    { label: $t("inventory.ledger.batch"), prop: "batchNo", minWidth: 90 },
+    {
+      label: $t("inventory.ledger.stockStatus"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(stockStatusOptions, row.stockStatus)}>
@@ -39,13 +62,54 @@ export function useLedger() {
         </el-tag>
       )
     },
-    { label: "库存量", prop: "qty", minWidth: 80 },
-    { label: "锁定", prop: "lockedQty", minWidth: 70 },
-    { label: "可用量", prop: "availableQty", minWidth: 80 },
-    { label: "货主", prop: "ownerName", minWidth: 110 },
-    { label: "失效日期", prop: "expiredAt", minWidth: 90 },
-    { fixed: "right", label: "操作", width: 150, slot: "operation" }
+    { label: $t("inventory.ledger.qty"), prop: "qty", minWidth: 80 },
+    { label: $t("inventory.ledger.locked"), prop: "lockedQty", minWidth: 70 },
+    {
+      label: $t("inventory.ledger.available"),
+      prop: "availableQty",
+      minWidth: 80
+    },
+    { label: $t("common.columns.owner"), prop: "ownerName", minWidth: 110 },
+    {
+      label: $t("inventory.ledger.expiredAt"),
+      prop: "expiredAt",
+      minWidth: 90
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: LedgerItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.detail"),
+        onClick: () => openDetail(row)
+      }
+    ];
+    if (row.stockStatus !== "frozen") {
+      buttons.push({
+        label: $t("inventory.ledger.freeze"),
+        type: "warning",
+        icon: Lock,
+        onClick: () => handleFreeze(row, true)
+      });
+    } else {
+      buttons.push({
+        label: $t("inventory.ledger.unfreeze"),
+        type: "success",
+        icon: Unlock,
+        onClick: () => handleFreeze(row, false)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -84,7 +148,12 @@ export function useLedger() {
 
   function handleFreeze(row: LedgerItem, freeze: boolean) {
     freezeStock([row.id], freeze).then(() => {
-      message(freeze ? "冻结成功" : "解冻成功", { type: "success" });
+      message(
+        freeze
+          ? $t("inventory.ledger.freezeSuccess")
+          : $t("inventory.ledger.unfreezeSuccess"),
+        { type: "success" }
+      );
       onSearch();
     });
   }

@@ -2,6 +2,10 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getRulePage, addRule, updateRule, deleteRule } from "@/api/billing";
 import type { FeeRuleItem } from "@/api/billing";
 import {
@@ -10,6 +14,9 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useBillingRule() {
@@ -29,30 +36,38 @@ export function useBillingRule() {
   });
 
   const columns: TableColumnList = [
-    { label: "规则编码", prop: "code", minWidth: 100 },
-    { label: "货主", prop: "ownerName", minWidth: 110 },
+    { label: $t("billing.rule.code"), prop: "code", minWidth: 100 },
+    { label: $t("common.columns.owner"), prop: "ownerName", minWidth: 110 },
     {
-      label: "费用类型",
+      label: $t("billing.rule.feeType"),
       minWidth: 80,
       cellRenderer: ({ row }) => dictLabel(feeTypeOptions, row.feeType)
     },
-    { label: "计费单位", prop: "unit", minWidth: 70 },
+    { label: $t("billing.rule.unit"), prop: "unit", minWidth: 70 },
     {
-      label: "单价（元）",
+      label: $t("billing.rule.price"),
       prop: "price",
       minWidth: 80,
       formatter: row => Number(row.price).toFixed(2)
     },
     {
-      label: "最低费用（元）",
+      label: $t("billing.rule.minimumFeeCol"),
       prop: "minimumFee",
       minWidth: 100,
       formatter: row => Number(row.minimumFee).toFixed(2)
     },
-    { label: "生效日期", prop: "effectiveFrom", minWidth: 90 },
-    { label: "失效日期", prop: "effectiveTo", minWidth: 90 },
     {
-      label: "状态",
+      label: $t("billing.rule.effectiveFrom"),
+      prop: "effectiveFrom",
+      minWidth: 90
+    },
+    {
+      label: $t("billing.rule.effectiveTo"),
+      prop: "effectiveTo",
+      minWidth: 90
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(userStatusOptions, row.status)}>
@@ -60,9 +75,38 @@ export function useBillingRule() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 150, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: FeeRuleItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("billing.rule.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -123,9 +167,16 @@ export function useBillingRule() {
         const formInline = (
           options.props as { formInline: Partial<FeeRuleItem> }
         ).formInline;
-        const req = formInline.id ? updateRule(formInline) : addRule(formInline);
+        const req = formInline.id
+          ? updateRule(formInline)
+          : addRule(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("billing.rule.updateSuccess")
+              : $t("billing.rule.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -134,11 +185,15 @@ export function useBillingRule() {
   }
 
   function handleDelete(row: FeeRuleItem) {
-    ElMessageBox.confirm(`确认删除计费规则「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("billing.rule.deleteTip", { code: row.code }),
+      $t("billing.rule.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteRule([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

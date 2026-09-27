@@ -1,7 +1,12 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
+import { $t } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getDevicePage,
   addDevice,
@@ -16,6 +21,9 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import SwitchBtn from "~icons/ep/switch-button";
 import formComp from "../form.vue";
 
 export function useDevice() {
@@ -36,17 +44,21 @@ export function useDevice() {
   });
 
   const columns: TableColumnList = [
-    { label: "设备编码", prop: "code", minWidth: 90 },
-    { label: "设备名称", prop: "name", minWidth: 130 },
+    { label: $t("integration.device.code"), prop: "code", minWidth: 90 },
+    { label: $t("integration.device.name"), prop: "name", minWidth: 130 },
     {
-      label: "设备类型",
+      label: $t("integration.device.type"),
       minWidth: 100,
       cellRenderer: ({ row }) => dictLabel(deviceTypeOptions, row.deviceType)
     },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "库区", prop: "zoneCode", minWidth: 60 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    { label: $t("common.columns.zone"), prop: "zoneCode", minWidth: 60 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(deviceStatusOptions, row.status)}>
@@ -54,11 +66,48 @@ export function useDevice() {
         </el-tag>
       )
     },
-    { label: "最后心跳", prop: "lastHeartbeat", minWidth: 140 },
-    { label: "IP 地址", prop: "ip", minWidth: 100 },
-    { label: "厂商", prop: "vendor", minWidth: 90 },
-    { fixed: "right", label: "操作", width: 210, slot: "operation" }
+    {
+      label: $t("integration.device.lastHeartbeat"),
+      prop: "lastHeartbeat",
+      minWidth: 140
+    },
+    { label: $t("integration.device.ip"), prop: "ip", minWidth: 100 },
+    { label: $t("integration.device.vendor"), prop: "vendor", minWidth: 90 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: DeviceItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("integration.device.editTitle"), row)
+      },
+      {
+        label:
+          row.status === "offline"
+            ? $t("common.buttons.enabled")
+            : $t("common.buttons.disabled"),
+        type: row.status === "offline" ? "success" : "warning",
+        icon: SwitchBtn,
+        onClick: () => handleToggle(row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -119,7 +168,12 @@ export function useDevice() {
           ? updateDevice(formInline)
           : addDevice(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("integration.device.editSuccess")
+              : $t("integration.device.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -131,23 +185,34 @@ export function useDevice() {
   function handleToggle(row: DeviceItem) {
     const enable = row.status === "offline";
     ElMessageBox.confirm(
-      `确认${enable ? "启用" : "停用"}设备「${row.name}」吗？`,
-      "提示",
+      enable
+        ? $t("integration.device.confirmEnable", { name: row.name })
+        : $t("integration.device.confirmDisable", { name: row.name }),
+      $t("integration.device.tipTitle"),
       { type: "warning" }
     ).then(() => {
       toggleDevice(row.id, enable).then(() => {
-        message(enable ? "设备已启用" : "设备已停用", { type: "success" });
+        message(
+          enable
+            ? $t("integration.device.enabledSuccess")
+            : $t("integration.device.disabledSuccess"),
+          { type: "success" }
+        );
         onSearch();
       });
     });
   }
 
   function handleDelete(row: DeviceItem) {
-    ElMessageBox.confirm(`确认删除设备「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("integration.device.confirmDelete", { name: row.name }),
+      $t("integration.device.tipTitle"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteDevice([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

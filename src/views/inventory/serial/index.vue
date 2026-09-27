@@ -3,5 +3,7 @@ defineOptions({ name: "InventorySerial" });
 </script>
 
 <template>
-  <div class="p-4 text-gray-500">序列号管理 - 页面建设中</div>
+  <div class="p-4 text-gray-500">
+    {{ $t("inventory.serial.title") }} - {{ $t("inventory.serial.building") }}
+  </div>
 </template>

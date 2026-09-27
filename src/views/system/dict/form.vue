@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 import type { DictTypeItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
 
 interface Props {
   formInline: Partial<DictTypeItem>;
@@ -14,8 +15,12 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  name: [{ required: true, message: "请输入字典名称", trigger: "blur" }],
-  code: [{ required: true, message: "请输入字典编码", trigger: "blur" }]
+  name: [
+    { required: true, message: $t("system.dict.namePh"), trigger: "blur" }
+  ],
+  code: [
+    { required: true, message: $t("system.dict.codeMsg"), trigger: "blur" }
+  ]
 };
 </script>
 
@@ -26,21 +31,24 @@ const rules: FormRules = {
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="字典名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入字典名称" />
+    <el-form-item :label="$t('system.dict.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('system.dict.namePh')"
+      />
     </el-form-item>
-    <el-form-item label="字典编码" prop="code">
+    <el-form-item :label="$t('system.dict.code')" prop="code">
       <el-input
         v-model="newFormInline.code"
-        placeholder="请输入字典编码（英文标识）"
+        :placeholder="$t('system.dict.codePh')"
         :disabled="!!newFormInline.id"
       />
     </el-form-item>
-    <el-form-item label="备注" prop="remark">
+    <el-form-item :label="$t('common.columns.remark')" prop="remark">
       <el-input
         v-model="newFormInline.remark"
         type="textarea"
-        placeholder="备注"
+        :placeholder="$t('common.columns.remark')"
       />
     </el-form-item>
   </el-form>

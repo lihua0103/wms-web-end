@@ -3,8 +3,8 @@ export default {
   redirect: "/error/403",
   meta: {
     icon: "ri/information-line",
-    // showLink: false,
-    title: "异常页面",
+    showLink: false,
+    title: "menus.error",
     rank: 9
   },
   children: [

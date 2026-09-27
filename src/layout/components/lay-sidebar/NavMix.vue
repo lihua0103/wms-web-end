@@ -5,6 +5,7 @@ import LaySearch from "../lay-search/index.vue";
 import LayNotice from "../lay-notice/index.vue";
 import { ref, toRaw, watch, onMounted, nextTick } from "vue";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { transformI18n } from "@/plugins/i18n";
 import { getParentPaths, findRouteByPath } from "@/router/utils";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import LaySidebarExtraIcon from "../lay-sidebar/components/SidebarExtraIcon.vue";
@@ -83,7 +84,7 @@ watch(
           </div>
           <div :style="getDivStyle">
             <span class="select-none">
-              {{ route.meta.title }}
+              {{ transformI18n(route.meta.title) }}
             </span>
             <LaySidebarExtraIcon :extraIcon="route.meta.extraIcon" />
           </div>
@@ -110,14 +111,14 @@ watch(
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"
               />
-              退出系统
+              {{ $t("navbar.logout") }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span
         class="set-icon navbar-bg-hover"
-        title="打开系统配置"
+        :title="$t('navbar.openSystemConfig')"
         @click="onPanel"
       >
         <IconifyIconOffline :icon="Setting" />

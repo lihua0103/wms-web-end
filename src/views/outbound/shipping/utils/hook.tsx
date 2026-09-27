@@ -1,16 +1,22 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getShippingPage, confirmShipping } from "@/api/outbound";
 import type { ShippingItem } from "@/api/outbound";
-
-const statusMap: Record<string, { label: string; tag: string }> = {
-  waiting: { label: "待发货", tag: "warning" },
-  shipped: { label: "已发货", tag: "success" },
-  finished: { label: "已完成", tag: "success" }
-};
+import Van from "~icons/ep/van";
 
 export function useShipping() {
+  const statusMap: Record<string, { label: string; tag: string }> = {
+    waiting: { label: $t("outbound.shipping.statusWaiting"), tag: "warning" },
+    shipped: { label: $t("outbound.shipping.statusShipped"), tag: "success" },
+    finished: { label: $t("outbound.shipping.statusFinished"), tag: "success" }
+  };
+
   const form = reactive({
     code: "",
     carrierName: "",
@@ -26,14 +32,26 @@ export function useShipping() {
   });
 
   const columns: TableColumnList = [
-    { label: "交接单号", prop: "code", minWidth: 130 },
-    { label: "出库单号", prop: "orderCode", minWidth: 130 },
-    { label: "承运商", prop: "carrierName", minWidth: 90 },
-    { label: "车牌号", prop: "vehicleNo", minWidth: 90 },
-    { label: "司机", prop: "driverName", minWidth: 70 },
-    { label: "数量", prop: "qty", minWidth: 70 },
+    { label: $t("outbound.shipping.code"), prop: "code", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("outbound.shipping.orderNo"),
+      prop: "orderCode",
+      minWidth: 130
+    },
+    {
+      label: $t("outbound.shipping.carrier"),
+      prop: "carrierName",
+      minWidth: 90
+    },
+    {
+      label: $t("outbound.shipping.vehicleNo"),
+      prop: "vehicleNo",
+      minWidth: 90
+    },
+    { label: $t("outbound.shipping.driver"), prop: "driverName", minWidth: 70 },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={statusMap[row.status]?.tag || "info"}>
@@ -41,10 +59,34 @@ export function useShipping() {
         </el-tag>
       )
     },
-    { label: "发货日期", prop: "shipDate", minWidth: 90 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 110, slot: "operation" }
+    { label: $t("outbound.shipping.shipDate"), prop: "shipDate", minWidth: 90 },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ShippingItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "waiting") {
+      buttons.push({
+        label: $t("outbound.shipping.confirmShip"),
+        icon: Van,
+        onClick: () => handleConfirm(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -78,12 +120,16 @@ export function useShipping() {
 
   function handleConfirm(row: ShippingItem) {
     ElMessageBox.confirm(
-      `确认交接单「${row.code}」已装车发货？（承运商：${row.carrierName}，车牌：${row.vehicleNo}）`,
-      "提示",
+      $t("outbound.shipping.confirmTip", {
+        code: row.code,
+        carrier: row.carrierName,
+        vehicle: row.vehicleNo
+      }),
+      $t("outbound.shipping.tip"),
       { type: "warning" }
     ).then(() => {
       confirmShipping(row.id).then(() => {
-        message("发货确认成功", { type: "success" });
+        message($t("outbound.shipping.confirmSuccess"), { type: "success" });
         onSearch();
       });
     });

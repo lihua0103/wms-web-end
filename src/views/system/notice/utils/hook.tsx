@@ -3,6 +3,10 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
   getNoticePage,
   addNotice,
   readNotice,
@@ -11,26 +15,34 @@ import {
 import type { NoticeItem } from "@/api/system";
 import type { DictItem } from "@/constants/wms";
 import { dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import View from "~icons/ep/view";
+import Check from "~icons/ep/check";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 /** 消息类型选项 */
 export const noticeTypeOptions: DictItem[] = [
-  { label: "通知", value: "notice", tag: "info" },
-  { label: "公告", value: "announce", tag: "success" },
-  { label: "预警", value: "warning", tag: "danger" }
+  { label: $t("system.notice.typeNotice"), value: "notice", tag: "info" },
+  {
+    label: $t("system.notice.typeAnnounce"),
+    value: "announce",
+    tag: "success"
+  },
+  { label: $t("system.notice.typeWarning"), value: "warning", tag: "danger" }
 ];
 
 /** 消息级别选项 */
 export const noticeLevelOptions: DictItem[] = [
-  { label: "高", value: "high", tag: "danger" },
-  { label: "普通", value: "normal", tag: "" },
-  { label: "低", value: "low", tag: "info" }
+  { label: $t("system.notice.levelHigh"), value: "high", tag: "danger" },
+  { label: $t("system.notice.levelNormal"), value: "normal", tag: "" },
+  { label: $t("system.notice.levelLow"), value: "low", tag: "info" }
 ];
 
 /** 阅读状态选项 */
 export const readStatusOptions: DictItem[] = [
-  { label: "已读", value: 1, tag: "success" },
-  { label: "未读", value: 0, tag: "warning" }
+  { label: $t("system.notice.read"), value: 1, tag: "success" },
+  { label: $t("system.notice.unread"), value: 0, tag: "warning" }
 ];
 
 export function useNotice() {
@@ -51,9 +63,9 @@ export function useNotice() {
   });
 
   const columns: TableColumnList = [
-    { label: "标题", prop: "title", minWidth: 160 },
+    { label: $t("system.notice.title"), prop: "title", minWidth: 160 },
     {
-      label: "类型",
+      label: $t("common.columns.type"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(noticeTypeOptions, row.type)}>
@@ -62,7 +74,7 @@ export function useNotice() {
       )
     },
     {
-      label: "级别",
+      label: $t("system.notice.level"),
       minWidth: 60,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(noticeLevelOptions, row.level)}>
@@ -70,9 +82,13 @@ export function useNotice() {
         </el-tag>
       )
     },
-    { label: "发布人", prop: "publisher", minWidth: 80 },
     {
-      label: "状态",
+      label: $t("system.notice.publisher"),
+      prop: "publisher",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(readStatusOptions, row.status)}>
@@ -80,9 +96,46 @@ export function useNotice() {
         </el-tag>
       )
     },
-    { label: "发布时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 230, slot: "operation" }
+    {
+      label: $t("system.notice.publishTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: NoticeItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.view"),
+        icon: View,
+        onClick: () => openDetail(row)
+      }
+    ];
+    if (row.status === 0) {
+      buttons.push({
+        label: $t("system.notice.markRead"),
+        type: "success",
+        icon: Check,
+        onClick: () => handleRead(row)
+      });
+    }
+    buttons.push({
+      label: $t("common.buttons.delete"),
+      type: "danger",
+      icon: Delete,
+      onClick: () => handleDelete(row)
+    });
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -138,7 +191,7 @@ export function useNotice() {
           options.props as { formInline: Partial<NoticeItem> }
         ).formInline;
         addNotice(formInline).then(() => {
-          message("发布成功", { type: "success" });
+          message($t("system.notice.publishSuccess"), { type: "success" });
           done();
           onSearch();
         });
@@ -155,17 +208,21 @@ export function useNotice() {
   /** 标记已读 */
   function handleRead(row: NoticeItem) {
     readNotice([row.id]).then(() => {
-      message("已标记为已读", { type: "success" });
+      message($t("system.notice.readSuccess"), { type: "success" });
       onSearch();
     });
   }
 
   function handleDelete(row: NoticeItem) {
-    ElMessageBox.confirm(`确认删除消息「${row.title}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("system.notice.deleteConfirm", { title: row.title }),
+      $t("system.notice.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteNotice([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

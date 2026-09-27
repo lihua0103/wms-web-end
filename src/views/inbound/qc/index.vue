@@ -6,7 +6,6 @@ import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import EditPen from "~icons/ep/edit-pen";
 
 defineOptions({ name: "InboundQc" });
 
@@ -21,7 +20,6 @@ const {
   qcResultOptions,
   onSearch,
   resetForm,
-  openSubmitDialog,
   handleSizeChange,
   handleCurrentChange
 } = useQc();
@@ -35,27 +33,68 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
-        <el-input v-model="form.code" placeholder="质检单号" clearable style="width: 150px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('inbound.qc.code')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('inbound.qc.qcNo')"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="收货单" prop="receiptCode">
-        <el-input v-model="form.receiptCode" placeholder="收货单号" clearable style="width: 150px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('inbound.qc.receipt')" prop="receiptCode">
+        <el-input
+          v-model="form.receiptCode"
+          :placeholder="$t('inbound.qc.receiptNo')"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="物料" prop="materialCode">
-        <el-input v-model="form.materialCode" placeholder="物料编码" clearable style="width: 130px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('common.columns.material')" prop="materialCode">
+        <el-input
+          v-model="form.materialCode"
+          :placeholder="$t('inbound.qc.materialCode')"
+          clearable
+          style="width: 130px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="结果" prop="qcResult">
-        <el-select v-model="form.qcResult" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in qcResultOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('inbound.qc.result')" prop="qcResult">
+        <el-select
+          v-model="form.qcResult"
+          :placeholder="$t('inbound.qc.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in qcResultOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="质检管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('inbound.qc.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -71,18 +110,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openSubmitDialog(row)"
-            >
-              {{ row.qcResult === "waiting" ? "录入结果" : "修改结果" }}
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

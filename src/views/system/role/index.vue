@@ -7,9 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import AddFill from "~icons/ep/plus";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
-import Key from "~icons/ep/key";
 
 defineOptions({ name: "SystemRole" });
 
@@ -30,8 +27,6 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
-  openAuth,
   saveAuth,
   handleSizeChange,
   handleCurrentChange
@@ -46,24 +41,24 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="关键字" prop="keyword">
+      <el-form-item :label="$t('system.role.keyword')" prop="keyword">
         <el-input
           v-model="form.keyword"
-          placeholder="角色编码 / 名称"
+          :placeholder="$t('system.role.keywordPh')"
           clearable
           style="width: 200px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('common.columns.status')" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="全部"
+          :placeholder="$t('system.role.all')"
           clearable
           style="width: 140px"
         >
-          <el-option label="启用" :value="1" />
-          <el-option label="停用" :value="0" />
+          <el-option :label="$t('common.buttons.enabled')" :value="1" />
+          <el-option :label="$t('common.buttons.disabled')" :value="0" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -72,25 +67,29 @@ const {
           :icon="useRenderIcon(SearchIcon)"
           @click="onSearch"
         >
-          搜索
+          {{ $t("common.buttons.search") }}
         </el-button>
         <el-button
           :icon="useRenderIcon(RefreshIcon)"
           @click="resetForm(searchFormRef)"
         >
-          重置
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="角色管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('system.role.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="openDialog('新增角色')"
+          @click="openDialog($t('system.role.addRole'))"
         >
-          新增角色
+          {{ $t("system.role.addRole") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -108,41 +107,14 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(Key)"
-              @click="openAuth(row)"
-            >
-              菜单授权
-            </el-button>
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑角色', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
 
     <!-- 菜单授权 -->
     <el-dialog
       v-model="authVisible"
-      :title="`菜单授权 - ${currentRole?.name || ''}`"
+      :title="$t('system.role.authTitle', { name: currentRole?.name || '' })"
       width="480px"
       destroy-on-close
     >
@@ -156,9 +128,11 @@ const {
         :props="{ label: 'name', children: 'children' }"
       />
       <template #footer>
-        <el-button @click="authVisible = false">取消</el-button>
+        <el-button @click="authVisible = false">
+          {{ $t("common.buttons.cancel") }}
+        </el-button>
         <el-button type="primary" :loading="saveLoading" @click="saveAuth">
-          保存
+          {{ $t("common.buttons.save") }}
         </el-button>
       </template>
     </el-dialog>

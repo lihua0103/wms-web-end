@@ -85,7 +85,7 @@ export function filterList(
   query: Record<string, any>,
   searchFields: string[] = []
 ): any[] {
-  const { page, pageSize, keyword, ...filters } = query || {};
+  const { page: _page, pageSize: _pageSize, keyword, ...filters } = query || {};
   return list.filter(row => {
     if (isValidFilter(keyword) && searchFields.length) {
       const hit = searchFields.some(f =>
@@ -145,7 +145,8 @@ export function crudRoutes({
     {
       url: `${prefix}/page`,
       method: "get",
-      response: ({ query }) => paginate(filterList(list, query, searchFields), query)
+      response: ({ query }) =>
+        paginate(filterList(list, query, searchFields), query)
     },
     {
       url: `${prefix}/list`,
@@ -189,7 +190,9 @@ export function crudRoutes({
       method: "post",
       response: ({ body }) => {
         const ids: any[] = body?.ids ?? [];
-        list = list.filter(r => !ids.some(id => String(id) === String(r[idKey])));
+        list = list.filter(
+          r => !ids.some(id => String(id) === String(r[idKey]))
+        );
         return ok(true, "删除成功");
       }
     }

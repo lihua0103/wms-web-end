@@ -7,7 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { dictTag, dictLabel } from "@/constants/wms";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import View from "~icons/ep/view";
 
 defineOptions({ name: "SystemLog" });
 
@@ -23,7 +22,6 @@ const {
   currentRow,
   onSearch,
   resetForm,
-  openDetail,
   handleSizeChange,
   handleCurrentChange
 } = useLog();
@@ -37,19 +35,19 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="关键字" prop="keyword">
+      <el-form-item :label="$t('system.log.keyword')" prop="keyword">
         <el-input
           v-model="form.keyword"
-          placeholder="操作人 / 模块 / 操作"
+          :placeholder="$t('system.log.keywordPh')"
           clearable
           style="width: 200px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="执行结果" prop="status">
+      <el-form-item :label="$t('system.log.result')" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="全部"
+          :placeholder="$t('system.log.all')"
           clearable
           style="width: 140px"
         >
@@ -67,18 +65,22 @@ const {
           :icon="useRenderIcon(SearchIcon)"
           @click="onSearch"
         >
-          搜索
+          {{ $t("common.buttons.search") }}
         </el-button>
         <el-button
           :icon="useRenderIcon(RefreshIcon)"
           @click="resetForm(searchFormRef)"
         >
-          重置
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="操作日志" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('system.log.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -94,45 +96,38 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(View)"
-              @click="openDetail(row)"
-            >
-              详情
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
 
     <!-- 日志详情 -->
-    <el-drawer v-model="detailVisible" title="日志详情" size="420px">
+    <el-drawer
+      v-model="detailVisible"
+      :title="$t('system.log.detailTitle')"
+      size="420px"
+    >
       <el-descriptions v-if="currentRow" :column="1" border>
-        <el-descriptions-item label="操作人">{{
+        <el-descriptions-item :label="$t('system.log.operator')">{{
           currentRow.username
         }}</el-descriptions-item>
-        <el-descriptions-item label="模块">{{
+        <el-descriptions-item :label="$t('system.log.module')">{{
           currentRow.module
         }}</el-descriptions-item>
-        <el-descriptions-item label="操作">{{
+        <el-descriptions-item :label="$t('system.log.action')">{{
           currentRow.action
         }}</el-descriptions-item>
-        <el-descriptions-item label="IP 地址">{{
+        <el-descriptions-item :label="$t('system.log.ip')">{{
           currentRow.ip
         }}</el-descriptions-item>
-        <el-descriptions-item label="执行结果">
+        <el-descriptions-item :label="$t('system.log.result')">
           <el-tag :type="dictTag(logStatusOptions, currentRow.status) as any">
             {{ dictLabel(logStatusOptions, currentRow.status) }}
           </el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="耗时"
+        <el-descriptions-item :label="$t('system.log.duration')"
           >{{ currentRow.duration }} ms</el-descriptions-item
         >
-        <el-descriptions-item label="操作时间">{{
+        <el-descriptions-item :label="$t('system.log.time')">{{
           currentRow.createdAt
         }}</el-descriptions-item>
       </el-descriptions>

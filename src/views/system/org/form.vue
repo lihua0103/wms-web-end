@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 import type { OrgItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
 import { orgTypeOptions } from "./utils/hook";
 
 interface Props {
@@ -18,8 +19,14 @@ const newFormInline = reactive(props.formInline);
 const parentOptions = props.parentOptions;
 
 const rules: FormRules = {
-  type: [{ required: true, message: "请选择组织类型", trigger: "change" }],
-  name: [{ required: true, message: "请输入组织名称", trigger: "blur" }]
+  type: [
+    {
+      required: true,
+      message: $t("system.org.typePh"),
+      trigger: "change"
+    }
+  ],
+  name: [{ required: true, message: $t("system.org.namePh"), trigger: "blur" }]
 };
 </script>
 
@@ -30,10 +37,10 @@ const rules: FormRules = {
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="上级组织" prop="parentId">
+    <el-form-item :label="$t('system.org.parent')" prop="parentId">
       <el-select
         v-model="newFormInline.parentId"
-        placeholder="顶级组织"
+        :placeholder="$t('system.org.parentPh')"
         clearable
         filterable
         style="width: 100%"
@@ -46,10 +53,10 @@ const rules: FormRules = {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="组织类型" prop="type">
+    <el-form-item :label="$t('system.org.type')" prop="type">
       <el-select
         v-model="newFormInline.type"
-        placeholder="请选择组织类型"
+        :placeholder="$t('system.org.typePh')"
         style="width: 100%"
       >
         <el-option
@@ -60,14 +67,23 @@ const rules: FormRules = {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="组织名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入组织名称" />
+    <el-form-item :label="$t('system.org.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('system.org.namePh')"
+      />
     </el-form-item>
-    <el-form-item label="负责人" prop="leader">
-      <el-input v-model="newFormInline.leader" placeholder="请输入负责人" />
+    <el-form-item :label="$t('system.org.leader')" prop="leader">
+      <el-input
+        v-model="newFormInline.leader"
+        :placeholder="$t('system.org.leaderPh')"
+      />
     </el-form-item>
-    <el-form-item label="联系电话" prop="phone">
-      <el-input v-model="newFormInline.phone" placeholder="请输入联系电话" />
+    <el-form-item :label="$t('system.org.phone')" prop="phone">
+      <el-input
+        v-model="newFormInline.phone"
+        :placeholder="$t('system.org.phonePh')"
+      />
     </el-form-item>
   </el-form>
 </template>

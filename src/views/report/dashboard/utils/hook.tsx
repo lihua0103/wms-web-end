@@ -2,6 +2,7 @@ import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import * as echarts from "echarts";
 import { getDashboardData } from "@/api/report";
 import type { DashboardData } from "@/api/report";
+import { $t } from "@/plugins/i18n";
 
 export function useReportDashboard() {
   const data = ref<DashboardData>();
@@ -19,10 +20,22 @@ export function useReportDashboard() {
   const statCards = computed(() => {
     const s = data.value?.stockSummary;
     return [
-      { title: "库存总量", value: s ? s.totalQty.toLocaleString() : "-" },
-      { title: "库存总值（元）", value: s ? s.totalValue.toLocaleString() : "-" },
-      { title: "在库 SKU 数", value: s ? s.skuCount.toLocaleString() : "-" },
-      { title: "库存预警数", value: s ? s.warningCount.toLocaleString() : "-" }
+      {
+        title: $t("report.dashboard.totalQty"),
+        value: s ? s.totalQty.toLocaleString() : "-"
+      },
+      {
+        title: $t("report.dashboard.totalValue"),
+        value: s ? s.totalValue.toLocaleString() : "-"
+      },
+      {
+        title: $t("report.dashboard.skuCount"),
+        value: s ? s.skuCount.toLocaleString() : "-"
+      },
+      {
+        title: $t("report.dashboard.warningCount"),
+        value: s ? s.warningCount.toLocaleString() : "-"
+      }
     ];
   });
 
@@ -32,14 +45,17 @@ export function useReportDashboard() {
       categoryChart.setOption({
         tooltip: { trigger: "axis" },
         grid: { left: 70, right: 20, top: 30, bottom: 30 },
-        xAxis: { type: "category", data: data.value.categoryStock.map(i => i.name) },
+        xAxis: {
+          type: "category",
+          data: data.value.categoryStock.map(i => i.name)
+        },
         yAxis: { type: "value" },
         series: [
           {
             type: "bar",
             barWidth: "45%",
             data: data.value.categoryStock.map(i => i.value),
-            itemStyle: { color: "#409eff", borderRadius: [4, 4, 0, 0] }
+            itemStyle: { color: "#0e7490", borderRadius: [4, 4, 0, 0] }
           }
         ]
       });
@@ -80,7 +96,9 @@ export function useReportDashboard() {
     if (turnoverRef.value && data.value) {
       turnoverChart = echarts.init(turnoverRef.value);
       // 升序排列，y 轴自下而上渲染后 Top1 显示在最上方
-      const top = [...data.value.turnoverTop].sort((a, b) => a.turnover - b.turnover);
+      const top = [...data.value.turnoverTop].sort(
+        (a, b) => a.turnover - b.turnover
+      );
       turnoverChart.setOption({
         tooltip: { trigger: "axis" },
         grid: { left: 90, right: 40, top: 30, bottom: 30 },

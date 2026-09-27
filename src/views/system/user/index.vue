@@ -7,9 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import AddFill from "~icons/ep/plus";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
-import Key from "~icons/ep/key";
 
 defineOptions({ name: "SystemUser" });
 
@@ -24,8 +21,6 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
-  handleResetPwd,
   handleSizeChange,
   handleCurrentChange
 } = useUser();
@@ -39,48 +34,64 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="账号" prop="username">
+      <el-form-item :label="$t('system.user.account')" prop="username">
         <el-input
           v-model="form.username"
-          placeholder="请输入用户账号"
+          :placeholder="$t('system.user.accountPh')"
           clearable
           style="width: 180px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="昵称" prop="nickname">
+      <el-form-item :label="$t('system.user.nickname')" prop="nickname">
         <el-input
           v-model="form.nickname"
-          placeholder="请输入用户昵称"
+          :placeholder="$t('system.user.nicknamePh')"
           clearable
           style="width: 180px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 140px">
-          <el-option label="启用" :value="1" />
-          <el-option label="停用" :value="0" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('system.user.all')"
+          clearable
+          style="width: 140px"
+        >
+          <el-option :label="$t('common.buttons.enabled')" :value="1" />
+          <el-option :label="$t('common.buttons.disabled')" :value="0" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">
-          搜索
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+        >
+          {{ $t("common.buttons.search") }}
         </el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">
-          重置
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+        >
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('system.user.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="openDialog('新增用户')"
+          @click="openDialog($t('system.user.addUser'))"
         >
-          新增用户
+          {{ $t("system.user.addUser") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -98,34 +109,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑用户', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="warning"
-              :icon="useRenderIcon(Key)"
-              @click="handleResetPwd(row)"
-            >
-              重置密码
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

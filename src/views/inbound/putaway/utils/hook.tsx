@@ -1,9 +1,15 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getPutawayPage, finishPutaway } from "@/api/inbound";
 import type { PutawayTaskItem } from "@/api/inbound";
 import { taskStatusOptions, dictTag, dictLabel } from "@/constants/wms";
+import CircleCheck from "~icons/ep/circle-check";
 
 export function usePutaway() {
   const form = reactive({
@@ -21,16 +27,40 @@ export function usePutaway() {
   });
 
   const columns: TableColumnList = [
-    { label: "任务号", prop: "taskNo", minWidth: 130 },
-    { label: "收货单号", prop: "receiptCode", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "源库位", prop: "fromLocation", minWidth: 90 },
-    { label: "目标库位", prop: "toLocation", minWidth: 90 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "数量", prop: "qty", minWidth: 70 },
+    { label: $t("inbound.putaway.taskNo"), prop: "taskNo", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("inbound.putaway.receiptNo"),
+      prop: "receiptCode",
+      minWidth: 130
+    },
+    {
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("inbound.putaway.fromLocation"),
+      prop: "fromLocation",
+      minWidth: 90
+    },
+    {
+      label: $t("inbound.putaway.toLocation"),
+      prop: "toLocation",
+      minWidth: 90
+    },
+    {
+      label: $t("inbound.putaway.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("inbound.putaway.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(taskStatusOptions, row.status)}>
@@ -38,10 +68,35 @@ export function usePutaway() {
         </el-tag>
       )
     },
-    { label: "操作员", prop: "operator", minWidth: 70 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 100, slot: "operation" }
+    { label: $t("inbound.putaway.operator"), prop: "operator", minWidth: 70 },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: PutawayTaskItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (["pending", "processing"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.complete"),
+        type: "success",
+        icon: CircleCheck,
+        onClick: () => handleFinish(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -75,12 +130,15 @@ export function usePutaway() {
 
   function handleFinish(row: PutawayTaskItem) {
     ElMessageBox.confirm(
-      `确认任务「${row.taskNo}」已上架至 ${row.toLocation} 吗？`,
-      "提示",
+      $t("inbound.putaway.confirmFinish", {
+        taskNo: row.taskNo,
+        location: row.toLocation
+      }),
+      $t("inbound.putaway.tip"),
       { type: "warning" }
     ).then(() => {
       finishPutaway(row.id).then(() => {
-        message("上架完成", { type: "success" });
+        message($t("inbound.putaway.finishSuccess"), { type: "success" });
         onSearch();
       });
     });

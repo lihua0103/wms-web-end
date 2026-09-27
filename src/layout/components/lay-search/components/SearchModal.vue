@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import SearchResult from "./SearchResult.vue";
 import SearchFooter from "./SearchFooter.vue";
 import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
 import SearchHistory from "./SearchHistory.vue";
 import type { optionsItem, dragItem } from "../types";
 import { ref, computed, shallowRef, watch } from "vue";
@@ -105,19 +106,12 @@ function flatTree(arr) {
 /** 查询 */
 function search() {
   const flatMenusData = flatTree(menusData.value);
-  resultOptions.value = flatMenusData.filter(menu =>
-    keyword.value
-      ? menu.meta?.title
-          .toLocaleLowerCase()
-          .includes(keyword.value.toLocaleLowerCase().trim()) ||
-        !isAllEmpty(
-          match(
-            menu.meta?.title.toLocaleLowerCase(),
-            keyword.value.toLocaleLowerCase().trim()
-          )
-        )
-      : false
-  );
+  resultOptions.value = flatMenusData.filter(menu => {
+    if (!keyword.value) return false;
+    const title = transformI18n(menu.meta?.title).toLocaleLowerCase();
+    const kw = keyword.value.toLocaleLowerCase().trim();
+    return title.includes(kw) || !isAllEmpty(match(title, kw));
+  });
   activePath.value =
     resultOptions.value?.length > 0 ? resultOptions.value[0].path : "";
 }
@@ -289,7 +283,7 @@ onKeyStroke("ArrowDown", handleDown);
       v-model="keyword"
       size="large"
       clearable
-      placeholder="搜索菜单（支持拼音搜索）"
+      :placeholder="$t('search.placeholder')"
       @input="handleSearch"
     >
       <template #prefix>
@@ -301,7 +295,7 @@ onKeyStroke("ArrowDown", handleDown);
     </el-input>
     <div class="search-content">
       <el-scrollbar ref="scrollbarRef" max-height="calc(90vh - 140px)">
-        <el-empty v-if="showEmpty" description="暂无搜索结果" />
+        <el-empty v-if="showEmpty" :description="$t('search.noResult')" />
         <SearchHistory
           v-if="showSearchHistory"
           ref="historyRef"

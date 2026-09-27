@@ -42,7 +42,7 @@ const getLabel = computed(
         >
           <el-empty
             v-if="notices.length === 0"
-            description="暂无消息"
+            :description="$t('notice.empty')"
             :image-size="60"
           />
           <span v-else>

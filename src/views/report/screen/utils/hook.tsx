@@ -2,6 +2,7 @@ import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import * as echarts from "echarts";
 import { getScreenData } from "@/api/report";
 import type { ScreenData } from "@/api/report";
+import { $t } from "@/plugins/i18n";
 
 const AXIS_LABEL_COLOR = "#8ea0c0";
 const AXIS_LINE_COLOR = "rgba(140, 160, 200, 0.4)";
@@ -21,17 +22,33 @@ export function useReportScreen() {
   ).padStart(2, "0")}`;
 
   const metricCards = computed(() => [
-    { title: "今日入库量", value: data.value ? data.value.todayInbound.toLocaleString() : "-", color: "#409eff" },
-    { title: "今日出库量", value: data.value ? data.value.todayOutbound.toLocaleString() : "-", color: "#67c23a" },
-    { title: "在线设备", value: data.value ? data.value.onlineDevices.toLocaleString() : "-", color: "#e6a23c" },
-    { title: "待处理任务", value: data.value ? data.value.taskPending.toLocaleString() : "-", color: "#f56c6c" }
+    {
+      title: $t("report.screen.todayInbound"),
+      value: data.value ? data.value.todayInbound.toLocaleString() : "-",
+      color: "#22b8cf"
+    },
+    {
+      title: $t("report.screen.todayOutbound"),
+      value: data.value ? data.value.todayOutbound.toLocaleString() : "-",
+      color: "#67c23a"
+    },
+    {
+      title: $t("report.screen.onlineDevices"),
+      value: data.value ? data.value.onlineDevices.toLocaleString() : "-",
+      color: "#e6a23c"
+    },
+    {
+      title: $t("report.screen.taskPending"),
+      value: data.value ? data.value.taskPending.toLocaleString() : "-",
+      color: "#f56c6c"
+    }
   ]);
 
   /** 告警等级对应节点颜色 */
   function alarmColor(level: string) {
     if (level === "high") return "#f56c6c";
     if (level === "medium") return "#e6a23c";
-    return "#409eff";
+    return "#22b8cf";
   }
 
   function renderCharts() {
@@ -41,7 +58,7 @@ export function useReportScreen() {
         {
           tooltip: { trigger: "axis" },
           legend: {
-            data: ["入库", "出库"],
+            data: [$t("report.screen.inbound"), $t("report.screen.outbound")],
             bottom: 0,
             textStyle: { color: AXIS_LABEL_COLOR }
           },
@@ -60,16 +77,16 @@ export function useReportScreen() {
           },
           series: [
             {
-              name: "入库",
+              name: $t("report.screen.inbound"),
               type: "line",
               smooth: true,
               symbol: "none",
               data: data.value.hourlyFlow.map(h => h.inbound),
-              itemStyle: { color: "#409eff" },
+              itemStyle: { color: "#22b8cf" },
               areaStyle: { opacity: 0.25 }
             },
             {
-              name: "出库",
+              name: $t("report.screen.outbound"),
               type: "line",
               smooth: true,
               symbol: "none",
@@ -85,10 +102,15 @@ export function useReportScreen() {
     if (zoneRef.value && data.value) {
       if (!zoneChart) zoneChart = echarts.init(zoneRef.value);
       // 升序排列，y 轴自下而上渲染后填充率最高者显示在最上方
-      const rows = [...data.value.zoneFill].sort((a, b) => a.percent - b.percent);
+      const rows = [...data.value.zoneFill].sort(
+        (a, b) => a.percent - b.percent
+      );
       zoneChart.setOption(
         {
-          tooltip: { trigger: "axis", formatter: "{b}：{c}%" },
+          tooltip: {
+            trigger: "axis",
+            formatter: $t("report.screen.zoneTooltip")
+          },
           grid: { left: 90, right: 60, top: 20, bottom: 20 },
           xAxis: {
             type: "value",
@@ -107,7 +129,7 @@ export function useReportScreen() {
               type: "bar",
               barWidth: 14,
               data: rows.map(r => r.percent),
-              itemStyle: { color: "#409eff", borderRadius: [0, 4, 4, 0] },
+              itemStyle: { color: "#22b8cf", borderRadius: [0, 4, 4, 0] },
               label: {
                 show: true,
                 position: "right",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import type { FormRules } from "element-plus";
 import { qcResultOptions } from "@/constants/wms";
 
@@ -13,16 +14,27 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  qcResult: [{ required: true, message: "请选择质检结果", trigger: "change" }]
+  qcResult: [
+    {
+      required: true,
+      message: $t("inbound.qc.plsSelectResult"),
+      trigger: "change"
+    }
+  ]
 };
 </script>
 
 <template>
-  <el-form ref="formRef" :model="newFormInline" :rules="rules" label-width="100px">
-    <el-form-item label="质检单号">
+  <el-form
+    ref="formRef"
+    :model="newFormInline"
+    :rules="rules"
+    label-width="100px"
+  >
+    <el-form-item :label="$t('inbound.qc.qcNo')">
       <el-input :model-value="newFormInline.code" disabled />
     </el-form-item>
-    <el-form-item label="质检结果" prop="qcResult">
+    <el-form-item :label="$t('inbound.qc.qcResult')" prop="qcResult">
       <el-select v-model="newFormInline.qcResult" style="width: 100%">
         <el-option
           v-for="d in qcResultOptions.filter(o => o.value !== 'waiting')"
@@ -32,8 +44,12 @@ const rules: FormRules = {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="质检备注">
-      <el-input v-model="newFormInline.qcRemark" type="textarea" placeholder="不合格原因/让步说明等" />
+    <el-form-item :label="$t('inbound.qc.qcRemark')">
+      <el-input
+        v-model="newFormInline.qcRemark"
+        type="textarea"
+        :placeholder="$t('inbound.qc.qcRemarkPh')"
+      />
     </el-form-item>
   </el-form>
 </template>

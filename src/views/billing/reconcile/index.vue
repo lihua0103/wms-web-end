@@ -4,6 +4,7 @@ import { useBillingReconcile } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { $t } from "@/plugins/i18n";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 
@@ -20,16 +21,16 @@ const {
   reconcileStatusOptions,
   onSearch,
   resetForm,
-  onAction,
   handleSizeChange,
   handleCurrentChange
 } = useBillingReconcile();
 
+// value 为 mock 数据匹配值，保持原文；label 为展示文案
 const ownerOptions = [
-  { value: "货主A 华东电子", label: "货主A 华东电子" },
-  { value: "货主B 精工机械", label: "货主B 精工机械" },
-  { value: "货主C 日化用品", label: "货主C 日化用品" },
-  { value: "自营", label: "自营" }
+  { value: "货主A 华东电子", label: $t("billing.reconcile.ownerA") },
+  { value: "货主B 精工机械", label: $t("billing.reconcile.ownerB") },
+  { value: "货主C 日化用品", label: $t("billing.reconcile.ownerC") },
+  { value: "自营", label: $t("billing.reconcile.selfOwned") }
 ];
 </script>
 
@@ -41,31 +42,46 @@ const ownerOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
+      <el-form-item :label="$t('billing.reconcile.noLabel')" prop="code">
         <el-input
           v-model="form.code"
-          placeholder="对账单号"
+          :placeholder="$t('billing.reconcile.no')"
           clearable
           style="width: 180px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="货主" prop="ownerName">
-        <el-select v-model="form.ownerName" placeholder="全部" clearable style="width: 170px">
-          <el-option v-for="o in ownerOptions" :key="o.value" :label="o.label" :value="o.value" />
+      <el-form-item :label="$t('common.columns.owner')" prop="ownerName">
+        <el-select
+          v-model="form.ownerName"
+          :placeholder="$t('billing.reconcile.all')"
+          clearable
+          style="width: 170px"
+        >
+          <el-option
+            v-for="o in ownerOptions"
+            :key="o.value"
+            :label="o.label"
+            :value="o.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="账期" prop="period">
+      <el-form-item :label="$t('billing.reconcile.period')" prop="period">
         <el-input
           v-model="form.period"
-          placeholder="如 2026-08"
+          :placeholder="$t('billing.reconcile.periodPh')"
           clearable
           style="width: 130px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('billing.reconcile.all')"
+          clearable
+          style="width: 120px"
+        >
           <el-option
             v-for="d in reconcileStatusOptions"
             :key="d.value"
@@ -75,16 +91,27 @@ const ownerOptions = [
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">
-          搜索
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+        >
+          {{ $t("common.buttons.search") }}
         </el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">
-          重置
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+        >
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="对账单" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('billing.reconcile.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -100,19 +127,7 @@ const ownerOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <template v-if="row.status === 'pending'">
-              <el-button link type="primary" @click="onAction(row, 'confirm')">
-                确认对账
-              </el-button>
-              <el-button link type="danger" @click="onAction(row, 'dispute')">
-                提出异议
-              </el-button>
-            </template>
-            <span v-else class="text-gray-400">-</span>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

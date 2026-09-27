@@ -11,6 +11,7 @@ import { useSettingStoreHook } from "@/store/modules/settings";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import { ref, watch, unref, toRaw, nextTick, onBeforeUnmount } from "vue";
+import { transformI18n, $t } from "@/plugins/i18n";
 import {
   delay,
   isEqual,
@@ -345,10 +346,10 @@ function onClickDrop(key, item, selectRoute?: RouteConfigs) {
       setTimeout(() => {
         if (pureSetting.hiddenSideBar) {
           tagsViews[6].icon = ExitFullscreen;
-          tagsViews[6].text = "内容区退出全屏";
+          tagsViews[6].text = $t("tags.contentExitFullscreen");
         } else {
           tagsViews[6].icon = Fullscreen;
-          tagsViews[6].text = "内容区全屏";
+          tagsViews[6].text = $t("tags.contentFullscreen");
         }
       }, 100);
       break;
@@ -595,7 +596,7 @@ onBeforeUnmount(() => {
             <span
               class="tag-title dark:text-text_color_primary! dark:hover:text-primary!"
             >
-              {{ item.meta.title }}
+              {{ transformI18n(item.meta.title) }}
             </span>
             <span
               v-if="
@@ -620,7 +621,7 @@ onBeforeUnmount(() => {
               <TagChrome />
             </div>
             <span class="tag-title">
-              {{ item.meta.title }}
+              {{ transformI18n(item.meta.title) }}
             </span>
             <span
               v-if="isFixedTag(item) ? false : index !== 0"

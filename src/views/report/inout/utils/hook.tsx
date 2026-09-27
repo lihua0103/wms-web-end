@@ -3,6 +3,7 @@ import type { TableColumnCtx } from "element-plus";
 import * as echarts from "echarts";
 import { getInoutReport } from "@/api/report";
 import type { InoutReport, InoutTotal } from "@/api/report";
+import { $t } from "@/plugins/i18n";
 
 function fmtDay(d: Date): string {
   const p = (n: number) => String(n).padStart(2, "0");
@@ -13,11 +14,19 @@ export function useReportInout() {
   const loading = ref(false);
   const report = ref<InoutReport>({
     list: [],
-    total: { inboundQty: 0, outboundQty: 0, inboundAmount: 0, outboundAmount: 0 }
+    total: {
+      inboundQty: 0,
+      outboundQty: 0,
+      inboundAmount: 0,
+      outboundAmount: 0
+    }
   });
 
   const form = reactive({
-    dateRange: [fmtDay(new Date(Date.now() - 29 * 86400000)), fmtDay(new Date())] as string[],
+    dateRange: [
+      fmtDay(new Date(Date.now() - 29 * 86400000)),
+      fmtDay(new Date())
+    ] as string[],
     warehouseCode: ""
   });
 
@@ -51,21 +60,24 @@ export function useReportInout() {
     trendChart.setOption(
       {
         tooltip: { trigger: "axis" },
-        legend: { data: ["入库数量", "出库数量"], bottom: 0 },
+        legend: {
+          data: [$t("report.inout.inboundQty"), $t("report.inout.outboundQty")],
+          bottom: 0
+        },
         grid: { left: 70, right: 30, top: 30, bottom: 40 },
         xAxis: { type: "category", data: rows.map(r => r.date) },
         yAxis: { type: "value" },
         series: [
           {
-            name: "入库数量",
+            name: $t("report.inout.inboundQty"),
             type: "line",
             smooth: true,
             data: rows.map(r => r.inboundQty),
-            itemStyle: { color: "#409eff" },
+            itemStyle: { color: "#0e7490" },
             areaStyle: { opacity: 0.15 }
           },
           {
-            name: "出库数量",
+            name: $t("report.inout.outboundQty"),
             type: "line",
             smooth: true,
             data: rows.map(r => r.outboundQty),
@@ -81,11 +93,15 @@ export function useReportInout() {
   /** 汇总行：日期列显示"合计"，其余列取 total */
   function summaryMethod({ columns }: { columns: TableColumnCtx<any>[] }) {
     return columns.map((col, i) => {
-      if (i === 0) return "合计";
+      if (i === 0) return $t("common.columns.total");
       const key = col.property as keyof InoutTotal;
-      const val = key ? (report.value.total as Record<string, number>)[key] : undefined;
+      const val = key
+        ? (report.value.total as Record<string, number>)[key]
+        : undefined;
       if (val === undefined || val === null) return "";
-      return key.includes("Amount") ? Number(val).toFixed(2) : Number(val).toLocaleString();
+      return key.includes("Amount")
+        ? Number(val).toFixed(2)
+        : Number(val).toLocaleString();
     });
   }
 

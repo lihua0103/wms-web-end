@@ -15,8 +15,8 @@ export function useDataThemeChange() {
   const themeColors = ref<Array<themeColorsType>>([
     /* 亮白色 */
     { color: "#ffffff", themeColor: "light" },
-    /* 道奇蓝 */
-    { color: "#1b2a47", themeColor: "default" },
+    /* 远航青（默认主题：藏青蓝侧栏 + 青色主色） */
+    { color: "#0e7490", themeColor: "default" },
     /* 深紫罗兰色 */
     { color: "#722ed1", themeColor: "saucePurple" },
     /* 深粉色 */

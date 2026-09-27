@@ -10,6 +10,7 @@ import {
 import type { tagsViewsType } from "../types";
 import { useRoute, useRouter } from "vue-router";
 import { responsiveStorageNameSpace } from "@/config";
+import { $t } from "@/plugins/i18n";
 import { useSettingStoreHook } from "@/store/modules/settings";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import {
@@ -63,49 +64,49 @@ export function useTags() {
   const tagsViews = reactive<Array<tagsViewsType>>([
     {
       icon: RefreshRight,
-      text: "重新加载",
+      text: $t("tags.reload"),
       divided: false,
       disabled: false,
       show: true
     },
     {
       icon: Close,
-      text: "关闭当前标签页",
+      text: $t("tags.closeCurrent"),
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
       show: true
     },
     {
       icon: CloseLeftTags,
-      text: "关闭左侧标签页",
+      text: $t("tags.closeLeft"),
       divided: true,
       disabled: multiTags.value.length > 1 ? false : true,
       show: true
     },
     {
       icon: CloseRightTags,
-      text: "关闭右侧标签页",
+      text: $t("tags.closeRight"),
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
       show: true
     },
     {
       icon: CloseOtherTags,
-      text: "关闭其他标签页",
+      text: $t("tags.closeOthers"),
       divided: true,
       disabled: multiTags.value.length > 2 ? false : true,
       show: true
     },
     {
       icon: CloseAllTags,
-      text: "关闭全部标签页",
+      text: $t("tags.closeAll"),
       divided: false,
       disabled: multiTags.value.length > 1 ? false : true,
       show: true
     },
     {
       icon: Fullscreen,
-      text: "内容区全屏",
+      text: $t("tags.contentFullscreen"),
       divided: true,
       disabled: false,
       show: true

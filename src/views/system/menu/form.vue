@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 import type { MenuItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
 import { menuTypeOptions } from "./utils/hook";
 
 interface Props {
@@ -18,9 +19,19 @@ const newFormInline = reactive(props.formInline);
 const parentOptions = props.parentOptions;
 
 const rules: FormRules = {
-  menuType: [{ required: true, message: "请选择菜单类型", trigger: "change" }],
-  name: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
-  path: [{ required: true, message: "请输入路由地址", trigger: "blur" }]
+  menuType: [
+    {
+      required: true,
+      message: $t("system.menu.typeMsg"),
+      trigger: "change"
+    }
+  ],
+  name: [
+    { required: true, message: $t("system.menu.namePh"), trigger: "blur" }
+  ],
+  path: [
+    { required: true, message: $t("system.menu.pathMsg"), trigger: "blur" }
+  ]
 };
 </script>
 
@@ -31,10 +42,10 @@ const rules: FormRules = {
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="上级菜单" prop="parentId">
+    <el-form-item :label="$t('system.menu.parent')" prop="parentId">
       <el-select
         v-model="newFormInline.parentId"
-        placeholder="顶级菜单"
+        :placeholder="$t('system.menu.parentPh')"
         clearable
         filterable
         style="width: 100%"
@@ -47,63 +58,66 @@ const rules: FormRules = {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="菜单类型" prop="menuType">
+    <el-form-item :label="$t('system.menu.type')" prop="menuType">
       <el-radio-group v-model="newFormInline.menuType">
         <el-radio v-for="t in menuTypeOptions" :key="t.value" :value="t.value">
           {{ t.label }}
         </el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="菜单名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入菜单名称" />
+    <el-form-item :label="$t('system.menu.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('system.menu.namePh')"
+      />
     </el-form-item>
     <el-form-item
       v-if="newFormInline.menuType !== 'button'"
-      label="路由地址"
+      :label="$t('system.menu.path')"
       prop="path"
     >
       <el-input
         v-model="newFormInline.path"
-        placeholder="请输入路由地址，如 /system/user"
+        :placeholder="$t('system.menu.pathPh')"
       />
     </el-form-item>
     <el-form-item
       v-if="newFormInline.menuType === 'menu'"
-      label="组件路径"
+      :label="$t('system.menu.component')"
       prop="component"
     >
       <el-input
         v-model="newFormInline.component"
-        placeholder="请输入组件路径，如 system/user/index"
+        :placeholder="$t('system.menu.componentPh')"
       />
     </el-form-item>
     <el-form-item
       v-if="newFormInline.menuType === 'button'"
-      label="权限标识"
+      :label="$t('system.menu.permission')"
       prop="permission"
     >
       <el-input
         v-model="newFormInline.permission"
-        placeholder="请输入权限标识，如 system:user:add"
+        :placeholder="$t('system.menu.permissionPh')"
       />
     </el-form-item>
-    <el-form-item label="图标" prop="icon">
+    <el-form-item :label="$t('system.menu.icon')" prop="icon">
       <el-input
         v-model="newFormInline.icon"
-        placeholder="请输入图标标识，如 ep/setting"
+        :placeholder="$t('system.menu.iconPh')"
       />
     </el-form-item>
-    <el-form-item label="排序" prop="sort">
+    <el-form-item :label="$t('system.menu.sort')" prop="sort">
       <el-input-number
         v-model="newFormInline.sort"
         :min="0"
         controls-position="right"
       />
     </el-form-item>
-    <el-form-item label="状态" prop="status">
+    <el-form-item :label="$t('common.columns.status')" prop="status">
       <el-radio-group v-model="newFormInline.status">
-        <el-radio :value="1">启用</el-radio>
-        <el-radio :value="0">停用</el-radio>
+        <el-radio :value="1">{{ $t("common.buttons.enabled") }}</el-radio>
+        <el-radio :value="0">{{ $t("common.buttons.disabled") }}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

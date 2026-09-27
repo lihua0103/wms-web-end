@@ -7,27 +7,27 @@ export default {
   redirect: "/billing/rule",
   meta: {
     icon: "ep/coin",
-    title: "计费结算",
-    rank: 80
+    title: "menus.billing",
+    rank: 70
   },
   children: [
     {
       path: "/billing/rule",
       name: "BillingRule",
       component: () => import("@/views/billing/rule/index.vue"),
-      meta: { title: "计费规则" }
+      meta: { title: "menus.billingRule" }
     },
     {
       path: "/billing/bill",
       name: "BillingBill",
       component: () => import("@/views/billing/bill/index.vue"),
-      meta: { title: "费用账单" }
+      meta: { title: "menus.billingBill" }
     },
     {
       path: "/billing/reconcile",
       name: "BillingReconcile",
       component: () => import("@/views/billing/reconcile/index.vue"),
-      meta: { title: "对账单" }
+      meta: { title: "menus.billingReconcile" }
     }
   ]
 } satisfies RouteConfigsTable;

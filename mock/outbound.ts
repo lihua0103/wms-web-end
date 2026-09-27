@@ -14,13 +14,31 @@ import {
 
 const warehouses = ["WH001", "WH002", "WH003"];
 const carriers = ["顺丰速运", "京东物流", "德邦快递", "自有车队"];
-const customers = ["华东商贸有限公司", "联华超市", "美宜佳便利店", "精工机械股份", "日化集团"];
+const customers = [
+  "华东商贸有限公司",
+  "联华超市",
+  "美宜佳便利店",
+  "精工机械股份",
+  "日化集团"
+];
 
 function mkMaterial(i: number) {
   const code = `SKU${String(((i - 1) % 40) + 1).padStart(5, "0")}`;
   return {
     materialCode: code,
-    materialName: ["不锈钢轴承", "伺服电机", "控制主板", "线束组件", "铝合金外壳", "橡胶密封圈", "包装纸箱", "缓冲泡沫", "标签贴纸", "螺丝套件"][(i - 1) % 10] + `-${(i - 1) % 40 + 1}`
+    materialName:
+      [
+        "不锈钢轴承",
+        "伺服电机",
+        "控制主板",
+        "线束组件",
+        "铝合金外壳",
+        "橡胶密封圈",
+        "包装纸箱",
+        "缓冲泡沫",
+        "标签贴纸",
+        "螺丝套件"
+      ][(i - 1) % 10] + `-${((i - 1) % 40) + 1}`
   };
 }
 
@@ -28,13 +46,30 @@ const orders = genRows(50, i => ({
   id: i,
   code: genCode("OUT", i),
   warehouseCode: pick(warehouses),
-  ownerName: pick(["货主A 华东电子", "货主B 精工机械", "货主C 日化用品", "自营"]),
+  ownerName: pick([
+    "货主A 华东电子",
+    "货主B 精工机械",
+    "货主C 日化用品",
+    "自营"
+  ]),
   customerName: pick(customers),
   type: pick(["sales", "sales", "sales", "transfer", "internal", "scrap"]),
   priority: pick(["urgent", "high", "normal", "normal", "low"]),
   ...mkMaterial(i),
   qty: randInt(10, 500),
-  status: pick(["pending", "allocating", "picking_wait", "picking", "review", "shipping_wait", "shipped", "finished", "finished", "cancelled", "stockout"]),
+  status: pick([
+    "pending",
+    "allocating",
+    "picking_wait",
+    "picking",
+    "review",
+    "shipping_wait",
+    "shipped",
+    "finished",
+    "finished",
+    "cancelled",
+    "stockout"
+  ]),
   deliveryDate: pickDate(-3, -10),
   remark: "",
   createdAt: pickDate(15, 0) + " 09:20:00"
@@ -51,7 +86,16 @@ const waves = genRows(15, i => ({
   createdAt: pickDate(10, 0) + " 08:00:00"
 }));
 
-const locations = ["A-01-01", "A-01-02", "A-02-01", "B-03-02", "B-05-01", "C-01-03", "C-02-01", "D-02-02"];
+const locations = [
+  "A-01-01",
+  "A-01-02",
+  "A-02-01",
+  "B-03-02",
+  "B-05-01",
+  "C-01-03",
+  "C-02-01",
+  "D-02-02"
+];
 const pickings = genRows(45, i => ({
   id: i,
   taskNo: genCode("PK", i),
@@ -78,7 +122,8 @@ const packings = genRows(35, i => {
     qty,
     checkedQty: status === "finished" ? qty : 0,
     weight: status === "finished" ? randInt(10, 500) : undefined,
-    boxNo: status === "finished" ? `BOX${String(randInt(1000, 9999))}` : undefined,
+    boxNo:
+      status === "finished" ? `BOX${String(randInt(1000, 9999))}` : undefined,
     status,
     operator: pick(["user002", "user003"]),
     createdAt: pickDate(10, 0) + " 10:15:00"
@@ -101,11 +146,31 @@ const shippings = genRows(30, i => ({
 // ========================= 路由 =========================
 
 export default defineFakeRoute([
-  ...crudRoutes({ prefix: "/wms/outbound/order", seed: orders, searchFields: ["code", "customerName", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/outbound/wave", seed: waves, searchFields: ["code"] }),
-  ...crudRoutes({ prefix: "/wms/outbound/picking", seed: pickings, searchFields: ["taskNo", "orderCode", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/outbound/packing", seed: packings, searchFields: ["code", "orderCode", "materialCode"] }),
-  ...crudRoutes({ prefix: "/wms/outbound/shipping", seed: shippings, searchFields: ["code", "orderCode"] }),
+  ...crudRoutes({
+    prefix: "/wms/outbound/order",
+    seed: orders,
+    searchFields: ["code", "customerName", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/outbound/wave",
+    seed: waves,
+    searchFields: ["code"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/outbound/picking",
+    seed: pickings,
+    searchFields: ["taskNo", "orderCode", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/outbound/packing",
+    seed: packings,
+    searchFields: ["code", "orderCode", "materialCode"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/outbound/shipping",
+    seed: shippings,
+    searchFields: ["code", "orderCode"]
+  }),
   // 出库单审批
   {
     url: "/wms/outbound/order/approve",
@@ -122,7 +187,8 @@ export default defineFakeRoute([
     url: "/wms/outbound/wave/generate",
     method: "post",
     response: ({ body }) => {
-      const count = waves.filter(w => w.warehouseCode === body?.warehouseCode).length + 1;
+      const count =
+        waves.filter(w => w.warehouseCode === body?.warehouseCode).length + 1;
       const row = {
         id: Date.now() % 100000,
         code: genCode("WV", count),

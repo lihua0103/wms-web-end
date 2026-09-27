@@ -1,0 +1,2342 @@
+app:
+  title: ZL WMS
+  subtitle: Integrated Management Platform
+common:
+  language: Language
+  buttons:
+    add: Add
+    edit: Edit
+    delete: Delete
+    batchDelete: Batch Delete
+    search: Search
+    reset: Reset
+    refresh: Refresh
+    export: Export
+    import: Import
+    confirm: Confirm
+    cancel: Cancel
+    save: Save
+    submit: Submit
+    close: Close
+    detail: Detail
+    back: Back
+    expand: Expand
+    collapse: Collapse
+    print: Print
+    upload: Upload
+    download: Download
+    copy: Copy
+    view: View
+    audit: Approve
+    cancelAudit: Revoke
+    execute: Execute
+    assign: Assign
+    dispatch: Dispatch
+    complete: Complete
+    cancelOrder: Cancel
+    generate: Generate
+    sync: Sync
+    test: Test Connection
+    enabled: Enable
+    disabled: Disable
+    send: Send
+    resend: Resend
+    declare: Declare
+    more: More
+    login: Sign In
+    logout: Sign Out
+    ok: OK
+  columns:
+    index: No.
+    code: Code
+    name: Name
+    status: Status
+    type: Type
+    operation: Actions
+    remark: Remark
+    creator: Created By
+    createTime: Created At
+    updater: Updated By
+    updateTime: Updated At
+    quantity: Qty
+    unit: UOM
+    warehouse: Warehouse
+    zone: Zone
+    location: Location
+    owner: Cargo Owner
+    material: Material
+    batchNo: Batch No.
+    total: Total
+  tips:
+    input: Please enter
+    select: Please select
+    inputOrSelect: Enter or select
+    selectDate: Select date
+    noData: No data
+    loading: Loading...
+    confirmDelete: Delete the selected records?
+    deleteSuccess: Deleted successfully
+    saveSuccess: Saved successfully
+    submitSuccess: Submitted successfully
+    operateSuccess: Operation successful
+    operateFailed: Operation failed
+    selectedWarning: Please select at least one record
+    logoutSuccess: Signed out successfully
+    welcomeBack: Welcome back
+    comingSoon: Work in progress
+  pagination:
+    total: "{total} records in total"
+menus:
+  home: Home
+  welcome: Workspace
+  login: Sign In
+  error: Error Pages
+  forbidden: "403"
+  notFound: "404"
+  serverError: "500"
+  loading: Loading...
+  master: Master Data
+  masterWarehouse: Warehouses
+  masterZone: Zones
+  masterLocation: Locations
+  masterMaterial: Materials
+  masterOwner: Cargo Owners
+  masterSupplier: Suppliers
+  masterCustomer: Customers
+  masterContainer: Containers
+  inbound: Inbound
+  inboundAppointment: Appointments
+  inboundReceipt: Receiving
+  inboundQc: Quality Inspection
+  inboundPutaway: Putaway Tasks
+  inboundReturn: Returns
+  outbound: Outbound
+  outboundOrder: Outbound Orders
+  outboundWave: Waves
+  outboundPicking: Picking Tasks
+  outboundPacking: Pack & Check
+  outboundShipping: Shipping Handover
+  inventory: Inventory
+  inventoryLedger: Stock Ledger
+  inventorySerial: Serial Numbers
+  inventoryBatch: Batches & Expiry
+  inventoryMove: Transfers
+  inventoryAdjustment: Adjustments
+  inventoryStocktake: Stocktake
+  inventoryWarning: Stock Alerts
+  inventoryTransaction: Stock Transactions
+  operation: Warehouse Operations
+  operationTask: Task Pool
+  operationReplenish: Replenishment
+  operationProcess: Value-added Processing
+  operationCrossdock: Cross-dock
+  transport: Transportation
+  transportCarrier: Carriers
+  transportVehicle: Vehicles & Drivers
+  transportDispatch: Delivery Orders
+  transportTracking: In-transit Tracking
+  billing: Billing & Settlement
+  billingRule: Billing Rules
+  billingBill: Bills
+  billingReconcile: Reconciliation
+  customs: Customs
+  customsLedger: Customs Ledgers
+  customsVerify: Verification Lists
+  customsRelease: Release Notes
+  customsTriple: Triple-doc Matching
+  customsMsglog: Customs Messages
+  report: Reports
+  reportDashboard: Inventory Dashboard
+  reportInout: Inbound & Outbound Report
+  reportEfficiency: Operation Efficiency
+  reportScreen: Data Big Screen
+  system: System
+  systemUser: Users
+  systemRole: Roles
+  systemMenu: Menus
+  systemOrg: Organizations
+  systemDict: Dictionaries
+  systemParam: Parameters
+  systemLog: Audit Logs
+  systemNotice: Notifications
+  integration: Devices & Integration
+  integrationDevice: Devices
+  integrationAgv: AGV Scheduling
+  integrationDeviceTask: Device Tasks
+  integrationConfig: Integration Config
+  integrationApilog: API Logs
+  ai: AI Agent Center
+  aiWorkflow: AI Workflows
+  aiRun: Run History
+dict:
+  userStatus:
+    "0": Disabled
+    "1": Enabled
+  docStatus:
+    draft: Draft
+    pending: Pending Approval
+    approved: Approved
+    processing: In Progress
+    finished: Finished
+    cancelled: Cancelled
+  zoneType:
+    receiving: Receiving
+    storage: Storage
+    picking: Picking
+    buffer: Buffer
+    shipping: Shipping
+    return: Return
+    reject: Rejected
+    process: Processing
+  locationType:
+    floor: Floor
+    shelf: Shelf
+    stereo: AS/RS
+    pick: Pick Face
+    cache: Cache
+  materialCategory:
+    raw: Raw Material
+    semi: Semi-finished
+    finished: Finished Goods
+    packing: Packaging
+    consumable: Consumables
+    spare: Spare Parts
+  containerType:
+    pallet: Pallet
+    box: Tote
+    bin: Bin
+    cage: Roll Cage
+  containerStatus:
+    idle: Idle
+    occupied: Occupied
+    instock: In Stock
+    shipping: In Shipping
+    scrapped: Scrapped
+  inboundType:
+    purchase: Purchase Inbound
+    return: Return Inbound
+    transfer: Transfer In
+    gain: Stocktake Gain
+    other: Other Inbound
+  inboundStatus:
+    pending: Pending Approval
+    waiting: Waiting Arrival
+    receiving: Receiving
+    qc: Pending QC
+    putaway: Pending Putaway
+    finished: Finished
+    cancelled: Cancelled
+  qcResult:
+    waiting: Waiting
+    pass: Pass
+    fail: Fail
+    concession: Concession
+  outboundType:
+    sales: Sales Outbound
+    transfer: Transfer Out
+    internal: Internal Use
+    scrap: Scrap
+    other: Other Outbound
+  outboundStatus:
+    pending: Pending Approval
+    allocating: Allocating
+    picking_wait: Waiting Picking
+    picking: Picking
+    review: Pending Review
+    shipping_wait: Waiting Shipment
+    shipped: Shipped
+    finished: Finished
+    cancelled: Cancelled
+    stockout: Stockout
+  priority:
+    urgent: Urgent
+    high: High
+    normal: Normal
+    low: Low
+  stockStatus:
+    qualified: Qualified
+    inspecting: Inspecting
+    frozen: Frozen
+    unqualified: Unqualified
+  moveType:
+    location: Location Transfer
+    container: Container Transfer
+    transfer: Warehouse Transfer
+  stocktakeStatus:
+    draft: Draft
+    counting: Counting
+    diff: Difference Pending
+    finished: Finished
+    cancelled: Cancelled
+  stocktakeMode:
+    full: Full Count
+    cycle: Cycle Count
+    spot: Spot Count
+    moving: Movement Count
+  transactionType:
+    receive: Receive In
+    putaway: Putaway In
+    sales: Sales Out
+    transfer_out: Transfer Out
+    transfer_in: Transfer In
+    move: Move
+    replenish: Replenish
+    stocktake: Stocktake Adjust
+    gain: Gain
+    loss: Loss
+    freeze: Freeze
+    unfreeze: Unfreeze
+  warningType:
+    low: Below Safety Stock
+    over: Overstock
+    dead: Dead Stock
+    expiring: Nearing Expiry
+    expired: Expired
+  serialStatus:
+    instock: In Stock
+    allocated: Allocated
+    outbound: Outbound
+    scrapped: Scrapped
+    repairing: Under Repair
+  taskType:
+    receive: Receiving
+    qc: QC
+    putaway: Putaway
+    replenish: Replenishment
+    picking: Picking
+    review: Review
+    move: Transfer
+    stocktake: Stocktake
+  taskStatus:
+    pending: Pending Assignment
+    processing: In Progress
+    finished: Finished
+    cancelled: Cancelled
+    error: Error
+  carrierType:
+    self: Own Fleet
+    third: 3PL
+  deliveryStatus:
+    pending: Pending Dispatch
+    dispatched: Dispatched
+    delivering: Delivering
+    signed: Signed
+    error: Error
+  feeType:
+    storage: Storage Fee
+    operation: Operation Fee
+    handling: Handling Fee
+    material: Consumable Fee
+    transport: Freight
+  billStatus:
+    pending: Pending Confirmation
+    confirmed: Confirmed
+    invoiced: Invoiced
+    settled: Settled
+    disputed: Disputed
+  deviceType:
+    agv: AGV
+    stacker: Stacker Crane
+    conveyor: Conveyor
+    ptl: PTL
+    sorter: Sorter
+    door: Auto Door
+  deviceStatus:
+    online: Online
+    offline: Offline
+    error: Fault
+    repairing: Under Repair
+    charging: Charging
+    working: Working
+  deviceTaskStatus:
+    queued: Queued
+    executing: Executing
+    finished: Finished
+    failed: Failed
+    cancelled: Cancelled
+  integrationType:
+    erp: ERP
+    oms: OMS
+    tms: TMS
+    wcs: WCS
+    ecom: E-commerce
+  apiDirection:
+    down: Inbound (External → WMS)
+    up: Outbound (WMS → External)
+  apiLogStatus:
+    success: Success
+    fail: Fail
+    retry: Retrying
+  customsLedgerType:
+    bonded_logistics: Bonded Logistics Ledger
+    process_trade: Processing Trade Ledger
+    export_warehouse: Export Supervised Warehouse Ledger
+  customsLedgerStatus:
+    active: Active
+    changing: Changing
+    expired: Expired
+    cancelled: Cancelled
+  supervisionMode:
+    "1210": 1210 Bonded E-commerce Import
+    "1233": 1233 Bonded Warehouse Goods
+    "1239": 1239 Bonded E-commerce A
+    "5034": 5034 Bonded Logistics Center Entrepot
+    "0110": 0110 General Trade
+  customsVerifyType:
+    in: Inbound Verification List
+    out: Outbound Verification List
+  customsVerifyStatus:
+    draft: Draft
+    declared: Declared
+    passed: Passed
+    deducted: Deducted
+    refused: Refused
+    cancelled: Cancelled
+  releaseDirection:
+    in: Inbound
+    out: Outbound
+  releaseStatus:
+    draft: Pending Declaration
+    declared: Declared
+    released: Released
+    crossed: Gate Crossed
+    cancelled: Cancelled
+  tripleDocType:
+    order: Order
+    payment: Payment
+    logistics: Waybill
+  tripleStatus:
+    pending: Pending Push
+    pushed: Pushed
+    matched: Matched
+    failed: Match Failed
+  triplePlatform:
+    tmall: Tmall Global
+    jd: JD Worldwide
+    pdd: PDD Global
+    douyin: Douyin Global
+    kaola: Kaola
+  customsMsgType:
+    verify: Verification List Message
+    release: Release Note Message
+    triple: Triple-doc Message
+    summary: Summary Declaration Message
+    ledger: Ledger Filing Message
+  customsChannel:
+    single_window: Single Window
+    golden_phase2: Golden Gate Phase II
+    ceb_platform: CEB Clearance Platform
+  customsMsgDirection:
+    up: Outbound (WMS → Customs)
+    down: Inbound (Customs → WMS)
+  customsMsgStatus:
+    success: Sent
+    fail: Send Failed
+    pending: Pending
+    resend: Resending
+  aiScene:
+    inventory: Inventory
+    operation: Warehouse Operations
+    transport: Transportation
+    billing: Billing & Settlement
+    customs: Customs Documents
+    report: Reports
+  aiTrigger:
+    manual: Manual
+    scheduled: Scheduled
+    event: Event-driven
+  aiRunStatus:
+    running: Running
+    success: Success
+    failed: Failed
+  aiNodeType:
+    start: Start
+    llm: LLM
+    tool: Tool Call
+    condition: Condition
+    end: End
+  aiWorkflowStatus:
+    enabled: Enabled
+    disabled: Disabled
+ai:
+  workflow:
+    title: AI Agent Workflows
+    allPh: All
+    namePh: Workflow name
+    scene: Business Scene
+    triggerType: Trigger
+    add: Add Workflow
+    editTitle: Edit Workflow
+    run: Run
+    code: Workflow Code
+    name: Workflow Name
+    cronExpr: Cron Expression
+    model: Execution Model
+    description: Description
+    steps: Orchestration Steps
+    codePh: e.g. WF-AI-007
+    nameFormPh: e.g. Smart Sorting for Return Inbound
+    cronPh: e.g. 0 0 2 * * ? (daily 02:00)
+    descPh: Describe trigger conditions, execution logic, and outputs
+    stepNamePh: Step name, e.g. Identify Alert Type
+    codeRequired: Please enter the workflow code
+    nameRequired: Please enter the workflow name
+    sceneRequired: Please select a business scene
+    triggerRequired: Please select a trigger
+    modelRequired: Please select an execution model
+    moveUp: Move Up
+    moveDown: Move Down
+    addStep: + Add Step
+    runCount: Runs
+    successRate: Success Rate
+    lastRun: Last Run
+    stepSummary: "{count} steps · {type}"
+    cronExprTag: " ({cron})"
+    defaultStepReceive: Receive Trigger Params
+    defaultStepAnalyze: Business Analysis
+    defaultStepAction: Execute Action
+    defaultStepOutput: Output Result
+    stepRequired: At least one orchestration step is required
+    addSuccess: Added successfully
+    updateSuccess: Updated successfully
+    disabledTip: The workflow is disabled. Enable it first
+    runTriggered: Run triggered. Run No. {runNo}. Check progress in Runs
+    enabledMsg: Enabled
+    disabledMsg: Disabled
+    tip: Notice
+    confirmDeleteName: Confirm deleting workflow "{name}"? This cannot be undone
+  run:
+    title: AI Agent Runs
+    allPh: All
+    runNo: Run No.
+    runNoPh: Run No. starting with RUN
+    workflow: Workflow
+    workflowPh: Workflow name
+    scene: Scene
+    triggerType: Trigger
+    stepProgress: Step Progress
+    duration: Duration
+    tokenCol: Token
+    operator: Triggered By
+    startedAt: Start Time
+    detailTitle: Run Details
+    totalDuration: Total Duration
+    tokenUsage: Token Usage
+    failReason: Failure Reason
+    manualTrigger: Manual Trigger
+    scheduledTrigger: Scheduled Trigger
+    eventTrigger: Event Trigger
+    retry: Retry
+    retryQueued: Re-queued
+    stepTimeline: Step Execution Timeline
+    stepDuration: "Duration: {duration}"
+    inputLabel: "Input: "
+    outputLabel: "Output: "
+    noSteps: No step details
+    stepStatus:
+      running: Running
+      success: Success
+      failed: Failed
+      pending: Pending
+      skipped: Skipped
+  panel:
+    agentName: WMS AI Agent
+    entryLabel: AI Agent
+    statusRemote: Online · Remote Engine
+    statusLocal: Online · Local Preview Engine
+    statusOff: Offline
+    greeting: Hello, I am the WMS AI Agent. I can help you check stock, track documents, find issues, and generate reports, and I also support international logistics scenarios (freight quotes, ETA queries, customs compliance, exception handling) — click a skill card below or type a command directly.
+    disabledMsg: The AI Agent feature is disabled. Ask an administrator to enable it in platform-config.json.
+    stopped: (Generation stopped)
+    clearSession: Clear Session
+    collapse: Collapse
+    toolCalling: Calling…
+    tokenUsage: "{count} tokens used"
+    inputPh: "Enter a command, e.g.: Check Class A material stock in WH001"
+    skill:
+      checkStock:
+        title: Check Stock
+        prompt: Check the current stock and location occupancy of zones A/B in WH001 Shanghai Main Warehouse
+      trackDocs:
+        title: Track Documents
+        prompt: Which step has inbound appointment ASN202609260013 reached
+      findIssues:
+        title: Find Issues
+        prompt: Scan today's stock warnings and operation exceptions, listed by priority
+      genReport:
+        title: Generate Reports
+        prompt: Generate key points of this week's inbound/outbound and operation efficiency report
+      freightQuote:
+        title: Freight Quote
+        prompt: Estimate ocean freight and transit time for 2 pallets / 500kg from Shanghai to Los Angeles
+      etaQuery:
+        title: ETA Query
+        prompt: Expected delivery time of delivery order DP202609250008, and whether it is delayed
+      customsCheck:
+        title: Customs Compliance
+        prompt: Review whether export document elements are complete and the HS classification is correct
+      exceptionHandle:
+        title: Exception Handling
+        prompt: Handle the WH002 stockout warning and create a handling ticket
+    preview:
+      engineOff: AI Agent feature is disabled (AiEnabled=false)
+      remoteFallback: Remote engine connection failed ({msg}); switched to the local preview engine
+      engineError: Preview engine error
+      inventory:
+        thought: "Command understood: stock query. Params: warehouse=WH001 Shanghai Main Warehouse (default current), scope=A/B storage zones, output=available stock and locations."
+        toolSummary: Matched 3 SKUs, 6 batches, 41 locations
+        body: |-
+          Real-time stock of **WH001 Shanghai Main Warehouse** queried. Key results:
+
+          **1. SKU00003 Precision Bearing (Class A)**
+          - Available: 1,284 pcs ｜ Locations B-03-01 to B-03-06
+          - Batch expiry: B2609A (expires 2027-03-15) ｜ Safety stock attainment 96%
+          - Status: Normal
+
+          **2. SKU00011 Lithium Battery Module (Dangerous Goods)**
+          - Available: 460 pcs ｜ Location D-02-03 (quarantine zone, UN3480)
+          - ⚠ Below the safety stock line (500 pcs); replenishment review recommended
+
+          **3. SKU00027 Precision Machinery Parts**
+          - Available: 2,150 pcs ｜ Location B-05-02
+          - ⚠ Slow-moving alert: no outbound records for 90 consecutive days
+
+          Summary: Zone A location occupancy 82%, Zone B 67%. Shall I export details, check a batch's serial numbers, or generate replenishment suggestions?
+        s1: Generate replenishment suggestions for SKU00011
+        s2: Check Zone B location occupancy details
+        s3: Export a stock snapshot
+      docTrace:
+        thought: "Command understood: full-chain document tracking. Document ASN202609260013 (inbound appointment); retrieving execution progress along the appointment → receiving → QC → putaway chain."
+        toolSummary: Chain matched 4 nodes; currently held at QC
+        body: |-
+          Progress of **ASN202609260013** (Inbound Appointment · Owner A East Electronics):
+
+          - ✅ Appointment confirmed: 09-26 09:12, dock D-03, slot 14:00-16:00
+          - ✅ Receiving handover: IN202609260021, received 480/500 pcs, 20 pcs discrepancy registered for handling
+          - ⏳ **In QC**: QC202609270005, 15% sampling, 62/75 pcs inspected, expected to finish in 25 minutes
+          - ⬜ Putaway task: not generated (PA tasks will be auto-dispatched to Zone B ASRS locations after QC)
+
+          Risk note: at the current pace the full chain is expected to complete before 17:40, within the appointment window. Shall I watch the QC node and remind you when it completes?
+        s1: Remind me when QC completes
+        s2: View the 20 pcs receiving discrepancy
+        s3: Which locations will this batch be put away to
+      exceptionScan:
+        thought: "Command understood: global exception scan. Scope = stock warnings + operation timeouts + slow-moving, window = today, sorted by priority."
+        toolSummary: "{count} exceptions matched, 2 of them critical"
+        step1: Exception Detection
+        step2: Classification
+        step3: Priority Ranking
+        body: |-
+          Today's global exception scan completed, **{count} matched** in total. Critical items by priority:
+
+          **🔴 P0 · WH002 Guangzhou South Warehouse stockout warning**
+          - SKU00017 car charging module: 0 available, 300 in transit expected 09-29
+          - Impact: 6 unfulfilled orders; suggestion: partially fulfill 4 and switch the other 2 to WH001
+
+          **🔴 P0 · Picking task timeout**
+          - PK202609270012 (wave WV202609270003): 42 minutes over, responsible picking area C-02
+          - Suggestion: escalate to the team leader or fall back to the AGV forklift
+
+          **🟡 P1 · {slowCount} slow-moving warnings**: 3 SKUs in Zone B with no movement for 90 days; promotion or transfer suggested
+
+          Shall I create a handling ticket for any of these exceptions?
+        s1: Handle the WH002 stockout warning
+        s2: View slow-moving SKU details
+        s3: Push P0 exceptions to the team group
+      reportGen:
+        thought: "Command understood: report interpretation. Aggregate this week's inbound/outbound and operation efficiency KPIs, compare week over week, and output highlights and suggestions."
+        toolSummary: Aggregated 7 days × 3 metric groups from 126k transactions
+        body: |-
+          Operational highlights of this week (09-21 to 09-27):
+
+          - **Throughput**: inbound 21,436 pcs (+8.2% WoW), outbound 28,701 pcs (+15.6% WoW), outbound peaks on Thursday
+          - **Efficiency**: picking 142 pcs per person-hour (+6 WoW), 3,208 AGV transfer tasks, equipment utilization 81%
+          - **Quality**: receiving discrepancy rate 0.42%, picking error rate 0.08%, both within target
+          - **Warning**: WH002 outbound volume fell for two straight weeks (-12%) while inventory turnover days rose to 47
+
+          Conclusion: healthy overall; attention to the WH002 inventory structure is suggested. Shall I generate the full weekly report PDF or dig into the cause of the WH002 turnover anomaly?
+        s1: Dig into the WH002 turnover anomaly
+        s2: Generate outbound trend chart data
+        s3: Compare with last month's efficiency
+      freightQuote:
+        thought: "Command understood: international freight quote. Params: origin Shanghai (CNSHA) → Los Angeles (USLAX), 2 pallets / 500kg / 3.2cbm, ocean LCL vs express compared first."
+        toolSummary: Returned 3 channel quotes (ocean LCL / ocean express / air)
+        body: |-
+          **Shanghai → Los Angeles** (2 pallets / 500kg / 3.2cbm) quote results:
+
+          - **Ocean LCL**: about $680 ($212/cbm + surcharges), 28-34 days door to door, cutoff every Tue/Fri
+          - **Ocean express (Matson limited-time)**: about $1,150, 18-22 days, suitable for urgent restock
+          - **Air**: about $2,400 ($4.8/kg), 5-7 days, including 1-2 days of customs
+
+          Suggestion: use LCL for non-urgent restock at the lowest unit logistics cost; for the 6 orders tied to the WH002 stockout, the express channel balances speed and cost.
+
+          Note: quotes are preview simulation only; official quotes follow contract schedules and live fuel surcharges.
+        s1: Estimate the total cost via the express channel
+        s2: Compare full transit time to the WH001 US-West warehouse
+        s3: Generate a quotation draft
+      etaQuery:
+        thought: "Command understood: in-transit ETA query. Retrieving the GPS track of delivery order DP202609250008, the carrier's promised time, and the current congestion index."
+        toolSummary: Track matched 12 nodes; latest at the G15 Changshu section
+        bodyOnTime: |-
+          In-transit status of **DP202609250008** (carrier: Shunzhi Logistics · 沪A·D8821):
+
+          - Current position: G15 Shenhai Expressway, Changshu section (track at 09-27 10:42)
+          - Promised by 09-27 18:00, **estimated arrival 17:20**, on-time check: ✅ on schedule
+          - 86 km remaining, passing 2 (light) congestion points
+
+          Shall I enable an arrival reminder 30 minutes before delivery?
+        bodyDelayed: |-
+          In-transit status of **DP202609250008** (carrier: Shunzhi Logistics · 沪A·D8821):
+
+          - Current position: G15 Shenhai Expressway, Changshu section (track at 09-27 10:42)
+          - Promised by 09-27 18:00, **estimated arrival 19:10, about 70 minutes late** ⚠
+          - Cause: accident control on the Suzhou section plus unloading queue (2 orders ahead)
+
+          Suggestion: I can push a delay-soothing SMS to the consignee and adjust the dock appointment. Shall I proceed?
+        s1: Push a delay notification to the customer
+        s2: Adjust tonight's dock appointment
+        s3: View this carrier's on-time rate this month
+      customsCheck:
+        thought: "Command understood: intelligent export document review. Executing workflow WF-AI-003: OCR parsing → element verification → HS pre-classification → risk flagging."
+        toolSummaryOcr: Parsed 3 documents (invoice / packing list / POA) and extracted 18 elements
+        toolSummaryHs: Pre-classified as 8482.10 (rolling bearings), confidence 0.94
+        stepOcr: OCR Document Parsing
+        stepVerify: Element Completeness Check
+        stepHs: HS Code Pre-classification
+        stepRisk: Risk Flagging and Review
+        body: |-
+          Document review completed (workflow WF-AI-003). Results:
+
+          **✅ Element verification**: 16 of 18 passed
+          - Invoice, packing list, and customs POA are complete
+          - ⚠ Certificate of origin missing (required for general-trade tax refund; submission recommended)
+          - ⚠ Gross weight differs between the packing list and the invoice (1,240kg vs 1,215kg); confirm manually with the customs declaration as authoritative
+
+          **✅ HS pre-classification**: 8482.10 rolling bearings (94% confidence), rebate rate 13%, no special regulatory requirements
+
+          **Risk level**: 🟡 Medium (2 items pending manual confirmation). A customs declaration draft can be generated right after confirmation. Continue?
+        s1: Correct the gross weight per the customs declaration
+        s2: Generate a customs declaration draft
+        s3: View regulatory conditions of HS 8482.10
+      exceptionHandle:
+        thought: "Command understood: exception handling. Target = WH002 stockout warning ({sku}); executing the handling workflow: root cause analysis → plan matching → ticket creation."
+        toolSummaryRoot: "Root cause: sales forecast 35% too low + 2-day supplier delay"
+        toolSummaryTicket: Replenishment ticket RP202609270011 created
+        stepConfirm: Exception Confirmation
+        stepRoot: Root Cause Analysis
+        stepPlan: Plan Matching
+        stepTicket: Ticket Creation
+        body: |-
+          Handling completed. Execution summary:
+
+          **Root cause**: sales forecast was 35% below actual during the promo warm-up, compounded by a 2-day supplier material delay
+
+          **Actions taken**:
+          - ✅ Urgent replenishment ticket **RP202609270011** created (300 pcs, expedited), ETA 09-29 10:00
+          - ✅ Of the 6 affected orders, 4 partially fulfilled and 2 switched to WH001 Shanghai Main Warehouse (cross-warehouse dispatch)
+          - ✅ Owner B Precision Machinery's customer service notified to sync customer delivery dates
+
+          **Follow-up suggestions** (manual confirmation needed): raise the SKU's safety stock from 500 to 650 and include it in the promo forecast correction model.
+
+          Tickets and notifications are logged in Runs and traceable at any time.
+        s1: View RP202609270011 ticket details
+        s2: Raise the safety stock to 650
+        s3: Review this month's similar warnings
+      general:
+        thought: No deterministic skill matched; switching to general Q&A mode (the preview engine only simulates answers within the warehousing and international logistics domains).
+        body: |-
+          Command received: "{question}".
+
+          This is the local preview engine. Supported skill domains:
+          - Warehousing: Check Stock / Track Documents / Find Issues / Generate Reports
+          - International logistics: Freight Quote / ETA Query / Customs Compliance / Exception Handling
+
+          Try rephrasing (e.g. "Check WH001 stock") or wait until the remote Agent gateway is connected to unlock full natural language capability.
+        s1: Check WH001 Shanghai Main Warehouse stock
+        s2: Scan today's exceptions
+        s3: Quote freight from Shanghai to Los Angeles
+billing:
+  bill:
+    title: Bills
+    noLabel: No.
+    no: Bill No.
+    all: All
+    period: Billing Period
+    periodPh: e.g. 2026-08
+    feeType: Fee Type
+    amountCol: Amount (CNY)
+    confirmUser: Confirmed By
+    confirmBtn: Confirm
+    invoiceBtn: Invoice
+    settleBtn: Settle
+    tip: Notice
+    confirmTip: Confirm bill "{code}"?
+    confirmSuccess: Bill confirmed
+    invoiceTip: Invoice bill "{code}"?
+    invoiceSuccess: Invoiced successfully
+    settleTip: Confirm that bill "{code}" has been settled?
+    settleSuccess: Settlement completed
+    ownerA: Owner A Huadong Electronics
+    ownerB: Owner B Jinggong Machinery
+    ownerC: Owner C Daily Chemicals
+    selfOwned: Self-operated
+  rule:
+    title: Billing Rules
+    code: Rule Code
+    all: All
+    feeType: Fee Type
+    addBtn: Add Rule
+    addTitle: Add Billing Rule
+    editTitle: Edit Billing Rule
+    unit: Billing Unit
+    price: Unit Price (CNY)
+    minimumFee: Minimum Fee
+    minimumFeeCol: Minimum Fee (CNY)
+    effectiveFrom: Effective Date
+    effectiveTo: Expiry Date
+    codeRequired: Please enter the rule code
+    ownerRequired: Please select an owner
+    feeTypeRequired: Please select a fee type
+    unitRequired: Please select a billing unit
+    effectiveFromRequired: Please select the effective date
+    effectiveToRequired: Please select the expiry date
+    unitPalletDay: Pallet/Day
+    unitPiece: Piece
+    unitTime: Time
+    unitTicket: Shipment
+    tip: Notice
+    deleteTip: Delete billing rule "{code}"?
+    addSuccess: Added successfully
+    updateSuccess: Updated successfully
+    ownerA: Owner A Huadong Electronics
+    ownerB: Owner B Jinggong Machinery
+    ownerC: Owner C Daily Chemicals
+    selfOwned: Self-operated
+  reconcile:
+    title: Reconciliation
+    noLabel: No.
+    no: Reconciliation No.
+    all: All
+    period: Billing Period
+    periodPh: e.g. 2026-08
+    billCount: Bill Count
+    totalAmountCol: Total Amount (CNY)
+    diffAmountCol: Difference Amount (CNY)
+    confirmBtn: Confirm
+    disputeBtn: Raise Dispute
+    tip: Notice
+    confirmTip: Confirm reconciliation "{code}"?
+    confirmSuccess: Reconciliation confirmed
+    disputeTip: Raise a dispute on reconciliation "{code}"?
+    disputeSuccess: Dispute submitted
+    ownerA: Owner A Huadong Electronics
+    ownerB: Owner B Jinggong Machinery
+    ownerC: Owner C Daily Chemicals
+    selfOwned: Self-operated
+customs:
+  ledger:
+    title: Customs Ledger
+    addTitle: Add Customs Ledger
+    editTitle: Edit Customs Ledger
+    add: New Ledger
+    tip: Notice
+    all: All
+    ledgerNo: Ledger No.
+    ledgerNoPh: e.g. L2631W00001
+    ledgerType: Ledger Type
+    enterpriseName: Enterprise Name
+    enterpriseNamePh: Registered enterprise name
+    enterpriseNameFullPh: Full registered enterprise name
+    customsCode: Customs Registration Code
+    customsCodePh: 10-digit customs registration code
+    creditCode: Credit Code
+    creditCodePh: 18-digit unified social credit code
+    supervisionMode: Supervision Mode
+    validFrom: Valid From
+    validTo: Valid To
+    detailBtn: Details
+    detailTitle: Ledger Detail Records
+    gNo: Customs Item No.
+    skuCode: Material Code
+    goodsName: Description
+    declaredQty: Filed Qty
+    usedQty: Deducted
+    availQty: Available Qty
+    inputLedgerNo: Please enter the ledger number
+    selectLedgerType: Please select a ledger type
+    inputEnterpriseName: Please enter the enterprise name
+    inputCustomsCode: Please enter the customs registration code
+    selectSupervisionMode: Please select a supervision mode
+    selectValidFrom: Please select the valid-from date
+    selectValidTo: Please select the valid-to date
+    pickValidFrom: Select valid-from date
+    pickValidTo: Select valid-to date
+    remarkPh: Remark
+    addSuccess: Added successfully
+    updateSuccess: Updated successfully
+    confirmDelete: Are you sure you want to delete ledger {no}? Its associated detail records will also be removed.
+  verify:
+    title: Verification List
+    detailTitle: Verification List Details
+    all: All
+    listNo: List No.
+    bizNo: Related Doc No.
+    bizNoPh: Inbound/outbound order No.
+    relBizNo: Related Inbound/Outbound Order
+    ledgerNo: Ledger No.
+    packCount: Packages
+    supervisionMode: Supervision Mode
+    declareTime: Declared At
+    declareBy: Declared By
+    refusedReason: Refusal Reason
+    goodsTitle: Goods Details
+    gNo: Item No.
+    hsCode: HS Code
+    goodsName: Description
+    declareQty: Declared Qty
+    price: Unit Price
+    currency: Currency
+    grossWeightKg: Gross Wt. (kg)
+    netWeightKg: Net Wt. (kg)
+    grossNetWeight: Gross / Net Weight
+    redeclare: Redeclare
+    syncReceipt: Sync Receipt
+    declareTitle: Declare Confirmation
+    confirmDeclare: Declare verification list {no} to customs?
+    declaredTip: Verification list {no} declared
+    syncedTip: Receipt of verification list {no} synced
+  release:
+    title: Release Note
+    detailTitle: Release Note Details
+    all: All
+    tip: Notice
+    passNo: Release Note No.
+    vehicleNo: Plate No.
+    direction: Direction
+    directionFull: Inbound/Outbound Direction
+    driver: Driver
+    driverPhone: Driver Phone
+    containerNo: Container No.
+    relListNo: Related Verification List
+    relBizNo: Related Inbound/Outbound Order
+    packCount: Packages
+    grossWeight: Gross Weight
+    grossWeightKg: Gross Wt. (kg)
+    declareTime: Declared At
+    releaseTime: Released At
+    crossTime: Gate Crossed At
+    releaseBtn: Release
+    crossBtn: Gate Cross Confirm
+    cancelBtn: Cancel
+    declareTitle: Declare Confirmation
+    confirmDeclare: Declare release note {no} ({vehicle})?
+    declaredTip: Release note {no} declared
+    releasedTip: Release note {no} released by customs
+    crossedTip: Gate crossing of vehicle {vehicle} registered
+    confirmCancel: Are you sure you want to cancel release note {no}? This cannot be undone.
+    cancelledTip: Cancelled
+  triple:
+    title: Triple-doc Matching
+    detailTitle: Triple-doc Details
+    all: All
+    docNo: Document No.
+    orderNo: Order No.
+    relOrderNo: Related Order No.
+    docType: Document Type
+    platform: Platform
+    platformFull: E-commerce Platform
+    extNo: External No.
+    paymentNoNote: (Payment Transaction No.)
+    logisticsNoNote: (Waybill No.)
+    amount: Amount
+    amountCol: Amount (CNY)
+    consignee: Consignee
+    matchStatus: Matching Status
+    failReason: Failure Reason
+    pushTime: Pushed At
+    matchTime: Matched At
+    push: Push
+    repush: Repush
+    pushTitle: Push Confirmation
+    confirmPush: Push {type} {no} to the cross-border e-commerce clearance platform?
+    pushedTip: Document {no} pushed successfully and matched by customs
+  msglog:
+    title: Customs Messages
+    detailTitle: Message Details
+    all: All
+    msgNo: Message No.
+    bizNo: Related Document
+    bizNoPh: Related Document No.
+    msgType: Message Type
+    channel: Declaration Channel
+    direction: Direction
+    resendCount: Resend Count
+    errorMsg: Error Message
+    createdAt: Time
+    requestMsg: Request Message
+    responseMsg: Response Message
+    resentTip: Message {no} resent successfully
+inbound:
+  asn:
+    title: Inbound Appointment
+    add: New Appointment
+    edit: Edit Appointment
+    code: No.
+    asnNo: ASN No.
+    all: All
+    supplier: Supplier
+    supplierPh: Supplier name
+    inboundType: Inbound Type
+    expectedArrival: Expected Arrival
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    ownerA: Owner A East China Electronics
+    ownerB: Owner B Precision Machinery
+    ownerC: Owner C Daily Chemicals
+    ownerSelf: Self-operated
+    statusDraft: Draft
+    statusPending: Pending Review
+    statusApproved: Approved
+    statusFinished: Completed
+    statusCancelled: Cancelled
+    plsSelectWarehouse: Please select a warehouse
+    plsInputSupplier: Please enter the supplier
+    plsSelectArrival: Please select the expected arrival time
+    tip: Notice
+    confirmApprove: Confirm approving "{code}"?
+    confirmCancel: Confirm cancelling "{code}"?
+    confirmDelete: Confirm deleting appointment "{code}"?
+    approveSuccess: Approved
+    cancelledMsg: Cancelled
+    createSuccess: Created successfully
+    updateSuccess: Updated successfully
+  receipt:
+    title: Receiving Management
+    register: Receiving Registration
+    code: No.
+    receiptNo: Receipt No.
+    asnNo: ASN No.
+    all: All
+    supplier: Supplier
+    materialCode: Material Code
+    materialName: Material Name
+    batch: Batch
+    received: Received
+    qualified: Qualified
+    rejected: Rejected
+    receiver: Receiver
+    receivedQty: Received Quantity
+    qualifiedQty: Qualified Quantity
+    rejectedQty: Rejected Quantity
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    plsInputReceivedQty: Please enter the received quantity
+    tip: Notice
+    confirmApprove: Confirm approving "{code}"?
+    auditSuccess: Approved
+    registerSuccess: Receiving registered successfully
+  qc:
+    title: QC Management
+    code: No.
+    qcNo: QC No.
+    receipt: Receipt
+    receiptNo: Receipt No.
+    materialCode: Material Code
+    materialName: Material Name
+    batch: Batch
+    result: Result
+    all: All
+    enterResult: Enter Result
+    editResult: Edit Result
+    qcResult: QC Result
+    qcRemark: QC Remark
+    qcRemarkPh: Fail reason / concession notes, etc.
+    qcQty: QC Quantity
+    qcUser: QC Inspector
+    qcTime: QC Time
+    enterTitle: Enter QC Result
+    submitSuccess: QC result submitted
+    plsSelectResult: Please select the QC result
+  putaway:
+    title: Putaway Tasks
+    taskNo: Task No.
+    receiptNo: Receipt No.
+    all: All
+    fromLocation: Source Location
+    toLocation: Target Location
+    materialCode: Material Code
+    materialName: Material Name
+    operator: Operator
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    tip: Notice
+    confirmFinish: Confirm task "{taskNo}" has been put away to {location}?
+    finishSuccess: Putaway completed
+  return:
+    title: Return Inbound
+    add: New Return Order
+    edit: Edit Return Order
+    code: No.
+    returnNo: Return No.
+    all: All
+    customer: Customer
+    customerPh: Customer name
+    materialCode: Material Code
+    materialCodePh: e.g. SKU00001
+    materialName: Material Name
+    reason: Return Reason
+    reasonQuality: Quality Issue
+    reasonWrongDelivery: Wrong Delivery
+    reasonRejected: Customer Rejected
+    reasonDamaged: Damaged Packaging
+    reasonExpired: Near-expiry Return
+    ownerA: Owner A East China Electronics
+    ownerB: Owner B Precision Machinery
+    ownerC: Owner C Daily Chemicals
+    ownerSelf: Self-operated
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    statusPending: Pending Review
+    statusApproved: Approved
+    statusReceiving: Receiving
+    statusFinished: Completed
+    statusCancelled: Cancelled
+    approve: Approve
+    plsSelectWarehouse: Please select a warehouse
+    plsInputCustomer: Please enter the customer name
+    plsInputMaterialCode: Please enter the material code
+    plsInputQty: Please enter the quantity
+    tip: Notice
+    confirmApprove: Confirm approving "{code}"?
+    confirmCancel: Confirm cancelling "{code}"?
+    confirmDelete: Confirm deleting return order "{code}"?
+    approveSuccess: Approved
+    cancelledMsg: Cancelled
+    createSuccess: Created successfully
+    updateSuccess: Updated successfully
+integration:
+  device:
+    title: Devices
+    addDevice: Add Device
+    editTitle: Edit Device
+    code: Device Code
+    name: Device Name
+    type: Device Type
+    warehouse: Warehouse
+    zone: Zone
+    ip: IP Address
+    vendor: Vendor
+    all: All
+    codeExample: e.g. AGV-007
+    codeRequired: Please enter the device code
+    nameRequired: Please enter the device name
+    typeRequired: Please select a device type
+    warehouseRequired: Please select a warehouse
+    zonePh: Please select a zone
+    ipExample: e.g. 192.168.10.11
+    ipRequired: Please enter the device IP address
+    ipInvalid: Invalid IP address format
+    vendorPh: Please enter the device vendor
+    lastHeartbeat: Last Heartbeat
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+    zoneA: A Receiving Zone
+    zoneB: B Storage Zone
+    zoneC: C Picking Zone
+    zoneD: D Shipping Zone
+    tipTitle: Notice
+    confirmEnable: Enable device "{name}"?
+    confirmDisable: Disable device "{name}"?
+    confirmDelete: Delete device "{name}"?
+    enabledSuccess: Device enabled
+    disabledSuccess: Device disabled
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+  deviceTask:
+    title: Device Tasks
+    taskNo: Task No.
+    taskNoPh: Device task no.
+    device: Device
+    bizNo: Business Order No.
+    bizNoPh: Related business order no.
+    all: All
+    finishTime: Finish Time
+    tipTitle: Notice
+    confirmCancel: Cancel task "{taskNo}"?
+    cancelSuccess: Task cancelled
+  config:
+    title: Integration Config
+    addTitle: Add Integration Config
+    addBtn: Add Config
+    editTitle: Edit Integration Config
+    systemName: System Name
+    systemNamePh: Connected system name
+    systemNameExample: e.g. Yonyou U8 ERP
+    systemNameRequired: Please enter the system name
+    systemType: System Type
+    systemTypeRequired: Please select a system type
+    all: All
+    apiUrl: API URL
+    apiUrlCol: API URL
+    apiUrlExample: e.g. https://erp.demo.com/api
+    apiUrlRequired: Please enter the API URL
+    authType: Auth Method
+    authTypeRequired: Please select an auth method
+    authToken: Token
+    authSignature: Signature
+    syncDirection: Sync Direction
+    syncDirectionRequired: Please select a sync direction
+    lastSyncTime: Last Sync Time
+    testSuccess: Connection to "{name}" succeeded
+    tipTitle: Notice
+    confirmDelete: Delete integration config "{name}"?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+  apiLog:
+    title: API Log
+    detailTitle: API Log Detail
+    requestId: Request ID
+    requestIdPh: Request tracking ID
+    system: System
+    systemName: System Name
+    apiPath: API Path
+    direction: Direction
+    duration: Duration
+    durationCol: Duration (ms)
+    errorMsg: Error Message
+    requestSummary: Request Summary
+    responseSummary: Response Summary
+    all: All
+    sysYonyou: Yonyou U8 ERP
+    sysOms: OMS Order Center
+    sysWcs: Inovance WCS Device Layer
+    sysTms: KuaidiNiao TMS
+    sysTmall: Tmall E-commerce Platform
+    sysJd: JD E-commerce Platform
+  agv:
+    title: AGV Scheduling
+    dispatchBtn: Dispatch Task
+    dispatchTitle: Dispatch AGV Task
+    dispatchSuccess: Task dispatched
+    retry: Redispatch
+    retrySuccess: Redispatched
+    taskNo: Task No.
+    taskNoPh: AGV task no.
+    agv: AGV
+    code: AGV Code
+    codePh: AGV code
+    codeRequired: Please select an AGV code
+    taskType: Task Type
+    typeRequired: Please select a task type
+    typeCarry: Transport
+    typeInbound: Inbound
+    typeOutbound: Outbound
+    typeCharge: Charging
+    fromLocation: From Location
+    fromRequired: Please enter the from location
+    fromExample: e.g. A-01-01
+    toLocation: To Location
+    toRequired: Please enter the to location
+    toExample: e.g. C-02-03
+    priority: Priority
+    priorityRequired: Please select a priority
+    priorityLevel: Level {v}
+    priorityHighest: Level {v} (Highest)
+    priorityLowest: Level {v} (Lowest)
+    all: All
+    tipTitle: Notice
+    confirmRetry: Redispatch task "{taskNo}"?
+inventory:
+  ledger:
+    title: Inventory Ledger
+    all: All
+    batch: Batch
+    materialCode: Material Code
+    materialName: Material Name
+    stockStatus: Stock Status
+    qty: Stock Qty
+    locked: Locked
+    lockedQty: Locked Qty
+    available: Available
+    availableQty: Available Qty
+    expiredAt: Expiry Date
+    freeze: Freeze
+    unfreeze: Unfreeze
+    detailTitle: Stock Details
+    freezeSuccess: Frozen successfully
+    unfreezeSuccess: Unfrozen successfully
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+  transaction:
+    title: Inventory Transactions
+    building: Page under construction
+  batch:
+    title: Batch Expiry
+    building: Page under construction
+  serial:
+    title: Serial Number Management
+    building: Page under construction
+  adjustment:
+    title: Inventory Adjustment
+    building: Page under construction
+  move:
+    title: Transfer Management
+    building: Page under construction
+  stocktake:
+    title: Stocktake Management
+    all: All
+    docNo: Doc No.
+    stocktakeNo: Stocktake Order No.
+    mode: Stocktake Mode
+    planDate: Plan Date
+    itemCount: Item Count
+    diffCount: Diff Count
+    materialCode: Material Code
+    materialName: Material Name
+    batch: Batch
+    bookQty: Book Qty
+    actualQty: Actual Qty
+    create: Create Stocktake Order
+    createSuccess: Created successfully
+    start: Start Stocktake
+    submitDiff: Submit Differences
+    detail: Details
+    detailTitle: Stocktake Details - {code}
+    started: Stocktake started
+    startTip: Confirm starting this stocktake?
+    diffSubmitted: Differences submitted
+    submitDiffTip: Confirm submitting the stocktake differences?
+    finished: Stocktake finished and an adjustment order has been generated from the differences
+    finishTip: Confirm finishing the stocktake and generating an adjustment order?
+    cancelled: Cancelled
+    cancelTip: Confirm cancelling this stocktake order?
+    tip: Notice
+    inputActualFirst: Please enter the actual quantity first
+    saved: Saved
+    selectWarehouse: Please select a warehouse
+    selectMode: Please select a stocktake mode
+    selectPlanDate: Please select a plan date
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+  warning:
+    title: Inventory Alerts
+    building: Page under construction
+master:
+  warehouse:
+    title: Warehouse Management
+    addTitle: Add Warehouse
+    editTitle: Edit Warehouse
+    code: Warehouse Code
+    name: Warehouse Name
+    type: Warehouse Type
+    typeNormal: Normal
+    typeCold: Cold Chain
+    typeDangerous: Hazardous
+    all: All
+    address: Address
+    addressPh: Detailed Address
+    contact: Contact
+    phone: Phone
+    area: Total Area (m²)
+    colArea: Area (m²)
+    codeExample: e.g. WH004
+    enabled: Enabled
+    disabled: Disabled
+    tip: Notice
+    delTip: Are you sure you want to delete warehouse {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    codeRequired: Please enter warehouse code
+    nameRequired: Please enter warehouse name
+  zone:
+    title: Zone Management
+    addTitle: Add Zone
+    editTitle: Edit Zone
+    code: Zone Code
+    name: Zone Name
+    type: Zone Type
+    codeExample: e.g. 1Z01
+    all: All
+    locationCount: Location Count
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+    selectWarehouse: Please select a warehouse
+    codeRequired: Please enter zone code
+    nameRequired: Please enter zone name
+    typeRequired: Please select a zone type
+    enabled: Enabled
+    disabled: Disabled
+    tip: Notice
+    delTip: Are you sure you want to delete zone {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+  location:
+    title: Location Management
+    addTitle: Add Location
+    editTitle: Edit Location
+    code: Location Code
+    zoneCode: Zone Code
+    type: Location Type
+    codeExample: e.g. 1Z01-01-02-3
+    zoneCodeExample: e.g. 1Z01
+    maxWeight: Max Weight (kg)
+    maxVolume: Max Volume (m³)
+    isMix: Mixed Storage
+    colMix: Mixed
+    allow: Allowed
+    forbid: Forbidden
+    statusIdle: Idle
+    statusOccupied: Occupied
+    statusDisabled: Disabled
+    all: All
+    batchGen: Batch Generate
+    genTitle: Batch Generate Locations
+    genSuccess: Successfully generated {count} locations
+    prefix: Code Prefix
+    prefixPh: Prefix for generated codes, e.g. 1Z01
+    prefixRequired: Please enter code prefix
+    rows: Rows
+    cols: Columns
+    floors: Floors
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+    selectWarehouse: Please select a warehouse
+    zoneCodeRequired: Please enter zone code
+    codeRequired: Please enter location code
+    tip: Notice
+    delTip: Are you sure you want to delete location {code}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+  material:
+    title: Material Management
+    addTitle: Add Material
+    editTitle: Edit Material
+    detailTitle: Material Details
+    code: Material Code
+    name: Material Name
+    category: Category
+    codeExample: e.g. SKU00041
+    spec: Specification
+    specPh: Specification / Model
+    barcode: Barcode
+    barcodePh: Product barcode (multiple codes can be maintained for one item)
+    safetyQty: Safety Stock
+    price: Unit Price
+    priceYuan: Unit Price (CNY)
+    currency: CNY
+    expiryMgmt: Expiry Management
+    serialMgmt: Serial Number Management
+    serial: Serial Number
+    yes: Yes
+    no: No
+    ownerA: Cargo Owner A East China Electronics
+    ownerB: Cargo Owner B Precision Machinery
+    ownerC: Cargo Owner C Daily Chemicals
+    selfOwned: Self-operated
+    unitPiece: Piece
+    unitBox: Box
+    unitPallet: Pallet
+    unitMeter: Meter
+    unitKg: KG
+    categoryRequired: Please select a category
+    codeRequired: Please enter material code
+    nameRequired: Please enter material name
+    enabled: Enabled
+    disabled: Disabled
+    all: All
+    tip: Notice
+    delTip: Are you sure you want to delete material {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+  owner:
+    title: Cargo Owner Management
+    addTitle: Add Cargo Owner
+    editTitle: Edit Cargo Owner
+    code: Cargo Owner Code
+    name: Cargo Owner Name
+    codeExample: e.g. OW001
+    contact: Contact
+    phone: Phone
+    address: Address
+    settleType: Settlement Type
+    settleMonthly: Monthly Settlement
+    settleImmediate: Immediate Settlement
+    enabled: Enabled
+    disabled: Disabled
+    tip: Notice
+    delTip: Are you sure you want to delete cargo owner {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    codeRequired: Please enter cargo owner code
+    nameRequired: Please enter cargo owner name
+  supplier:
+    title: Supplier Management
+    addTitle: Add Supplier
+    editTitle: Edit Supplier
+    code: Supplier Code
+    name: Supplier Name
+    contact: Contact
+    phone: Phone
+    email: Email
+    address: Address
+    enabled: Enabled
+    disabled: Disabled
+    tip: Notice
+    delTip: Are you sure you want to delete supplier {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    codeRequired: Please enter supplier code
+    nameRequired: Please enter supplier name
+  customer:
+    title: Customer Management
+    addTitle: Add Customer
+    editTitle: Edit Customer
+    code: Customer Code
+    name: Customer Name
+    contact: Contact
+    phone: Phone
+    address: Address
+    enabled: Enabled
+    disabled: Disabled
+    tip: Notice
+    delTip: Are you sure you want to delete customer {name}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    codeRequired: Please enter customer code
+    nameRequired: Please enter customer name
+  container:
+    title: Container Management
+    addTitle: Add Container
+    editTitle: Edit Container
+    code: Container Code
+    containerType: Container Type
+    codeExample: e.g. PLT00001
+    bindingMaterial: Bound Material
+    bindingMaterialPh: Bound material code (optional)
+    currentLocation: Current Location
+    currentLocationPh: Current location (optional)
+    selectWarehouse: Please select a warehouse
+    codeRequired: Please enter container code
+    typeRequired: Please select a container type
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+    all: All
+    tip: Notice
+    delTip: Are you sure you want to delete container {code}?
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+login:
+  brandMark: W
+  brandTitle: ZhiLian Warehousing
+  brandTagline: Keep every item's inbound, storage, picking and dispatch fully online, clear and under control
+  features:
+    inbound: Inbound
+    inboundSub: Booking · Receiving · QC
+    outbound: Outbound
+    outboundSub: Waves · Picking · Shipping
+    inventory: Inventory
+    inventorySub: Batch · Serial No. · Expiry
+    equipment: Equipment
+    equipmentSub: AGV · AS-RS · Conveyor
+    insight: Insights
+    insightSub: Dashboards · Big Screen · KPI
+  week:
+    mon: Mon
+    tue: Tue
+    wed: Wed
+    thu: Thu
+    fri: Fri
+    sat: Sat
+    sun: Sun
+  dashboard:
+    todayWork: Today's Operations
+    inboundOrders: Inbound Orders
+    outboundOrders: Outbound Orders
+    last7Days: In/Out Volume (Last 7 Days)
+    fillRate: Zone Fill Rate
+    fillRateAria: Zone fill rate 78%
+    occupancy: Occupancy
+  welcomeTitle: Welcome to {title}
+  continueHint: Sign in to continue
+  username: Account
+  password: Password
+  usernamePlaceholder: Enter your username
+  passwordPlaceholder: Enter your password
+  rememberMe: Remember me
+  forgotPassword: Forgot password?
+  contactAdminReset: Please contact the administrator to reset your password
+  agreePrefix: I have read and agreed to the
+  userAgreement: User Agreement
+  agreeAnd: and
+  privacyPolicy: Privacy Policy
+  secureNote: Secure access · Authorized users only
+  demoAccount: "Demo account: admin / admin123"
+  success: Login successful
+  failed: Login failed
+  agreeFirst: Please read and agree to the User Agreement and Privacy Policy first
+  footerPrivacy: Privacy Policy
+  footerTerms: Terms of Use
+  footerHelp: Help
+  copyright: © 2026 ZhiLian Logistics Group
+  passwordRequired: Please enter your password
+  passwordFormat: Password must be 8-18 characters containing any two types of numbers, letters, and symbols
+welcome:
+  title: Workbench
+  dateFull: "{w}, {m}/{d}/{y}"
+  weekday:
+    mon: Mon
+    tue: Tue
+    wed: Wed
+    thu: Thu
+    fri: Fri
+    sat: Sat
+    sun: Sun
+  allNormal: All warehouse operations are running normally
+  vsYesterday: vs. yesterday
+  kpi:
+    inbound: Today's Inbound Orders
+    outbound: Today's Outbound Orders
+    sku: SKUs in Stock
+    stock: Total Stock
+  unit:
+    orders: orders
+    kinds: kinds
+    pieces: pcs
+  quickTitle: Quick Actions
+  quick:
+    inboundAsn: Inbound Booking
+    createOutbound: Create Outbound Order
+    stocktake: Stock Take
+    ledger: Stock Ledger
+  chart:
+    inbound: Inbound
+    outbound: Outbound
+  trendTitle: In/Out Trend (Last 7 Days)
+  stockTitle: Stock Share by Warehouse
+  todoTitle: To-dos
+  todoPending: pending
+  todoAsn: Inbound Orders to Approve
+  todoSo: Outbound Orders to Allocate
+  todoDiff: Stocktake Differences
+  todoAlert: Stock Alerts
+  whShanghai: Shanghai DC
+  whGuangzhou: Guangzhou DC
+  whChengdu: Chengdu DC
+error:
+  backHome: Back to Home
+  forbidden: Sorry, you do not have permission to access this page
+  notFound: Sorry, the page you are looking for does not exist
+  serverError: Sorry, something went wrong on the server
+navbar:
+  logout: Sign Out
+  openSystemConfig: Settings
+  backToTop: Back to top
+panels:
+  systemConfig: System Settings
+  closeConfig: Close Settings
+  clearCache: Clear Cache
+  clearCacheTip: Clear cache and return to the login page
+  overallStyle: Overall Style
+  theme:
+    light: Light
+    lightTip: A fresh start with a bright and cozy workspace
+    dark: Dark
+    darkTip: A moonlight serenade, enjoy the quiet of the night
+    system: Auto
+    systemTip: Sync with the clock, the UI follows day and night
+  themeColor: Theme Color
+  layoutModel: Navigation Mode
+  layout:
+    verticalTip: Left-side menu, familiar and friendly
+    horizontalTip: Top menu, clean overview
+    mixTip: Mixed menu, flexible and versatile
+  stretch:
+    title: Page Width
+    fixed: Fixed
+    fixedTip: Compact page, find information easily
+    custom: Custom
+    customTip: Min 1280, max 1600
+  tabsStyle:
+    title: Tab Style
+    smart: Smart
+    smartTip: Smart tags, lively and fun
+    card: Card
+    cardTip: Card tags, efficient browsing
+    chrome: Chrome
+    chromeTip: Chrome style, classic and beautiful
+  interfaceDisplay: Interface Display
+  greyMode: Grey Mode
+  weakMode: Color Weakness Mode
+  hideTabs: Hide Tabs
+  hideFooter: Hide Footer
+  tabsCache: Persistent Tabs
+  on: On
+  off: Off
+search:
+  placeholder: Search menus (pinyin supported)
+  noResult: No results
+  confirm: Confirm
+  switch: Switch
+  close: Close
+  total: Total {total}
+  history: Search History
+  collect: Favorites
+  collectDraggable: " (drag to reorder)"
+notice:
+  empty: No messages
+  tab:
+    notify: Notices
+    notifyEmpty: No notices
+    message: Messages
+    messageEmpty: No messages
+    todo: To-dos
+    todoEmpty: No to-dos
+  list:
+    commentTitle: Xiao Ming commented on you
+    commentDesc: Sincerity lies in the heart, trust lies in action; integrity unites heart and action.
+    today: Today
+    replyTitle: Li Bai replied to you
+    replyDesc: A time will come to ride the wind and cleave the waves; set your cloud-like sail and cross the boundless sea.
+    yesterday: Yesterday
+    longTitle: Title
+    longDesc: Hover here to test how an extra-long message is handled. The description is clamped to 2 lines; overflow is ellipsized and the full content can be viewed via the tooltip.
+    time: Time
+    emergencyTitle: Urgent third-party code change
+    emergencyDesc: Submitted by Xiao Lin on 2024-05-10; the code change must be completed by 2024-05-11
+    dueSoon: Due soon
+    releaseTitle: Version Release
+    releaseDesc: Assigned to Xiao Ming to update and release by 2024-06-18
+    elapsedDays: 8 days elapsed
+    devTitle: New Feature Development
+    devDesc: Develop multi-tenant management
+    inProgress: In progress
+    taskTitle: Task Name
+    taskDesc: The task must start before 2030-10-30 10:00
+    notStarted: Not started
+tags:
+  reload: Reload
+  closeCurrent: Close Current
+  closeLeft: Close Left
+  closeRight: Close Right
+  closeOthers: Close Others
+  closeAll: Close All
+  contentFullscreen: Content Fullscreen
+  contentExitFullscreen: Exit Content Fullscreen
+sidebar:
+  collapse: Click to collapse
+  expand: Click to expand
+components:
+  list: List
+  columnSettings: Column Settings
+  density: Density
+  columnDisplay: Column Display
+  sizeLoose: Loose
+  sizeDefault: Default
+  sizeCompact: Compact
+  fullscreen: Fullscreen
+  exitFullscreen: Exit Fullscreen
+operation:
+  task:
+    title: Task Pool
+    all: All
+    taskNo: Task No.
+    taskType: Task Type
+    bizNo: Related Order No.
+    keywordPh: Doc or material keyword
+    assignee: Assignee
+    selectAssignee: Please select an assignee
+    assignTitle: Assign Task
+    assignSuccess: Assigned successfully
+    cancelConfirm: Are you sure you want to cancel task "{taskNo}"?
+    cancelSuccess: Cancelled
+    tip: Notice
+    materialCode: Material Code
+    materialName: Material Name
+    user002: user002 Zhang Wei
+    user003: user003 Wang Fang
+    user004: user004 Li Na
+    user005: user005 Liu Yang
+  process:
+    title: Processing Management
+    all: All
+    orderNo: Order No.
+    code: Processing Order No.
+    processType: Processing Type
+    materialCode: Material Code
+    materialName: Material Name
+    inputQty: Input Qty
+    outputQty: Output Qty
+    selectType: Please select a processing type
+    selectWarehouse: Please select a warehouse
+    inputMaterialCode: Please enter a material code
+    inputQtyRequired: Please enter the input quantity
+    materialCodePh: e.g. SKU00001
+    createOrder: Create Processing Order
+    editOrder: Edit Processing Order
+    start: Start
+    finish: Finish
+    statusDraft: Draft
+    statusProcessing: Processing
+    statusFinished: Completed
+    statusCancelled: Cancelled
+    createSuccess: Created successfully
+    updateSuccess: Updated successfully
+    startConfirm: Are you sure you want to start processing order "{code}"?
+    startSuccess: Started
+    finishTitle: Record Completion
+    finishSuccess: Completed successfully
+    deleteConfirm: Are you sure you want to delete processing order "{code}"?
+    tip: Notice
+    typeLabeling: Labeling
+    typeKitting: Kitting
+    typeRepacking: Repacking
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+  replenish:
+    title: Replenishment Management
+    all: All
+    orderNo: Order No.
+    code: Replenishment Order No.
+    fromLocation: From Location
+    toLocation: To Location
+    materialCode: Material Code
+    materialName: Material Name
+    qty: Replenishment Quantity
+    selectWarehouse: Please select a warehouse
+    inputFromLocation: Please enter the source location
+    inputToLocation: Please enter the target location
+    inputMaterialCode: Please enter a material code
+    inputQty: Please enter the replenishment quantity
+    fromLocationPh: e.g. B-01-01
+    toLocationPh: e.g. C-01-02
+    materialCodePh: e.g. SKU00001
+    manualReplenish: Manual Replenishment
+    triggerType: Trigger Type
+    triggerAuto: Auto
+    triggerManual: Manual
+    statusPending: Pending
+    statusProcessing: In Progress
+    statusFinished: Completed
+    statusCancelled: Cancelled
+    createSuccess: Replenishment task created
+    finishConfirm: Confirm that replenishment order "{code}" has been completed?
+    finishSuccess: Replenishment completed
+    tip: Notice
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+  crossdock:
+    title: Cross-dock Operations
+    all: All
+    orderNo: Order No.
+    code: Cross-dock Order No.
+    asnCode: Inbound ASN
+    outboundCode: Outbound Order No.
+    materialCode: Material Code
+    materialName: Material Name
+    statusPending: Pending
+    statusProcessing: In Progress
+    statusFinished: Completed
+    statusCancelled: Cancelled
+    executeConfirm: Confirm executing cross-dock "{code}"? Goods will go directly to outbound without putaway on arrival.
+    executeSuccess: Cross-dock executed
+    tip: Notice
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+outbound:
+  order:
+    title: Outbound Order (SO)
+    addOrder: New Outbound Order
+    editOrder: Edit Outbound Order
+    detailTitle: Outbound Order Details
+    no: Order No.
+    orderNo: Outbound Order No.
+    all: All
+    customer: Customer
+    customerName: Customer Name
+    typeLabel: Outbound Type
+    priority: Priority
+    materialCode: Material Code
+    materialCodePh: e.g. SKU00001
+    materialName: Material Name
+    deliveryDate: Delivery Date
+    dueDate: Due Date
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    tip: Notice
+    updateSuccess: Updated successfully
+    createSuccess: Created successfully
+    approvePassed: Approved
+    cancelled: Cancelled
+    warehouseRequired: Please select a warehouse
+    customerRequired: Please enter customer name
+    materialCodeRequired: Please enter material code
+    qtyRequired: Please enter quantity
+    approvePassTip: Are you sure to approve outbound order {code}?
+    cancelTip: Are you sure to cancel outbound order {code}?
+    deleteTip: Are you sure to delete outbound order {code}?
+  wave:
+    title: Wave Management
+    generate: Generate Wave
+    release: Release for Picking
+    released: Released for picking
+    no: Wave No.
+    all: All
+    carrier: Carrier
+    carrierMergePh: Merge by carrier (optional)
+    carrierSF: SF Express
+    carrierJD: JD Logistics
+    carrierDeppon: Deppon Express
+    carrierSelf: Own Fleet
+    orderCount: Orders
+    totalQty: Total Qty
+    statusPending: Pending Release
+    statusProcessing: Picking
+    statusFinished: Finished
+    statusCancelled: Cancelled
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    tip: Notice
+    warehouseRequired: Please select a warehouse
+    waveCreated: Wave {code} created successfully
+    releaseTip: Release wave {code} for picking? ({count} orders / {qty} pieces)
+  picking:
+    title: Picking Tasks
+    start: Start
+    started: Picking started
+    finished: Picking finished
+    taskNo: Task No.
+    waveNo: Wave No.
+    orderNo: Outbound Order No.
+    all: All
+    pickLocation: Pick Location
+    materialCode: Material Code
+    materialName: Material Name
+    pickQty: Pick Qty
+    picker: Picker
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    tip: Notice
+    startTip: Are you sure to start picking task {taskNo}?
+    finishTip: Finish picking task {taskNo}? ({material} × {qty})
+  packing:
+    title: Review & Packing
+    review: Review
+    reviewed: Review completed
+    no: No.
+    code: Review Order No.
+    all: All
+    orderNo: Outbound Order No.
+    waveNo: Wave No.
+    materialCode: Material Code
+    materialName: Material Name
+    expected: Expected
+    checked: Checked
+    expectedQty: Expected Qty
+    checkedQty: Checked Qty
+    weight: Weight (kg)
+    boxNo: Box No.
+    operator: Operator
+    statusWaiting: Pending Review
+    statusProcessing: Reviewing
+    statusFinished: Finished
+    checkedQtyRequired: Please enter checked quantity
+  shipping:
+    title: Shipping & Handover
+    confirmShip: Confirm Shipment
+    confirmSuccess: Shipment confirmed
+    no: No.
+    code: Handover Order No.
+    all: All
+    carrier: Carrier
+    carrierSF: SF Express
+    carrierJD: JD Logistics
+    carrierDeppon: Deppon Express
+    carrierSelf: Own Fleet
+    orderNo: Outbound Order No.
+    vehicleNo: Vehicle No.
+    driver: Driver
+    shipDate: Ship Date
+    statusWaiting: Pending Shipment
+    statusShipped: Shipped
+    statusFinished: Finished
+    tip: Notice
+    confirmTip: "Confirm handover order {code} loaded and shipped? (Carrier: {carrier}, Vehicle: {vehicle})"
+report:
+  dashboard:
+    totalQty: Total Stock Volume
+    totalValue: Total Stock Value (CNY)
+    skuCount: SKUs in Stock
+    warningCount: Stock Alerts
+    categoryStock: Stock by Category
+    warehouseStock: Stock Share by Warehouse
+    stockAge: Stock Age Distribution
+    turnoverTop: Turnover Rate Top 10
+  inout:
+    dateRange: Date Range
+    to: to
+    startDate: Start Date
+    endDate: End Date
+    all: All
+    summary: Inbound & Outbound Summary
+    trend: Inbound & Outbound Trend
+    date: Date
+    inboundQty: Inbound Qty
+    outboundQty: Outbound Qty
+    inboundAmount: Inbound Amount (CNY)
+    outboundAmount: Outbound Amount (CNY)
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+  efficiency:
+    personTitle: Labor Efficiency (by Task Count)
+    typeDistribution: Task Type Distribution
+    personTasks: Tasks per Person
+    rank: Rank
+    person: Person
+    taskCount: Task Count
+    avgMinutes: Avg Time (min)
+    errorRate: Error Rate
+  screen:
+    title: WMS Smart Warehouse Big Screen
+    todayInbound: Today Inbound Qty
+    todayOutbound: Today Outbound Qty
+    onlineDevices: Online Devices
+    taskPending: Pending Tasks
+    hourlyFlow: 24h Inbound & Outbound Flow
+    zoneFill: Zone Fill Rate
+    realtimeAlarm: Real-time Alarms
+    inbound: Inbound
+    outbound: Outbound
+    zoneTooltip: "{b}: {c}%"
+    alarmHigh: Critical
+    alarmMedium: Warning
+    alarmLow: Info
+system:
+  user:
+    title: User Management
+    all: All
+    account: Account
+    accountPh: Enter account
+    userAccount: Account
+    nickname: Nickname
+    userNickname: Nickname
+    nicknamePh: Enter nickname
+    phone: Phone
+    phonePh: Enter phone number
+    email: Email
+    emailPh: Enter email
+    dept: Department
+    deptPh: Enter department
+    warehouse: Warehouse
+    warehousePh: Select (multiple selections allowed)
+    role: Role
+    rolePh: Select role
+    addUser: Add User
+    editUser: Edit User
+    resetPwd: Reset Password
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete user "{name}"?
+    resetPwdSuccess: Password has been reset to 123456
+    roleSuperAdmin: Super Admin
+    roleWarehouseOp: Warehouse Operator
+    roleInventoryMgr: Inventory Manager
+    roleTransportMgr: Transport Dispatcher
+    wh001: WH001 Shanghai Main Warehouse
+    wh002: WH002 Guangzhou South China Warehouse
+    wh003: WH003 Chengdu Southwest Warehouse
+  org:
+    title: Organization Structure
+    addOrg: Add Organization
+    editOrg: Edit Organization
+    addChildOrg: Add Child Organization
+    addChild: Add Child
+    parent: Parent Organization
+    parentPh: Top-level Organization
+    type: Organization Type
+    typePh: Select organization type
+    name: Organization Name
+    namePh: Enter organization name
+    leader: Leader
+    leaderPh: Enter leader
+    phone: Contact Phone
+    phonePh: Enter contact phone
+    typeCompany: Company
+    typeWarehouse: Warehouse
+    typeDept: Department
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete organization "{name}"? Its child organizations will be invalidated as well
+  role:
+    title: Role Management
+    all: All
+    keyword: Keyword
+    keywordPh: Role Code / Name
+    addRole: Add Role
+    editRole: Edit Role
+    menuAuth: Menu Authorization
+    authTitle: Menu Authorization - {name}
+    code: Role Code
+    codePh: Enter role code (English identifier)
+    codeMsg: Enter role code
+    name: Role Name
+    namePh: Enter role name
+    description: Description
+    descPh: Enter role description
+    memberCount: Members
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete role "{name}"?
+    authSuccess: Role "{name}" authorized successfully
+  menu:
+    title: Menu Management
+    addMenu: Add Menu
+    editMenu: Edit Menu
+    addChildMenu: Add Child Menu
+    addChild: Add Child
+    parent: Parent Menu
+    parentPh: Top-level Menu
+    type: Menu Type
+    typeMsg: Select menu type
+    name: Menu Name
+    namePh: Enter menu name
+    path: Route Path
+    pathPh: Enter route path, e.g. /system/user
+    pathMsg: Enter route path
+    component: Component Path
+    componentPh: Enter component path, e.g. system/user/index
+    permission: Permission Code
+    permissionPh: Enter permission code, e.g. system:user:add
+    icon: Icon
+    iconPh: Enter icon name, e.g. ep/setting
+    sort: Sort
+    typeDir: Directory
+    typeMenu: Menu
+    typeButton: Button
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete menu "{name}"? Its child nodes will be invalidated as well
+  dict:
+    typeTitle: Dictionary Types
+    addType: Add Type
+    addTypeTitle: Add Dictionary Type
+    editTypeTitle: Edit Dictionary Type
+    keywordPh: Dictionary Name / Code
+    dataTitle: Dictionary Data
+    addData: Add Data
+    addDataTitle: Add Dictionary Data
+    editDataTitle: Edit Dictionary Data
+    selectedTag: "{name} ({code})"
+    selectTypeTip: Select a dictionary type on the left
+    selectTypeFirst: Please select a dictionary type on the left first
+    name: Dictionary Name
+    namePh: Enter dictionary name
+    code: Dictionary Code
+    codePh: Enter dictionary code (English identifier)
+    codeMsg: Enter dictionary code
+    itemCount: Items
+    type: Type
+    label: Data Label
+    labelPh: Enter data label (display name)
+    labelMsg: Enter data label
+    value: Data Key
+    valuePh: Enter data key (stored value)
+    valueMsg: Enter data key
+    sort: Sort
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteTypeConfirm: Are you sure you want to delete dictionary type "{name}"? Its dictionary data will be invalidated as well
+    deleteDataConfirm: Are you sure you want to delete dictionary data "{name}"?
+  param:
+    title: System Parameters
+    all: All
+    keyword: Keyword
+    keywordPh: Parameter Name / Key
+    source: Source
+    builtIn: Built-in
+    custom: Custom
+    addParam: Add Parameter
+    editParam: Edit Parameter
+    name: Parameter Name
+    namePh: Enter parameter name
+    key: Parameter Key
+    keyPh: Enter parameter key, e.g. outbound.batch.strategy
+    keyMsg: Enter parameter key
+    value: Parameter Value
+    valuePh: Enter parameter value
+    builtInTip: Built-in parameter; the key cannot be modified
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete parameter "{name}"?
+  notice:
+    titleBar: Notifications
+    title: Title
+    all: All
+    keywordPh: Enter notification title
+    publish: Publish Announcement
+    markRead: Mark as Read
+    detailTitle: Notification Detail
+    fullTitle: Notification Title
+    type: Notification Type
+    typeMsg: Select notification type
+    level: Level
+    levelPh: Select level
+    contentTitle: Content
+    contentPh: Enter notification content
+    publisher: Publisher
+    publishTime: Publish Time
+    typeNotice: Notice
+    typeAnnounce: Announcement
+    typeWarning: Alert
+    levelHigh: High
+    levelNormal: Normal
+    levelLow: Low
+    read: Read
+    unread: Unread
+    publishSuccess: Published successfully
+    readSuccess: Marked as read
+    tip: Notice
+    deleteConfirm: Are you sure you want to delete notification "{title}"?
+  log:
+    title: Operation Logs
+    all: All
+    keyword: Keyword
+    keywordPh: Operator / Module / Action
+    result: Execution Result
+    detailTitle: Log Detail
+    operator: Operator
+    module: Module
+    action: Action
+    ip: IP Address
+    duration: Duration
+    durationMs: Duration (ms)
+    time: Operation Time
+    success: Success
+    failure: Failure
+  permission:
+    desc: The backend simulation returns different routes based on the current role. Watch the left menu change (the admin role can view the System Management menu, while the common role cannot)
+    currentRole: "Current role: {name}"
+    adminRole: Admin Role
+    commonRole: Common Role
+    codeList: "Current codes: {list}"
+    allPermsTip: "*:*:* means having all button-level permissions"
+    componentWay: Permission check via component
+    functionWay: Permission check via function
+    directiveWay: Permission check via directive (permissions cannot be changed dynamically)
+    visibleWithCode: "Visible with code: {code}"
+transport:
+  vehicle:
+    title: Vehicles & Drivers
+    add: Add Vehicle
+    edit: Edit Vehicle
+    all: All
+    licensePlate: License Plate
+    driver: Driver
+    driverPh: Driver Name
+    phone: Phone
+    phonePh: Contact Phone
+    vehicleType: Vehicle Type
+    loadTon: Load (t)
+    carrier: Carrier
+    statusIdle: Idle
+    statusOnRoute: In Transit
+    statusRepair: Under Repair
+    vehicleNoPh: e.g. Su A12345
+    typeBox: Box
+    typeFlat: Flatbed
+    typeRefrigerated: Refrigerated
+    carrierSf: SF Express
+    carrierJd: JD Logistics
+    carrierDeppon: Deppon Express
+    carrierOwnFleet: Own Fleet
+    remarkPh: Remark
+    ton: t
+    plsInputVehicleNo: Please enter the license plate
+    plsInputDriver: Please enter the driver name
+    addSuccess: Added successfully
+    updateSuccess: Updated successfully
+    tip: Notice
+    confirmDelete: Confirm deletion of vehicle {vehicleNo}?
+  dispatch:
+    title: Delivery Orders
+    code: Order No.
+    customer: Customer
+    customerPh: Customer Name
+    all: All
+    deliveryNo: Delivery Order No.
+    outboundNo: Outbound Order No.
+    address: Delivery Address
+    carrier: Carrier
+    licensePlate: License Plate
+    driver: Driver
+    driverPh: Driver Name
+    sign: Sign
+    assignTitle: Delivery Dispatch
+    vehicleNoPh: e.g. Su A12345
+    plsSelectCarrier: Please select a carrier
+    plsInputVehicleNo: Please enter the license plate
+    plsInputDriver: Please enter the driver name
+    carrierSf: SF Express
+    carrierJd: JD Logistics
+    carrierDeppon: Deppon Express
+    carrierOwnFleet: Own Fleet
+    dispatchSuccess: Dispatched successfully
+    signSuccess: Signed successfully
+    tip: Notice
+    confirmSign: Confirm that delivery order {code} has been signed for?
+  tracking:
+    title: In-transit Tracking
+    code: Order No.
+    deliveryNo: Delivery Order No.
+    licensePlate: License Plate
+    all: All
+    carrier: Carrier
+    driver: Driver
+    origin: Origin
+    destination: Destination
+    currentLocation: Current Location
+    progress: Progress
+  carrier:
+    title: Carrier Management
+    add: Add Carrier
+    edit: Edit Carrier
+    all: All
+    name: Carrier Name
+    contact: Contact
+    phone: Phone
+    serviceArea: Service Area
+    serviceAreaPh: e.g. East China/South China
+    settleType: Settlement Method
+    settleMonthly: Monthly Settlement
+    settleImmediate: Immediate Settlement
+    codePh: e.g. CAR006
+    remarkPh: Remark
+    plsInputCode: Please enter the code
+    plsInputName: Please enter the carrier name
+    plsSelectType: Please select a type
+    addSuccess: Added successfully
+    updateSuccess: Updated successfully
+    tip: Notice
+    confirmDelete: Confirm deletion of carrier {name}?

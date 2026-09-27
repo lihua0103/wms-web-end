@@ -3,12 +3,19 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
+import {
   getCustomerPage,
   addCustomer,
   updateCustomer,
   deleteCustomer
 } from "@/api/master";
 import type { CustomerItem } from "@/api/master";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useCustomer() {
@@ -18,22 +25,49 @@ export function useCustomer() {
   const pagination = reactive({ pageSize: 10, currentPage: 1, total: 0 });
 
   const columns: TableColumnList = [
-    { label: "客户编码", prop: "code", minWidth: 90 },
-    { label: "客户名称", prop: "name", minWidth: 140 },
-    { label: "联系人", prop: "contact", minWidth: 80 },
-    { label: "电话", prop: "phone", minWidth: 110 },
-    { label: "地址", prop: "address", minWidth: 150 },
+    { label: $t("master.customer.code"), prop: "code", minWidth: 90 },
+    { label: $t("master.customer.name"), prop: "name", minWidth: 140 },
+    { label: $t("master.customer.contact"), prop: "contact", minWidth: 80 },
+    { label: $t("master.customer.phone"), prop: "phone", minWidth: 110 },
+    { label: $t("master.customer.address"), prop: "address", minWidth: 150 },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("master.customer.enabled")
+            : $t("master.customer.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: CustomerItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.customer.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -88,9 +122,16 @@ export function useCustomer() {
         const formInline = (
           options.props as { formInline: Partial<CustomerItem> }
         ).formInline;
-        const req = formInline.id ? updateCustomer(formInline) : addCustomer(formInline);
+        const req = formInline.id
+          ? updateCustomer(formInline)
+          : addCustomer(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.customer.editSuccess")
+              : $t("master.customer.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -99,11 +140,15 @@ export function useCustomer() {
   }
 
   function handleDelete(row: CustomerItem) {
-    ElMessageBox.confirm(`确认删除客户「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.customer.delTip", { name: row.name }),
+      $t("master.customer.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteCustomer([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

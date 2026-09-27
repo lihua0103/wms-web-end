@@ -7,39 +7,39 @@ export default {
   redirect: "/integration/device",
   meta: {
     icon: "ep/cpu",
-    title: "设备与集成",
-    rank: 100
+    title: "menus.integration",
+    rank: 90
   },
   children: [
     {
       path: "/integration/device",
       name: "IntegrationDevice",
       component: () => import("@/views/integration/device/index.vue"),
-      meta: { title: "设备管理" }
+      meta: { title: "menus.integrationDevice" }
     },
     {
       path: "/integration/agv",
       name: "IntegrationAgv",
       component: () => import("@/views/integration/agv/index.vue"),
-      meta: { title: "AGV 调度" }
+      meta: { title: "menus.integrationAgv" }
     },
     {
       path: "/integration/devicetask",
       name: "IntegrationDeviceTask",
       component: () => import("@/views/integration/devicetask/index.vue"),
-      meta: { title: "设备任务" }
+      meta: { title: "menus.integrationDeviceTask" }
     },
     {
       path: "/integration/config",
       name: "IntegrationConfig",
       component: () => import("@/views/integration/config/index.vue"),
-      meta: { title: "集成配置" }
+      meta: { title: "menus.integrationConfig" }
     },
     {
       path: "/integration/apilog",
       name: "IntegrationApiLog",
       component: () => import("@/views/integration/apilog/index.vue"),
-      meta: { title: "接口日志" }
+      meta: { title: "menus.integrationApilog" }
     }
   ]
 } satisfies RouteConfigsTable;

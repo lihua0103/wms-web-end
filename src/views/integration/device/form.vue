@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import type { FormRules } from "element-plus";
 import type { DeviceItem } from "@/api/integration";
 import { deviceTypeOptions } from "@/constants/wms";
@@ -15,35 +16,59 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  code: [{ required: true, message: "请输入设备编码", trigger: "blur" }],
-  name: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
+  code: [
+    {
+      required: true,
+      message: $t("integration.device.codeRequired"),
+      trigger: "blur"
+    }
+  ],
+  name: [
+    {
+      required: true,
+      message: $t("integration.device.nameRequired"),
+      trigger: "blur"
+    }
+  ],
   deviceType: [
-    { required: true, message: "请选择设备类型", trigger: "change" }
+    {
+      required: true,
+      message: $t("integration.device.typeRequired"),
+      trigger: "change"
+    }
   ],
   warehouseCode: [
-    { required: true, message: "请选择所属仓库", trigger: "change" }
+    {
+      required: true,
+      message: $t("integration.device.warehouseRequired"),
+      trigger: "change"
+    }
   ],
   ip: [
-    { required: true, message: "请输入设备 IP 地址", trigger: "blur" },
+    {
+      required: true,
+      message: $t("integration.device.ipRequired"),
+      trigger: "blur"
+    },
     {
       pattern: /^(\d{1,3}\.){3}\d{1,3}$/,
-      message: "IP 地址格式不正确",
+      message: $t("integration.device.ipInvalid"),
       trigger: "blur"
     }
   ]
 };
 
 const warehouseOptions = [
-  { value: "WH001", label: "WH001 上海主仓" },
-  { value: "WH002", label: "WH002 广州华南仓" },
-  { value: "WH003", label: "WH003 成都西南仓" }
+  { value: "WH001", label: $t("integration.device.wh001") },
+  { value: "WH002", label: $t("integration.device.wh002") },
+  { value: "WH003", label: $t("integration.device.wh003") }
 ];
 
 const zoneOptions = [
-  { value: "A", label: "A 收货区" },
-  { value: "B", label: "B 存储区" },
-  { value: "C", label: "C 拣货区" },
-  { value: "D", label: "D 发货区" }
+  { value: "A", label: $t("integration.device.zoneA") },
+  { value: "B", label: $t("integration.device.zoneB") },
+  { value: "C", label: $t("integration.device.zoneC") },
+  { value: "D", label: $t("integration.device.zoneD") }
 ];
 </script>
 
@@ -54,20 +79,23 @@ const zoneOptions = [
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="设备编码" prop="code">
+    <el-form-item :label="$t('integration.device.code')" prop="code">
       <el-input
         v-model="newFormInline.code"
-        placeholder="如 AGV-007"
+        :placeholder="$t('integration.device.codeExample')"
         :disabled="!!newFormInline.id"
       />
     </el-form-item>
-    <el-form-item label="设备名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入设备名称" />
+    <el-form-item :label="$t('integration.device.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('integration.device.nameRequired')"
+      />
     </el-form-item>
-    <el-form-item label="设备类型" prop="deviceType">
+    <el-form-item :label="$t('integration.device.type')" prop="deviceType">
       <el-select
         v-model="newFormInline.deviceType"
-        placeholder="请选择设备类型"
+        :placeholder="$t('integration.device.typeRequired')"
         style="width: 100%"
       >
         <el-option
@@ -78,7 +106,10 @@ const zoneOptions = [
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="所属仓库" prop="warehouseCode">
+    <el-form-item
+      :label="$t('integration.device.warehouse')"
+      prop="warehouseCode"
+    >
       <el-select v-model="newFormInline.warehouseCode" style="width: 100%">
         <el-option
           v-for="w in warehouseOptions"
@@ -88,10 +119,10 @@ const zoneOptions = [
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="所在库区" prop="zoneCode">
+    <el-form-item :label="$t('integration.device.zone')" prop="zoneCode">
       <el-select
         v-model="newFormInline.zoneCode"
-        placeholder="请选择库区"
+        :placeholder="$t('integration.device.zonePh')"
         clearable
         style="width: 100%"
       >
@@ -103,11 +134,17 @@ const zoneOptions = [
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="IP 地址" prop="ip">
-      <el-input v-model="newFormInline.ip" placeholder="如 192.168.10.11" />
+    <el-form-item :label="$t('integration.device.ip')" prop="ip">
+      <el-input
+        v-model="newFormInline.ip"
+        :placeholder="$t('integration.device.ipExample')"
+      />
     </el-form-item>
-    <el-form-item label="厂商" prop="vendor">
-      <el-input v-model="newFormInline.vendor" placeholder="请输入设备厂商" />
+    <el-form-item :label="$t('integration.device.vendor')" prop="vendor">
+      <el-input
+        v-model="newFormInline.vendor"
+        :placeholder="$t('integration.device.vendorPh')"
+      />
     </el-form-item>
   </el-form>
 </template>

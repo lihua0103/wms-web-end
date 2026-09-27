@@ -2,17 +2,25 @@ import { ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getMenuTree, addMenu, updateMenu, deleteMenu } from "@/api/system";
 import type { MenuItem } from "@/api/system";
 import type { DictItem } from "@/constants/wms";
 import { dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import Plus from "~icons/ep/plus";
 import formComp from "../form.vue";
 
 /** 菜单类型选项 */
 export const menuTypeOptions: DictItem[] = [
-  { label: "目录", value: "dir", tag: "" },
-  { label: "菜单", value: "menu", tag: "success" },
-  { label: "按钮", value: "button", tag: "warning" }
+  { label: $t("system.menu.typeDir"), value: "dir", tag: "" },
+  { label: $t("system.menu.typeMenu"), value: "menu", tag: "success" },
+  { label: $t("system.menu.typeButton"), value: "button", tag: "warning" }
 ];
 
 /** 将菜单树拍平为上级菜单下拉选项 */
@@ -36,9 +44,9 @@ export function useMenu() {
   const dataList = ref<MenuItem[]>([]);
 
   const columns: TableColumnList = [
-    { label: "菜单名称", prop: "name", minWidth: 140 },
+    { label: $t("system.menu.name"), prop: "name", minWidth: 140 },
     {
-      label: "类型",
+      label: $t("common.columns.type"),
       prop: "menuType",
       minWidth: 70,
       cellRenderer: ({ row }) => (
@@ -47,22 +55,62 @@ export function useMenu() {
         </el-tag>
       )
     },
-    { label: "图标", prop: "icon", minWidth: 100 },
-    { label: "路由地址", prop: "path", minWidth: 130 },
-    { label: "组件路径", prop: "component", minWidth: 140 },
-    { label: "权限标识", prop: "permission", minWidth: 140 },
-    { label: "排序", prop: "sort", minWidth: 60 },
+    { label: $t("system.menu.icon"), prop: "icon", minWidth: 100 },
+    { label: $t("system.menu.path"), prop: "path", minWidth: 130 },
+    { label: $t("system.menu.component"), prop: "component", minWidth: 140 },
     {
-      label: "状态",
+      label: $t("system.menu.permission"),
+      prop: "permission",
+      minWidth: 140
+    },
+    { label: $t("system.menu.sort"), prop: "sort", minWidth: 60 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("common.buttons.enabled")
+            : $t("common.buttons.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 200, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: MenuItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.menuType !== "button") {
+      buttons.push({
+        label: $t("system.menu.addChild"),
+        icon: Plus,
+        onClick: () =>
+          openDialog($t("system.menu.addChildMenu"), undefined, row)
+      });
+    }
+    buttons.push(
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("system.menu.editMenu"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    );
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -105,7 +153,12 @@ export function useMenu() {
           ? updateMenu(formInline)
           : addMenu(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("system.menu.editSuccess")
+              : $t("system.menu.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -115,12 +168,12 @@ export function useMenu() {
 
   function handleDelete(row: MenuItem) {
     ElMessageBox.confirm(
-      `确认删除菜单「${row.name}」吗？其子节点将一并失效`,
-      "提示",
+      $t("system.menu.deleteConfirm", { name: row.name }),
+      $t("system.menu.tip"),
       { type: "warning" }
     ).then(() => {
       deleteMenu([Number(row.id)]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

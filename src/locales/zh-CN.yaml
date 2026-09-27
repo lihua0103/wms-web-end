@@ -1,0 +1,2342 @@
+app:
+  title: 智联仓储 WMS
+  subtitle: 一体化管理平台
+common:
+  language: 语言
+  buttons:
+    add: 新增
+    edit: 编辑
+    delete: 删除
+    batchDelete: 批量删除
+    search: 搜索
+    reset: 重置
+    refresh: 刷新
+    export: 导出
+    import: 导入
+    confirm: 确定
+    cancel: 取消
+    save: 保存
+    submit: 提交
+    close: 关闭
+    detail: 详情
+    back: 返回
+    expand: 展开
+    collapse: 折叠
+    print: 打印
+    upload: 上传
+    download: 下载
+    copy: 复制
+    view: 查看
+    audit: 审核
+    cancelAudit: 弃审
+    execute: 执行
+    assign: 分配
+    dispatch: 调度
+    complete: 完成
+    cancelOrder: 取消
+    generate: 生成
+    sync: 同步
+    test: 测试连接
+    enabled: 启用
+    disabled: 停用
+    send: 发送
+    resend: 重发
+    declare: 申报
+    more: 更多
+    login: 登 录
+    logout: 退出登录
+    ok: 好的
+  columns:
+    index: 序号
+    code: 编码
+    name: 名称
+    status: 状态
+    type: 类型
+    operation: 操作
+    remark: 备注
+    creator: 创建人
+    createTime: 创建时间
+    updater: 更新人
+    updateTime: 更新时间
+    quantity: 数量
+    unit: 单位
+    warehouse: 仓库
+    zone: 库区
+    location: 库位
+    owner: 货主
+    material: 物料
+    batchNo: 批次号
+    total: 合计
+  tips:
+    input: 请输入
+    select: 请选择
+    inputOrSelect: 请输入或选择
+    selectDate: 请选择日期
+    noData: 暂无数据
+    loading: 加载中...
+    confirmDelete: 确认删除选中的数据吗？
+    deleteSuccess: 删除成功
+    saveSuccess: 保存成功
+    submitSuccess: 提交成功
+    operateSuccess: 操作成功
+    operateFailed: 操作失败
+    selectedWarning: 请先选择需要操作的数据
+    logoutSuccess: 退出成功
+    welcomeBack: 欢迎回来
+    comingSoon: 功能建设中
+  pagination:
+    total: 共 {total} 条
+menus:
+  home: 首页
+  welcome: 工作台
+  login: 登录
+  error: 异常页面
+  forbidden: "403"
+  notFound: "404"
+  serverError: "500"
+  loading: 加载中...
+  master: 主数据
+  masterWarehouse: 仓库管理
+  masterZone: 库区管理
+  masterLocation: 库位管理
+  masterMaterial: 物料管理
+  masterOwner: 货主管理
+  masterSupplier: 供应商管理
+  masterCustomer: 客户管理
+  masterContainer: 容器管理
+  inbound: 入库管理
+  inboundAppointment: 入库预约
+  inboundReceipt: 收货管理
+  inboundQc: 质检管理
+  inboundPutaway: 上架任务
+  inboundReturn: 退货入库
+  outbound: 出库管理
+  outboundOrder: 出库单
+  outboundWave: 波次管理
+  outboundPicking: 拣货任务
+  outboundPacking: 复核打包
+  outboundShipping: 发货交接
+  inventory: 库存管理
+  inventoryLedger: 库存台账
+  inventorySerial: 序列号管理
+  inventoryBatch: 批次效期
+  inventoryMove: 移库管理
+  inventoryAdjustment: 库存调整
+  inventoryStocktake: 盘点管理
+  inventoryWarning: 库存预警
+  inventoryTransaction: 库存流水
+  operation: 库内作业
+  operationTask: 任务池
+  operationReplenish: 补货管理
+  operationProcess: 加工管理
+  operationCrossdock: 越库作业
+  transport: 运输管理
+  transportCarrier: 承运商
+  transportVehicle: 车辆司机
+  transportDispatch: 配送单
+  transportTracking: 在途跟踪
+  billing: 计费结算
+  billingRule: 计费规则
+  billingBill: 费用账单
+  billingReconcile: 对账单
+  customs: 海关对接
+  customsLedger: 账册管理
+  customsVerify: 核注清单
+  customsRelease: 核放单
+  customsTriple: 三单对碰
+  customsMsglog: 海关报文
+  report: 报表分析
+  reportDashboard: 库存看板
+  reportInout: 出入库报表
+  reportEfficiency: 作业效率
+  reportScreen: 数据大屏
+  system: 系统管理
+  systemUser: 用户管理
+  systemRole: 角色管理
+  systemMenu: 菜单管理
+  systemOrg: 组织架构
+  systemDict: 数据字典
+  systemParam: 系统参数
+  systemLog: 操作日志
+  systemNotice: 消息通知
+  integration: 设备与集成
+  integrationDevice: 设备管理
+  integrationAgv: AGV 调度
+  integrationDeviceTask: 设备任务
+  integrationConfig: 集成配置
+  integrationApilog: 接口日志
+  ai: 智能体中心
+  aiWorkflow: 智能体工作流
+  aiRun: 运行记录
+dict:
+  userStatus:
+    "0": 停用
+    "1": 启用
+  docStatus:
+    draft: 草稿
+    pending: 待审核
+    approved: 已审核
+    processing: 执行中
+    finished: 已完成
+    cancelled: 已取消
+  zoneType:
+    receiving: 收货区
+    storage: 存储区
+    picking: 拣货区
+    buffer: 暂存区
+    shipping: 发货区
+    return: 退货区
+    reject: 不合格品区
+    process: 加工区
+  locationType:
+    floor: 地堆位
+    shelf: 货架位
+    stereo: 立库位
+    pick: 拣货位
+    cache: 缓存位
+  materialCategory:
+    raw: 原材料
+    semi: 半成品
+    finished: 成品
+    packing: 包材
+    consumable: 耗材
+    spare: 备品备件
+  containerType:
+    pallet: 托盘
+    box: 周转箱
+    bin: 料箱
+    cage: 笼车
+  containerStatus:
+    idle: 空闲
+    occupied: 占用
+    instock: 在库
+    shipping: 发运
+    scrapped: 报废
+  inboundType:
+    purchase: 采购入库
+    return: 退货入库
+    transfer: 调拨入库
+    gain: 盘盈入库
+    other: 其他入库
+  inboundStatus:
+    pending: 待审核
+    waiting: 待到货
+    receiving: 收货中
+    qc: 待质检
+    putaway: 待上架
+    finished: 已完成
+    cancelled: 已取消
+  qcResult:
+    waiting: 待检
+    pass: 合格
+    fail: 不合格
+    concession: 让步接收
+  outboundType:
+    sales: 销售出库
+    transfer: 调拨出库
+    internal: 领用出库
+    scrap: 报废出库
+    other: 其他出库
+  outboundStatus:
+    pending: 待审核
+    allocating: 待分配
+    picking_wait: 待拣货
+    picking: 拣货中
+    review: 待复核
+    shipping_wait: 待发货
+    shipped: 已发货
+    finished: 已完成
+    cancelled: 已取消
+    stockout: 缺货
+  priority:
+    urgent: 紧急
+    high: 高
+    normal: 普通
+    low: 低
+  stockStatus:
+    qualified: 合格
+    inspecting: 待检
+    frozen: 冻结
+    unqualified: 不合格
+  moveType:
+    location: 库位移库
+    container: 容器移库
+    transfer: 仓库调拨
+  stocktakeStatus:
+    draft: 草稿
+    counting: 盘点中
+    diff: 待处理差异
+    finished: 已完成
+    cancelled: 已取消
+  stocktakeMode:
+    full: 全盘
+    cycle: 循环盘点
+    spot: 抽盘
+    moving: 动碰盘点
+  transactionType:
+    receive: 收货入库
+    putaway: 上架入库
+    sales: 销售出库
+    transfer_out: 调拨出库
+    transfer_in: 调拨入库
+    move: 移库
+    replenish: 补货
+    stocktake: 盘点调整
+    gain: 报溢
+    loss: 报损
+    freeze: 冻结
+    unfreeze: 解冻
+  warningType:
+    low: 低于安全库存
+    over: 超储
+    dead: 呆滞库存
+    expiring: 临期
+    expired: 已过期
+  serialStatus:
+    instock: 在库
+    allocated: 已分配
+    outbound: 已出库
+    scrapped: 已报废
+    repairing: 维修中
+  taskType:
+    receive: 收货
+    qc: 质检
+    putaway: 上架
+    replenish: 补货
+    picking: 拣货
+    review: 复核
+    move: 移库
+    stocktake: 盘点
+  taskStatus:
+    pending: 待分配
+    processing: 执行中
+    finished: 已完成
+    cancelled: 已取消
+    error: 异常
+  carrierType:
+    self: 自有车队
+    third: 第三方物流
+  deliveryStatus:
+    pending: 待调度
+    dispatched: 已调度
+    delivering: 配送中
+    signed: 已签收
+    error: 异常
+  feeType:
+    storage: 仓储费
+    operation: 操作费
+    handling: 装卸费
+    material: 耗材费
+    transport: 运输费
+  billStatus:
+    pending: 待确认
+    confirmed: 已确认
+    invoiced: 已开票
+    settled: 已结算
+    disputed: 异议中
+  deviceType:
+    agv: AGV 小车
+    stacker: 堆垛机
+    conveyor: 输送线
+    ptl: 电子标签
+    sorter: 分拣机
+    door: 自动库门
+  deviceStatus:
+    online: 在线
+    offline: 离线
+    error: 故障
+    repairing: 维修中
+    charging: 充电中
+    working: 作业中
+  deviceTaskStatus:
+    queued: 排队中
+    executing: 执行中
+    finished: 已完成
+    failed: 失败
+    cancelled: 已取消
+  integrationType:
+    erp: ERP
+    oms: OMS
+    tms: TMS
+    wcs: WCS 设备层
+    ecom: 电商平台
+  apiDirection:
+    down: 下行（外部→WMS）
+    up: 上行（WMS→外部）
+  apiLogStatus:
+    success: 成功
+    fail: 失败
+    retry: 重试中
+  customsLedgerType:
+    bonded_logistics: 保税物流账册
+    process_trade: 加工贸易账册
+    export_warehouse: 出口监管仓账册
+  customsLedgerStatus:
+    active: 已激活
+    changing: 变更中
+    expired: 已过期
+    cancelled: 已注销
+  supervisionMode:
+    "1210": 1210 网购保税进口
+    "1233": 1233 保税仓库货物
+    "1239": 1239 保税跨境电商A
+    "5034": 5034 保税物流中心仓储转口
+    "0110": 0110 一般贸易
+  customsVerifyType:
+    in: 入区核注清单
+    out: 出区核注清单
+  customsVerifyStatus:
+    draft: 草稿
+    declared: 已申报
+    passed: 审核通过
+    deducted: 已核扣
+    refused: 退单
+    cancelled: 已作废
+  releaseDirection:
+    in: 入区
+    out: 出区
+  releaseStatus:
+    draft: 待申报
+    declared: 已申报
+    released: 已放行
+    crossed: 已过卡
+    cancelled: 已作废
+  tripleDocType:
+    order: 订单
+    payment: 支付单
+    logistics: 运单
+  tripleStatus:
+    pending: 待推送
+    pushed: 已推送
+    matched: 对碰成功
+    failed: 对碰失败
+  triplePlatform:
+    tmall: 天猫国际
+    jd: 京东国际
+    pdd: 拼多多全球购
+    douyin: 抖音全球购
+    kaola: 考拉海购
+  customsMsgType:
+    verify: 核注清单报文
+    release: 核放单报文
+    triple: 三单对碰报文
+    summary: 汇总申报报文
+    ledger: 账册备案报文
+  customsChannel:
+    single_window: 国际贸易单一窗口
+    golden_phase2: 金关二期保税物流系统
+    ceb_platform: 跨境电商通关服务平台
+  customsMsgDirection:
+    up: 上行（WMS→海关）
+    down: 下行（海关→WMS）
+  customsMsgStatus:
+    success: 发送成功
+    fail: 发送失败
+    pending: 待发送
+    resend: 重发中
+  aiScene:
+    inventory: 库存管理
+    operation: 仓储作业
+    transport: 运输在途
+    billing: 计费结算
+    customs: 关务单证
+    report: 数据报表
+  aiTrigger:
+    manual: 手动触发
+    scheduled: 定时触发
+    event: 事件触发
+  aiRunStatus:
+    running: 运行中
+    success: 成功
+    failed: 失败
+  aiNodeType:
+    start: 开始
+    llm: 大模型
+    tool: 工具调用
+    condition: 条件分支
+    end: 结束
+  aiWorkflowStatus:
+    enabled: 启用
+    disabled: 停用
+ai:
+  workflow:
+    title: 智能体工作流
+    allPh: 全部
+    namePh: 工作流名称
+    scene: 业务场景
+    triggerType: 触发方式
+    add: 新增工作流
+    editTitle: 编辑工作流
+    run: 运行
+    code: 工作流编码
+    name: 工作流名称
+    cronExpr: 定时表达式
+    model: 执行模型
+    description: 工作流说明
+    steps: 编排步骤
+    codePh: 如 WF-AI-007
+    nameFormPh: 如 退货入库智能分拣
+    cronPh: 如 0 0 2 * * ?（每日 02:00）
+    descPh: 描述触发条件、执行逻辑与输出物
+    stepNamePh: 步骤名称，如 识别预警类型
+    codeRequired: 请输入工作流编码
+    nameRequired: 请输入工作流名称
+    sceneRequired: 请选择业务场景
+    triggerRequired: 请选择触发方式
+    modelRequired: 请选择执行模型
+    moveUp: 上移
+    moveDown: 下移
+    addStep: + 添加步骤
+    runCount: 运行次数
+    successRate: 成功率
+    lastRun: 最近运行
+    stepSummary: "{count} 步 · {type}"
+    cronExprTag: （{cron}）
+    defaultStepReceive: 接收触发参数
+    defaultStepAnalyze: 业务分析
+    defaultStepAction: 执行动作
+    defaultStepOutput: 输出结果
+    stepRequired: 至少需要一个编排步骤
+    addSuccess: 新增成功
+    updateSuccess: 修改成功
+    disabledTip: 工作流已停用，请先启用
+    runTriggered: 已触发运行，运行编号 {runNo}，可前往「运行记录」查看进度
+    enabledMsg: 已启用
+    disabledMsg: 已停用
+    tip: 提示
+    confirmDeleteName: 确认删除工作流「{name}」吗？删除后不可恢复
+  run:
+    title: 智能体运行记录
+    allPh: 全部
+    runNo: 运行编号
+    runNoPh: RUN 开头编号
+    workflow: 工作流
+    workflowPh: 工作流名称
+    scene: 场景
+    triggerType: 触发方式
+    stepProgress: 步骤进度
+    duration: 耗时
+    tokenCol: Token
+    operator: 触发者
+    startedAt: 开始时间
+    detailTitle: 运行详情
+    totalDuration: 总耗时
+    tokenUsage: Token 消耗
+    failReason: 失败原因
+    manualTrigger: 手动触发
+    scheduledTrigger: 定时触发
+    eventTrigger: 事件触发
+    retry: 重试
+    retryQueued: 已重新入队
+    stepTimeline: 步骤执行时间线
+    stepDuration: 耗时 {duration}
+    inputLabel: 输入：
+    outputLabel: 输出：
+    noSteps: 暂无步骤明细
+    stepStatus:
+      running: 执行中
+      success: 成功
+      failed: 失败
+      pending: 待执行
+      skipped: 已跳过
+  panel:
+    agentName: WMS 智能体
+    entryLabel: 智能体
+    statusRemote: 在线 · 远端引擎
+    statusLocal: 在线 · 本地预览引擎
+    statusOff: 离线
+    greeting: 您好，我是 WMS 智能体。可以帮您查库存、追单据、找异常、出报表，也支持国际物流场景（运费试算、时效查询、关务合规、异常处置）——点击下方技能卡或直接输入指令。
+    disabledMsg: 智能体功能已关闭，请联系管理员在 platform-config.json 中开启。
+    stopped: （已停止生成）
+    clearSession: 清空会话
+    collapse: 收起
+    toolCalling: 调用中…
+    tokenUsage: 消耗 {count} tokens
+    inputPh: 输入指令，如：查 WH001 的 A 类物料库存
+    skill:
+      checkStock:
+        title: 查库存
+        prompt: 查询 WH001 上海主仓 A/B 区当前库存与库位占用
+      trackDocs:
+        title: 追单据
+        prompt: ASN202609260013 入库预约当前执行到哪一步了
+      findIssues:
+        title: 找异常
+        prompt: 扫描今日库存预警与作业异常，按优先级列出
+      genReport:
+        title: 出报表
+        prompt: 生成本周出入库与作业效率周报要点
+      freightQuote:
+        title: 运费试算
+        prompt: 试算上海发洛杉矶 2 托 500kg 海运运费与时效
+      etaQuery:
+        title: 时效查询
+        prompt: DP202609250008 配送单预计送达时间，是否延误
+      customsCheck:
+        title: 关务合规
+        prompt: 审核出口单证要素是否齐全，HS 归类是否正确
+      exceptionHandle:
+        title: 异常处置
+        prompt: 处置 WH002 的缺货预警并生成处置工单
+    preview:
+      engineOff: 智能体功能已关闭（AiEnabled=false）
+      remoteFallback: 远端引擎连接失败（{msg}），已切换本地预览引擎
+      engineError: 预览引擎异常
+      inventory:
+        thought: 已理解指令：库存查询。识别参数：仓库=WH001 上海主仓（默认当前仓），范围=A/B 存储区，输出=可用库存与库位。
+        toolSummary: 命中 3 个 SKU、6 个批次、41 个库位
+        body: |-
+          已为您查询 **WH001 上海主仓** 实时库存，重点结果如下：
+
+          **1. SKU00003 精密轴承（A 类）**
+          - 可用库存：1,284 件｜库位 B-03-01 ～ B-03-06
+          - 批次效期：B2609A（2027-03-15 到期）｜安全库存达成率 96%
+          - 状态：正常
+
+          **2. SKU00011 锂电池模组（危险品）**
+          - 可用库存：460 件｜库位 D-02-03（隔离区，UN3480）
+          - ⚠ 低于安全库存线（500 件），建议触发补货评估
+
+          **3. SKU00027 精工机械配件**
+          - 可用库存：2,150 件｜库位 B-05-02
+          - ⚠ 滞销预警：连续 90 天无出库记录
+
+          汇总：A 区库位占用率 82%，B 区 67%。需要我导出明细、查看某批次序列号，或直接生成补货建议吗？
+        s1: 生成 SKU00011 补货建议
+        s2: 查 B 区库位占用明细
+        s3: 导出库存快照
+      docTrace:
+        thought: 已理解指令：单据全链路追踪。识别单号 ASN202609260013（入库预约），沿「预约 → 收货 → 质检 → 上架」链路检索执行进度。
+        toolSummary: 链路命中 4 个节点，当前停留在「质检」
+        body: |-
+          单据 **ASN202609260013**（入库预约 · 货主A 华东电子）执行进度：
+
+          - ✅ 预约确认：09-26 09:12，月台 D-03，预约时段 14:00-16:00
+          - ✅ 收货交接：IN202609260021，实收 480/500 件，差异 20 件已登记待处理
+          - ⏳ **质检中**：QC202609270005，抽检 15%，已检 62/75 件，预计 25 分钟后完成
+          - ⬜ 上架任务：未生成（质检完成后自动派发 PA 任务至 B 区立体库位）
+
+          风险提示：按当前节奏，预计 17:40 前可完成全链路，未超预约时效。需要我盯住质检节点并在完成后提醒您吗？
+        s1: 质检完成后提醒我
+        s2: 查看 20 件收货差异明细
+        s3: 这批货上架到哪些库位
+      exceptionScan:
+        thought: 已理解指令：全局异常扫描。检索范围=库存预警 + 作业超时 + 滞销，时间窗=今日，按优先级排序输出。
+        toolSummary: 命中 {count} 条异常，其中高危 2 条
+        step1: 异常检测
+        step2: 分级归类
+        step3: 优先级排序
+        body: |-
+          今日全局异常扫描完成，共命中 **{count} 条**，按优先级列出高危项：
+
+          **🔴 P0 · WH002 广州华南仓缺货预警**
+          - SKU00017 车载充电模组：可用 0 件，在途 300 件预计 09-29 到仓
+          - 影响：未履约订单 6 笔；建议：部分履约 4 笔 + 其余 2 笔改仓 WH001 发货
+
+          **🔴 P0 · 拣货任务超时**
+          - PK202609270012（波次 WV202609270003）：超时 42 分钟，责任区 C-02 拣货位
+          - 建议：升级班组长介入，或转 AGV 无人叉车兜底
+
+          **🟡 P1 · 滞销预警 {slowCount} 条**：B 区 3 个 SKU 连续 90 天无动销，建议启动促销或调拨
+
+          需要我针对某条异常生成处置工单吗？
+        s1: 处置 WH002 缺货预警
+        s2: 查看滞销 SKU 明细
+        s3: 把 P0 异常推送到班组群
+      reportGen:
+        thought: 已理解指令：报表解读。聚合本周出入库与作业效率指标，对比上周环比，输出要点与建议。
+        toolSummary: 聚合 7 天 × 3 类指标，采样 12.6 万条流水
+        body: |-
+          本周（09-21 ～ 09-27）运营要点如下：
+
+          - **吞吐**：入库 21,436 件（环比 +8.2%），出库 28,701 件（环比 +15.6%），出库高峰集中在周四
+          - **效率**：人均拣货 142 件/时（环比 +6 件），AGV 搬运任务 3,208 单，设备利用率 81%
+          - **质量**：收货差异率 0.42%、拣货差错率 0.08%，均在目标线内
+          - **预警**：WH002 出库量连续两周下滑（-12%），但库存周转天数上升至 47 天
+
+          结论：整体健康，建议关注 WH002 的库存结构。需要我生成完整周报 PDF，或深挖 WH002 周转异常的原因吗？
+        s1: 深挖 WH002 周转异常
+        s2: 生成出库趋势图数据
+        s3: 对比上月的效率指标
+      freightQuote:
+        thought: 已理解指令：国际运费试算。参数：起运上海（CNSHA）→ 洛杉矶（USLAX），2 托 / 500kg / 3.2cbm，优先海运整拼比价。
+        toolSummary: 返回 3 个渠道报价（海运拼箱 / 海运快船 / 空运）
+        body: |-
+          **上海 → 洛杉矶**（2 托 / 500kg / 3.2cbm）试算结果：
+
+          - **海运拼箱 LCL**：约 $680（$212/cbm + 附加费），全程 28-34 天，截仓每周二/五
+          - **海运快船（美森限时达）**：约 $1,150，全程 18-22 天，适合补紧急断货
+          - **空运**：约 $2,400（$4.8/kg），全程 5-7 天，含清关 1-2 天
+
+          建议：非紧急补货走 LCL，单件物流成本最低；若对接 WH002 缺货的 6 笔订单，推荐快船渠道平衡时效与成本。
+
+          注：报价为预览模拟口径，正式报价以合约船期与实时燃油附加费为准。
+        s1: 按快船渠道测算总成本
+        s2: 对比到 WH001 美西仓的全程时效
+        s3: 生成报价单草稿
+      etaQuery:
+        thought: 已理解指令：在途时效查询。检索配送单 DP202609250008 的 GPS 轨迹、承运商承诺时效与当前拥堵指数。
+        toolSummary: 轨迹命中 12 个节点，最新位置 G15 常熟段
+        bodyOnTime: |-
+          配送单 **DP202609250008**（承运商：顺智物流 · 沪A·D8821）在途状态：
+
+          - 当前位置：G15 沈海高速 常熟段（09-27 10:42 轨迹）
+          - 承诺送达：09-27 18:00 前，**预计 17:20 送达**，正点率判断：✅ 正常
+          - 剩余里程 86km，途经 2 个拥堵点（轻度）
+
+          需要开启到货前 30 分钟提醒吗？
+        bodyDelayed: |-
+          配送单 **DP202609250008**（承运商：顺智物流 · 沪A·D8821）在途状态：
+
+          - 当前位置：G15 沈海高速 常熟段（09-27 10:42 轨迹）
+          - 承诺送达：09-27 18:00 前，**预计 19:10 送达，延误约 70 分钟** ⚠
+          - 延误原因：途经苏州段事故管制 + 卸货排队（前方 2 单在卸）
+
+          建议：已可一键向收货客户推送延误安抚短信，并同步调整月台预约。需要我执行吗？
+        s1: 推送延误通知给客户
+        s2: 调整今晚月台预约
+        s3: 查看该承运商本月准点率
+      customsCheck:
+        thought: 已理解指令：出口单证智能审核。按 WF-AI-003 工作流执行：OCR 解析 → 要素校验 → HS 预归类 → 风险标记。
+        toolSummaryOcr: 解析发票/装箱单/委托书共 3 份，提取 18 个要素
+        toolSummaryHs: 预归类 8482.10（滚动轴承），置信度 0.94
+        stepOcr: OCR 解析单证
+        stepVerify: 要素完整性校验
+        stepHs: HS 编码预归类
+        stepRisk: 风险标记与复核
+        body: |-
+          单证审核完成（工作流 WF-AI-003），结果如下：
+
+          **✅ 要素校验**：18 项中 16 项通过
+          - 发票、装箱单、报关委托书齐全
+          - ⚠ 原产地证缺失（一般贸易退税需要，建议补交）
+          - ⚠ 装箱单毛重与发票不一致（1,240kg vs 1,215kg），需人工确认以报关单为准
+
+          **✅ HS 预归类**：8482.10 滚动轴承（置信度 94%），退税率 13%，监管条件无特殊要求
+
+          **风险等级**：🟡 中（2 项待人工确认）。确认后可直接生成报关草单，是否继续？
+        s1: 按报关单口径修正毛重
+        s2: 生成报关草单
+        s3: 查看 HS 8482.10 监管条件
+      exceptionHandle:
+        thought: 已理解指令：异常处置。目标=WH002 缺货预警（{sku}），按「根因分析 → 预案匹配 → 工单生成」执行处置工作流。
+        toolSummaryRoot: 根因：销量预测偏低 35% + 供应商延迟交期 2 天
+        toolSummaryTicket: 补货工单 RP202609270011 已创建
+        stepConfirm: 异常确认
+        stepRoot: 根因分析
+        stepPlan: 预案匹配
+        stepTicket: 工单生成
+        body: |-
+          处置完成，执行摘要如下：
+
+          **根因**：大促预热期销量预测偏低 35%，叠加供应商原料延迟交期 2 天
+
+          **已执行动作**：
+          - ✅ 生成紧急补货工单 **RP202609270011**（300 件，加急），预计 09-29 10:00 到仓
+          - ✅ 受影响 6 笔订单中，4 笔部分履约、2 笔已改由 WH001 上海主仓发货（跨仓调度）
+          - ✅ 通知货主B 精工机械的客服侧同步客户交期
+
+          **后续建议**（需人工确认）：将该 SKU 的安全库存由 500 上调至 650，并纳入大促预测修正模型。
+
+          工单与通知已留痕至运行记录，可随时追溯。
+        s1: 查看 RP202609270011 工单详情
+        s2: 上调安全库存至 650
+        s3: 复盘本月同类预警
+      general:
+        thought: 未匹配到确定性技能，进入通用问答模式（预览引擎仅模拟仓储与国际物流域内回答）。
+        body: |-
+          收到指令：「{question}」。
+
+          当前为本地预览引擎，支持以下技能域：
+          - 仓储：查库存 / 追单据 / 找异常 / 出报表
+          - 国际物流：运费试算 / 时效查询 / 关务合规 / 异常处置
+
+          您可以换个说法（如「查 WH001 库存」），或等远端 Agent 网关接入后解锁完整自然语言能力。
+        s1: 查 WH001 上海主仓库存
+        s2: 扫描今日异常
+        s3: 试算上海到洛杉矶运费
+billing:
+  bill:
+    title: 费用账单
+    noLabel: 单号
+    no: 账单编号
+    all: 全部
+    period: 账期
+    periodPh: 如 2026-08
+    feeType: 费用类型
+    amountCol: 金额（元）
+    confirmUser: 确认人
+    confirmBtn: 确认
+    invoiceBtn: 开票
+    settleBtn: 结算
+    tip: 提示
+    confirmTip: 确认账单「{code}」吗？
+    confirmSuccess: 账单已确认
+    invoiceTip: 确认为账单「{code}」开票吗？
+    invoiceSuccess: 开票成功
+    settleTip: 确认账单「{code}」已完成结算吗？
+    settleSuccess: 结算完成
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    selfOwned: 自营
+  rule:
+    title: 计费规则
+    code: 规则编码
+    all: 全部
+    feeType: 费用类型
+    addBtn: 新增规则
+    addTitle: 新增计费规则
+    editTitle: 编辑计费规则
+    unit: 计费单位
+    price: 单价（元）
+    minimumFee: 最低费用
+    minimumFeeCol: 最低费用（元）
+    effectiveFrom: 生效日期
+    effectiveTo: 失效日期
+    codeRequired: 请输入规则编码
+    ownerRequired: 请选择货主
+    feeTypeRequired: 请选择费用类型
+    unitRequired: 请选择计费单位
+    effectiveFromRequired: 请选择生效日期
+    effectiveToRequired: 请选择失效日期
+    unitPalletDay: 托/天
+    unitPiece: 件
+    unitTime: 次
+    unitTicket: 票
+    tip: 提示
+    deleteTip: 确认删除计费规则「{code}」吗？
+    addSuccess: 新增成功
+    updateSuccess: 修改成功
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    selfOwned: 自营
+  reconcile:
+    title: 对账单
+    noLabel: 单号
+    no: 对账单号
+    all: 全部
+    period: 账期
+    periodPh: 如 2026-08
+    billCount: 账单数
+    totalAmountCol: 总金额（元）
+    diffAmountCol: 差异金额（元）
+    confirmBtn: 确认对账
+    disputeBtn: 提出异议
+    tip: 提示
+    confirmTip: 确认对账单「{code}」吗？
+    confirmSuccess: 对账已确认
+    disputeTip: 确认对账单「{code}」提出异议吗？
+    disputeSuccess: 已提交异议
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    selfOwned: 自营
+customs:
+  ledger:
+    title: 海关账册
+    addTitle: 新增海关账册
+    editTitle: 编辑海关账册
+    add: 新增账册
+    tip: 提示
+    all: 全部
+    ledgerNo: 账册编号
+    ledgerNoPh: 如 L2631W00001
+    ledgerType: 账册类型
+    enterpriseName: 企业名称
+    enterpriseNamePh: 备案企业名称
+    enterpriseNameFullPh: 备案企业全称
+    customsCode: 海关注册编码
+    customsCodePh: 10 位海关注册登记编码
+    creditCode: 信用代码
+    creditCodePh: 18 位统一社会信用代码
+    supervisionMode: 监管方式
+    validFrom: 生效日期
+    validTo: 失效日期
+    detailBtn: 底账
+    detailTitle: 账册底账明细
+    gNo: 海关料号
+    skuCode: 物料编码
+    goodsName: 品名
+    declaredQty: 备案数量
+    usedQty: 已核扣
+    availQty: 可用量
+    inputLedgerNo: 请输入账册编号
+    selectLedgerType: 请选择账册类型
+    inputEnterpriseName: 请输入企业名称
+    inputCustomsCode: 请输入海关注册编码
+    selectSupervisionMode: 请选择监管方式
+    selectValidFrom: 请选择生效日期
+    selectValidTo: 请选择失效日期
+    pickValidFrom: 选择生效日期
+    pickValidTo: 选择失效日期
+    remarkPh: 备注信息
+    addSuccess: 新增成功
+    updateSuccess: 修改成功
+    confirmDelete: 确认删除账册「{no}」吗？删除后关联底账将一并清除。
+  verify:
+    title: 核注清单
+    detailTitle: 核注清单详情
+    all: 全部
+    listNo: 清单编号
+    bizNo: 关联单号
+    bizNoPh: 出入库单号
+    relBizNo: 关联出入库单
+    ledgerNo: 账册编号
+    packCount: 件数
+    supervisionMode: 监管方式
+    declareTime: 申报时间
+    declareBy: 申报人
+    refusedReason: 退单原因
+    goodsTitle: 商品明细
+    gNo: 料号
+    hsCode: 商品编号
+    goodsName: 品名
+    declareQty: 申报数量
+    price: 单价
+    currency: 币制
+    grossWeightKg: 毛重(kg)
+    netWeightKg: 净重(kg)
+    grossNetWeight: 毛重 / 净重
+    redeclare: 重新申报
+    syncReceipt: 同步回执
+    declareTitle: 申报确认
+    confirmDeclare: 确认向海关申报核注清单「{no}」吗？
+    declaredTip: 清单「{no}」已申报
+    syncedTip: 清单「{no}」回执已同步
+  release:
+    title: 核放单
+    detailTitle: 核放单详情
+    all: 全部
+    tip: 提示
+    passNo: 核放单号
+    vehicleNo: 车牌号
+    direction: 方向
+    directionFull: 进出方向
+    driver: 司机
+    driverPhone: 司机电话
+    containerNo: 集装箱号
+    relListNo: 关联核注清单
+    relBizNo: 关联出入库单
+    packCount: 件数
+    grossWeight: 毛重
+    grossWeightKg: 毛重(kg)
+    declareTime: 申报时间
+    releaseTime: 放行时间
+    crossTime: 过卡时间
+    releaseBtn: 放行
+    crossBtn: 过卡确认
+    cancelBtn: 作废
+    declareTitle: 申报确认
+    confirmDeclare: 确认申报核放单「{no}」（{vehicle}）吗？
+    declaredTip: 核放单「{no}」已申报
+    releasedTip: 核放单「{no}」海关已放行
+    crossedTip: 车辆「{vehicle}」过卡登记完成
+    confirmCancel: 确认作废核放单「{no}」吗？作废后不可恢复。
+    cancelledTip: 已作废
+  triple:
+    title: 三单对碰
+    detailTitle: 三单详情
+    all: 全部
+    docNo: 单证编号
+    orderNo: 订单号
+    relOrderNo: 关联订单号
+    docType: 单证类型
+    platform: 平台
+    platformFull: 电商平台
+    extNo: 外部单号
+    paymentNoNote: (支付流水号)
+    logisticsNoNote: (运单号)
+    amount: 金额
+    amountCol: 金额(元)
+    consignee: 收件人
+    matchStatus: 对碰状态
+    failReason: 失败原因
+    pushTime: 推送时间
+    matchTime: 对碰时间
+    push: 推送
+    repush: 重新推送
+    pushTitle: 推送确认
+    confirmPush: 确认向跨境电商通关服务平台推送{type}「{no}」吗？
+    pushedTip: 单证「{no}」推送成功，海关对碰通过
+  msglog:
+    title: 海关报文
+    detailTitle: 报文详情
+    all: 全部
+    msgNo: 报文编号
+    bizNo: 关联单证
+    bizNoPh: 关联单证号
+    msgType: 报文类型
+    channel: 申报通道
+    direction: 方向
+    resendCount: 重发次数
+    errorMsg: 错误信息
+    createdAt: 时间
+    requestMsg: 请求报文
+    responseMsg: 回执报文
+    resentTip: 报文「{no}」重发成功
+inbound:
+  asn:
+    title: 入库预约
+    add: 新增预约单
+    edit: 编辑预约单
+    code: 单号
+    asnNo: 预约单号
+    all: 全部
+    supplier: 供应商
+    supplierPh: 供应商名称
+    inboundType: 入库类型
+    expectedArrival: 预计到货
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    ownerSelf: 自营
+    statusDraft: 草稿
+    statusPending: 待审核
+    statusApproved: 已审核
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    plsSelectWarehouse: 请选择仓库
+    plsInputSupplier: 请输入供应商
+    plsSelectArrival: 请选择预计到货时间
+    tip: 提示
+    confirmApprove: 确认审核通过「{code}」吗？
+    confirmCancel: 确认取消「{code}」吗？
+    confirmDelete: 确认删除预约单「{code}」吗？
+    approveSuccess: 审核通过
+    cancelledMsg: 已取消
+    createSuccess: 创建成功
+    updateSuccess: 修改成功
+  receipt:
+    title: 收货管理
+    register: 收货登记
+    code: 单号
+    receiptNo: 收货单号
+    asnNo: 预约单号
+    all: 全部
+    supplier: 供应商
+    materialCode: 物料编码
+    materialName: 物料名称
+    batch: 批次
+    received: 实收
+    qualified: 合格
+    rejected: 不合格
+    receiver: 收货人
+    receivedQty: 实收数量
+    qualifiedQty: 合格数量
+    rejectedQty: 不合格数量
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    plsInputReceivedQty: 请输入实收数量
+    tip: 提示
+    confirmApprove: 确认审核通过「{code}」吗？
+    auditSuccess: 审核通过
+    registerSuccess: 收货登记成功
+  qc:
+    title: 质检管理
+    code: 单号
+    qcNo: 质检单号
+    receipt: 收货单
+    receiptNo: 收货单号
+    materialCode: 物料编码
+    materialName: 物料名称
+    batch: 批次
+    result: 结果
+    all: 全部
+    enterResult: 录入结果
+    editResult: 修改结果
+    qcResult: 质检结果
+    qcRemark: 质检备注
+    qcRemarkPh: 不合格原因/让步说明等
+    qcQty: 质检数量
+    qcUser: 质检员
+    qcTime: 质检时间
+    enterTitle: 录入质检结果
+    submitSuccess: 质检结果已提交
+    plsSelectResult: 请选择质检结果
+  putaway:
+    title: 上架任务
+    taskNo: 任务号
+    receiptNo: 收货单号
+    all: 全部
+    fromLocation: 源库位
+    toLocation: 目标库位
+    materialCode: 物料编码
+    materialName: 物料名称
+    operator: 操作员
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    tip: 提示
+    confirmFinish: 确认任务「{taskNo}」已上架至 {location} 吗？
+    finishSuccess: 上架完成
+  return:
+    title: 退货入库
+    add: 新增退货单
+    edit: 编辑退货单
+    code: 单号
+    returnNo: 退货单号
+    all: 全部
+    customer: 客户
+    customerPh: 客户名称
+    materialCode: 物料编码
+    materialCodePh: 如 SKU00001
+    materialName: 物料名称
+    reason: 退货原因
+    reasonQuality: 质量问题
+    reasonWrongDelivery: 错发
+    reasonRejected: 客户拒收
+    reasonDamaged: 包装破损
+    reasonExpired: 临期退货
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    ownerSelf: 自营
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    statusPending: 待审核
+    statusApproved: 已审核
+    statusReceiving: 收货中
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    approve: 审批
+    plsSelectWarehouse: 请选择仓库
+    plsInputCustomer: 请输入客户名称
+    plsInputMaterialCode: 请输入物料编码
+    plsInputQty: 请输入数量
+    tip: 提示
+    confirmApprove: 确认审批通过「{code}」吗？
+    confirmCancel: 确认取消「{code}」吗？
+    confirmDelete: 确认删除退货单「{code}」吗？
+    approveSuccess: 审批通过
+    cancelledMsg: 已取消
+    createSuccess: 创建成功
+    updateSuccess: 修改成功
+integration:
+  device:
+    title: 设备管理
+    addDevice: 新增设备
+    editTitle: 编辑设备
+    code: 设备编码
+    name: 设备名称
+    type: 设备类型
+    warehouse: 所属仓库
+    zone: 所在库区
+    ip: IP 地址
+    vendor: 厂商
+    all: 全部
+    codeExample: 如 AGV-007
+    codeRequired: 请输入设备编码
+    nameRequired: 请输入设备名称
+    typeRequired: 请选择设备类型
+    warehouseRequired: 请选择所属仓库
+    zonePh: 请选择库区
+    ipExample: 如 192.168.10.11
+    ipRequired: 请输入设备 IP 地址
+    ipInvalid: IP 地址格式不正确
+    vendorPh: 请输入设备厂商
+    lastHeartbeat: 最后心跳
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+    zoneA: A 收货区
+    zoneB: B 存储区
+    zoneC: C 拣货区
+    zoneD: D 发货区
+    tipTitle: 提示
+    confirmEnable: 确认启用设备「{name}」吗？
+    confirmDisable: 确认停用设备「{name}」吗？
+    confirmDelete: 确认删除设备「{name}」吗？
+    enabledSuccess: 设备已启用
+    disabledSuccess: 设备已停用
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+  deviceTask:
+    title: 设备任务
+    taskNo: 任务号
+    taskNoPh: 设备任务号
+    device: 设备
+    bizNo: 业务单号
+    bizNoPh: 关联业务单号
+    all: 全部
+    finishTime: 完成时间
+    tipTitle: 提示
+    confirmCancel: 确认取消任务「{taskNo}」吗？
+    cancelSuccess: 任务已取消
+  config:
+    title: 集成配置
+    addTitle: 新增集成配置
+    addBtn: 新增配置
+    editTitle: 编辑集成配置
+    systemName: 系统名称
+    systemNamePh: 对接系统名称
+    systemNameExample: 如 用友 U8 ERP
+    systemNameRequired: 请输入系统名称
+    systemType: 系统类型
+    systemTypeRequired: 请选择系统类型
+    all: 全部
+    apiUrl: 接口地址
+    apiUrlCol: API 地址
+    apiUrlExample: 如 https://erp.demo.com/api
+    apiUrlRequired: 请输入接口地址
+    authType: 认证方式
+    authTypeRequired: 请选择认证方式
+    authToken: Token 令牌
+    authSignature: 签名认证
+    syncDirection: 同步方向
+    syncDirectionRequired: 请选择同步方向
+    lastSyncTime: 最近同步时间
+    testSuccess: 「{name}」连接成功
+    tipTitle: 提示
+    confirmDelete: 确认删除集成配置「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+  apiLog:
+    title: 接口日志
+    detailTitle: 接口日志详情
+    requestId: 请求 ID
+    requestIdPh: 请求跟踪 ID
+    system: 系统
+    systemName: 系统名称
+    apiPath: 接口路径
+    direction: 方向
+    duration: 耗时
+    durationCol: 耗时(ms)
+    errorMsg: 错误信息
+    requestSummary: 请求摘要
+    responseSummary: 响应摘要
+    all: 全部
+    sysYonyou: 用友 U8 ERP
+    sysOms: 订单中台 OMS
+    sysWcs: 汇川 WCS 设备层
+    sysTms: 快递鸟 TMS
+    sysTmall: 天猫电商平台
+    sysJd: 京东电商平台
+  agv:
+    title: AGV 调度
+    dispatchBtn: 下发任务
+    dispatchTitle: 下发 AGV 任务
+    dispatchSuccess: 任务已下发
+    retry: 重新下发
+    retrySuccess: 已重新下发
+    taskNo: 任务号
+    taskNoPh: AGV 任务号
+    agv: AGV
+    code: AGV 编号
+    codePh: AGV 编号
+    codeRequired: 请选择 AGV 编号
+    taskType: 任务类型
+    typeRequired: 请选择任务类型
+    typeCarry: 搬运
+    typeInbound: 入库
+    typeOutbound: 出库
+    typeCharge: 充电
+    fromLocation: 起始库位
+    fromRequired: 请输入起始库位
+    fromExample: 如 A-01-01
+    toLocation: 目标库位
+    toRequired: 请输入目标库位
+    toExample: 如 C-02-03
+    priority: 优先级
+    priorityRequired: 请选择优先级
+    priorityLevel: "{v} 级"
+    priorityHighest: "{v} 级（最紧急）"
+    priorityLowest: "{v} 级（最低）"
+    all: 全部
+    tipTitle: 提示
+    confirmRetry: 确认重新下发任务「{taskNo}」吗？
+inventory:
+  ledger:
+    title: 库存台账
+    all: 全部
+    batch: 批次
+    materialCode: 物料编码
+    materialName: 物料名称
+    stockStatus: 库存状态
+    qty: 库存量
+    locked: 锁定
+    lockedQty: 锁定数量
+    available: 可用量
+    availableQty: 可用数量
+    expiredAt: 失效日期
+    freeze: 冻结
+    unfreeze: 解冻
+    detailTitle: 库存详情
+    freezeSuccess: 冻结成功
+    unfreezeSuccess: 解冻成功
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+  transaction:
+    title: 库存流水
+    building: 页面建设中
+  batch:
+    title: 批次效期
+    building: 页面建设中
+  serial:
+    title: 序列号管理
+    building: 页面建设中
+  adjustment:
+    title: 库存调整
+    building: 页面建设中
+  move:
+    title: 移库管理
+    building: 页面建设中
+  stocktake:
+    title: 盘点管理
+    all: 全部
+    docNo: 单号
+    stocktakeNo: 盘点单号
+    mode: 盘点方式
+    planDate: 计划日期
+    itemCount: 盘点项数
+    diffCount: 差异数
+    materialCode: 物料编码
+    materialName: 物料名称
+    batch: 批次
+    bookQty: 账面数
+    actualQty: 实际数
+    create: 创建盘点单
+    createSuccess: 创建成功
+    start: 开始盘点
+    submitDiff: 提交差异
+    detail: 明细
+    detailTitle: 盘点明细 - {code}
+    started: 盘点已开始
+    startTip: 确认开始盘点吗？
+    diffSubmitted: 差异已提交
+    submitDiffTip: 确认提交盘点差异吗？
+    finished: 盘点完成，差异已生成调整单
+    finishTip: 确认完成盘点并生成调整单吗？
+    cancelled: 已取消
+    cancelTip: 确认取消该盘点单吗？
+    tip: 提示
+    inputActualFirst: 请先录入实际数量
+    saved: 已保存
+    selectWarehouse: 请选择仓库
+    selectMode: 请选择盘点方式
+    selectPlanDate: 请选择计划日期
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+  warning:
+    title: 库存预警
+    building: 页面建设中
+master:
+  warehouse:
+    title: 仓库管理
+    addTitle: 新增仓库
+    editTitle: 编辑仓库
+    code: 仓库编码
+    name: 仓库名称
+    type: 仓库类型
+    typeNormal: 普通
+    typeCold: 冷链
+    typeDangerous: 危化
+    all: 全部
+    address: 地址
+    addressPh: 详细地址
+    contact: 联系人
+    phone: 电话
+    area: 总面积(㎡)
+    colArea: 面积(㎡)
+    codeExample: 如 WH004
+    enabled: 启用
+    disabled: 停用
+    tip: 提示
+    delTip: 确认删除仓库「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    codeRequired: 请输入仓库编码
+    nameRequired: 请输入仓库名称
+  zone:
+    title: 库区管理
+    addTitle: 新增库区
+    editTitle: 编辑库区
+    code: 库区编码
+    name: 库区名称
+    type: 库区类型
+    codeExample: 如 1Z01
+    all: 全部
+    locationCount: 库位数
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+    selectWarehouse: 请选择仓库
+    codeRequired: 请输入库区编码
+    nameRequired: 请输入库区名称
+    typeRequired: 请选择库区类型
+    enabled: 启用
+    disabled: 停用
+    tip: 提示
+    delTip: 确认删除库区「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+  location:
+    title: 库位管理
+    addTitle: 新增库位
+    editTitle: 编辑库位
+    code: 库位编码
+    zoneCode: 库区编码
+    type: 库位类型
+    codeExample: 如 1Z01-01-02-3
+    zoneCodeExample: 如 1Z01
+    maxWeight: 最大承重(kg)
+    maxVolume: 最大容积(m³)
+    isMix: 是否混放
+    colMix: 混放
+    allow: 允许
+    forbid: 禁止
+    statusIdle: 空闲
+    statusOccupied: 占用
+    statusDisabled: 禁用
+    all: 全部
+    batchGen: 批量生成
+    genTitle: 批量生成库位
+    genSuccess: 成功生成 {count} 个库位
+    prefix: 编码前缀
+    prefixPh: 生成编码的前缀，如 1Z01
+    prefixRequired: 请输入编码前缀
+    rows: 排数
+    cols: 列数
+    floors: 层数
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+    selectWarehouse: 请选择仓库
+    zoneCodeRequired: 请输入库区编码
+    codeRequired: 请输入库位编码
+    tip: 提示
+    delTip: 确认删除库位「{code}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+  material:
+    title: 物料管理
+    addTitle: 新增物料
+    editTitle: 编辑物料
+    detailTitle: 物料详情
+    code: 物料编码
+    name: 物料名称
+    category: 分类
+    codeExample: 如 SKU00041
+    spec: 规格
+    specPh: 规格型号
+    barcode: 条码
+    barcodePh: 商品条码（一物多码可维护多条）
+    safetyQty: 安全库存
+    price: 单价
+    priceYuan: 单价(元)
+    currency: 元
+    expiryMgmt: 效期管理
+    serialMgmt: 序列号管理
+    serial: 序列号
+    yes: 是
+    no: 否
+    ownerA: 货主A 华东电子
+    ownerB: 货主B 精工机械
+    ownerC: 货主C 日化用品
+    selfOwned: 自营
+    unitPiece: 件
+    unitBox: 箱
+    unitPallet: 托
+    unitMeter: 米
+    unitKg: 千克
+    categoryRequired: 请选择分类
+    codeRequired: 请输入物料编码
+    nameRequired: 请输入物料名称
+    enabled: 启用
+    disabled: 停用
+    all: 全部
+    tip: 提示
+    delTip: 确认删除物料「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+  owner:
+    title: 货主管理
+    addTitle: 新增货主
+    editTitle: 编辑货主
+    code: 货主编码
+    name: 货主名称
+    codeExample: 如 OW001
+    contact: 联系人
+    phone: 电话
+    address: 地址
+    settleType: 结算方式
+    settleMonthly: 月结
+    settleImmediate: 现结
+    enabled: 启用
+    disabled: 停用
+    tip: 提示
+    delTip: 确认删除货主「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    codeRequired: 请输入货主编码
+    nameRequired: 请输入货主名称
+  supplier:
+    title: 供应商管理
+    addTitle: 新增供应商
+    editTitle: 编辑供应商
+    code: 供应商编码
+    name: 供应商名称
+    contact: 联系人
+    phone: 电话
+    email: 邮箱
+    address: 地址
+    enabled: 启用
+    disabled: 停用
+    tip: 提示
+    delTip: 确认删除供应商「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    codeRequired: 请输入供应商编码
+    nameRequired: 请输入供应商名称
+  customer:
+    title: 客户管理
+    addTitle: 新增客户
+    editTitle: 编辑客户
+    code: 客户编码
+    name: 客户名称
+    contact: 联系人
+    phone: 电话
+    address: 地址
+    enabled: 启用
+    disabled: 停用
+    tip: 提示
+    delTip: 确认删除客户「{name}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    codeRequired: 请输入客户编码
+    nameRequired: 请输入客户名称
+  container:
+    title: 容器管理
+    addTitle: 新增容器
+    editTitle: 编辑容器
+    code: 容器编码
+    containerType: 容器类型
+    codeExample: 如 PLT00001
+    bindingMaterial: 绑定物料
+    bindingMaterialPh: 绑定物料编码（可空）
+    currentLocation: 所在库位
+    currentLocationPh: 所在库位（可空）
+    selectWarehouse: 请选择仓库
+    codeRequired: 请输入容器编码
+    typeRequired: 请选择容器类型
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+    all: 全部
+    tip: 提示
+    delTip: 确认删除容器「{code}」吗？
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+login:
+  brandMark: 仓
+  brandTitle: 智联仓储
+  brandTagline: 让每一件货物的入库、存储、拣选与发运，全程在线、清晰可控
+  features:
+    inbound: 入库协同
+    inboundSub: 预约 · 收货 · 质检
+    outbound: 出库履约
+    outboundSub: 波次 · 拣货 · 发运
+    inventory: 库存管控
+    inventorySub: 批次 · 序列号 · 效期
+    equipment: 设备调度
+    equipmentSub: AGV · 立库 · 输送线
+    insight: 数据洞察
+    insightSub: 看板 · 大屏 · 绩效
+  week:
+    mon: 一
+    tue: 二
+    wed: 三
+    thu: 四
+    fri: 五
+    sat: 六
+    sun: 日
+  dashboard:
+    todayWork: 今日作业
+    inboundOrders: 入库单
+    outboundOrders: 出库单
+    last7Days: 近 7 日出入库量
+    fillRate: 库区填充率
+    fillRateAria: 库区填充率 78%
+    occupancy: 占用率
+  welcomeTitle: 欢迎登录 {title}
+  continueHint: 登录以继续
+  username: 账号
+  password: 密码
+  usernamePlaceholder: 请输入账号
+  passwordPlaceholder: 请输入密码
+  rememberMe: 记住我
+  forgotPassword: 忘记密码?
+  contactAdminReset: 请联系管理员重置密码
+  agreePrefix: 我已阅读并同意
+  userAgreement: 《用户协议》
+  agreeAnd: 和
+  privacyPolicy: 《隐私政策》
+  secureNote: 安全访问 · 仅限授权用户
+  demoAccount: 演示账号：admin / admin123
+  success: 登录成功
+  failed: 登录失败
+  agreeFirst: 请先阅读并同意《用户协议》和《隐私政策》
+  footerPrivacy: 隐私政策
+  footerTerms: 使用条款
+  footerHelp: 帮助
+  copyright: 版权所有 © 2026 智联物流集团
+  passwordRequired: 请输入密码
+  passwordFormat: 密码格式应为8-18位数字、字母、符号的任意两种组合
+welcome:
+  title: 工作台
+  dateFull: "{y}年{m}月{d}日 星期{w}"
+  weekday:
+    mon: 一
+    tue: 二
+    wed: 三
+    thu: 四
+    fri: 五
+    sat: 六
+    sun: 日
+  allNormal: 全仓作业运行正常
+  vsYesterday: 较昨日
+  kpi:
+    inbound: 今日入库单
+    outbound: 今日出库单
+    sku: 在库物料 SKU
+    stock: 库存总量
+  unit:
+    orders: 单
+    kinds: 种
+    pieces: 件
+  quickTitle: 快捷操作
+  quick:
+    inboundAsn: 入库预约
+    createOutbound: 创建出库单
+    stocktake: 库存盘点
+    ledger: 库存台账
+  chart:
+    inbound: 入库
+    outbound: 出库
+  trendTitle: 近 7 天出入库趋势
+  stockTitle: 各仓库库存占比
+  todoTitle: 待办事项
+  todoPending: 项待处理
+  todoAsn: 待审核入库单
+  todoSo: 待分配出库单
+  todoDiff: 待处理盘点差异
+  todoAlert: 库存预警
+  whShanghai: 上海主仓
+  whGuangzhou: 广州华南仓
+  whChengdu: 成都西南仓
+error:
+  backHome: 返回首页
+  forbidden: 抱歉，你无权访问该页面
+  notFound: 抱歉，你访问的页面不存在
+  serverError: 抱歉，服务器出错了
+navbar:
+  logout: 退出系统
+  openSystemConfig: 打开系统配置
+  backToTop: 回到顶部
+panels:
+  systemConfig: 系统配置
+  closeConfig: 关闭配置
+  clearCache: 清空缓存
+  clearCacheTip: 清空缓存并返回登录页
+  overallStyle: 整体风格
+  theme:
+    light: 浅色
+    lightTip: 清新启航，点亮舒适的工作界面
+    dark: 深色
+    darkTip: 月光序曲，沉醉于夜的静谧雅致
+    system: 自动
+    systemTip: 同步时光，界面随晨昏自然呼应
+  themeColor: 主题色
+  layoutModel: 导航模式
+  layout:
+    verticalTip: 左侧菜单，亲切熟悉
+    horizontalTip: 顶部菜单，简洁概览
+    mixTip: 混合菜单，灵活多变
+  stretch:
+    title: 页宽
+    fixed: 固定
+    fixedTip: 紧凑页面，轻松找到所需信息
+    custom: 自定义
+    customTip: 最小1280、最大1600
+  tabsStyle:
+    title: 页签风格
+    smart: 灵动
+    smartTip: 灵动标签，添趣生辉
+    card: 卡片
+    cardTip: 卡片标签，高效浏览
+    chrome: 谷歌
+    chromeTip: 谷歌风格，经典美观
+  interfaceDisplay: 界面显示
+  greyMode: 灰色模式
+  weakMode: 色弱模式
+  hideTabs: 隐藏标签页
+  hideFooter: 隐藏页脚
+  tabsCache: 页签持久化
+  on: 开
+  off: 关
+search:
+  placeholder: 搜索菜单（支持拼音搜索）
+  noResult: 暂无搜索结果
+  confirm: 确认
+  switch: 切换
+  close: 关闭
+  total: 共 {total} 项
+  history: 搜索历史
+  collect: 收藏
+  collectDraggable: （可拖拽排序）
+notice:
+  empty: 暂无消息
+  tab:
+    notify: 通知
+    notifyEmpty: 暂无通知
+    message: 消息
+    messageEmpty: 暂无消息
+    todo: 待办
+    todoEmpty: 暂无待办
+  list:
+    commentTitle: 小铭 评论了你
+    commentDesc: 诚在于心，信在于行，诚信在于心行合一。
+    today: 今天
+    replyTitle: 李白 回复了你
+    replyDesc: 长风破浪会有时，直挂云帆济沧海。
+    yesterday: 昨天
+    longTitle: 标题
+    longDesc: 请将鼠标移动到此处，以便测试超长的消息在此处将如何处理。本例中设置的描述最大行数为2，超过2行的描述内容将被省略并且可以通过tooltip查看完整内容
+    time: 时间
+    emergencyTitle: 第三方紧急代码变更
+    emergencyDesc: 小林提交于 2024-05-10，需在 2024-05-11 前完成代码变更任务
+    dueSoon: 马上到期
+    releaseTitle: 版本发布
+    releaseDesc: 指派小铭于 2024-06-18 前完成更新并发布
+    elapsedDays: 已耗时 8 天
+    devTitle: 新功能开发
+    devDesc: 开发多租户管理
+    inProgress: 进行中
+    taskTitle: 任务名称
+    taskDesc: 任务需要在 2030-10-30 10:00 前启动
+    notStarted: 未开始
+tags:
+  reload: 重新加载
+  closeCurrent: 关闭当前标签页
+  closeLeft: 关闭左侧标签页
+  closeRight: 关闭右侧标签页
+  closeOthers: 关闭其他标签页
+  closeAll: 关闭全部标签页
+  contentFullscreen: 内容区全屏
+  contentExitFullscreen: 内容区退出全屏
+sidebar:
+  collapse: 点击折叠
+  expand: 点击展开
+components:
+  list: 列表
+  columnSettings: 列设置
+  density: 密度
+  columnDisplay: 列展示
+  sizeLoose: 宽松
+  sizeDefault: 默认
+  sizeCompact: 紧凑
+  fullscreen: 全屏
+  exitFullscreen: 退出全屏
+operation:
+  task:
+    title: 任务池
+    all: 全部
+    taskNo: 任务号
+    taskType: 任务类型
+    bizNo: 关联单据
+    keywordPh: 单据/物料关键词
+    assignee: 执行人
+    selectAssignee: 请选择执行人
+    assignTitle: 分配任务
+    assignSuccess: 分配成功
+    cancelConfirm: 确认取消任务「{taskNo}」吗？
+    cancelSuccess: 已取消
+    tip: 提示
+    materialCode: 物料编码
+    materialName: 物料名称
+    user002: user002 张伟
+    user003: user003 王芳
+    user004: user004 李娜
+    user005: user005 刘洋
+  process:
+    title: 加工管理
+    all: 全部
+    orderNo: 单号
+    code: 加工单号
+    processType: 加工类型
+    materialCode: 物料编码
+    materialName: 物料名称
+    inputQty: 投入数量
+    outputQty: 产出数量
+    selectType: 请选择加工类型
+    selectWarehouse: 请选择仓库
+    inputMaterialCode: 请输入物料编码
+    inputQtyRequired: 请输入投入数量
+    materialCodePh: 如 SKU00001
+    createOrder: 创建加工单
+    editOrder: 编辑加工单
+    start: 开工
+    finish: 完工
+    statusDraft: 草稿
+    statusProcessing: 加工中
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    createSuccess: 创建成功
+    updateSuccess: 修改成功
+    startConfirm: 确认加工单「{code}」开始加工吗？
+    startSuccess: 已开工
+    finishTitle: 完工登记
+    finishSuccess: 完工成功
+    deleteConfirm: 确认删除加工单「{code}」吗？
+    tip: 提示
+    typeLabeling: 贴标
+    typeKitting: 组套
+    typeRepacking: 分装
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+  replenish:
+    title: 补货管理
+    all: 全部
+    orderNo: 单号
+    code: 补货单号
+    fromLocation: 源库位
+    toLocation: 目标库位
+    materialCode: 物料编码
+    materialName: 物料名称
+    qty: 补货数量
+    selectWarehouse: 请选择仓库
+    inputFromLocation: 请输入源库位
+    inputToLocation: 请输入目标库位
+    inputMaterialCode: 请输入物料编码
+    inputQty: 请输入补货数量
+    fromLocationPh: 如 B-01-01
+    toLocationPh: 如 C-01-02
+    materialCodePh: 如 SKU00001
+    manualReplenish: 手动补货
+    triggerType: 触发方式
+    triggerAuto: 自动
+    triggerManual: 手动
+    statusPending: 待执行
+    statusProcessing: 执行中
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    createSuccess: 补货任务已创建
+    finishConfirm: 确认补货单「{code}」已执行完成吗？
+    finishSuccess: 补货完成
+    tip: 提示
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+  crossdock:
+    title: 越库作业
+    all: 全部
+    orderNo: 单号
+    code: 越库单号
+    asnCode: 入库预约单
+    outboundCode: 出库单
+    materialCode: 物料编码
+    materialName: 物料名称
+    statusPending: 待执行
+    statusProcessing: 执行中
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    executeConfirm: 确认执行越库作业「{code}」？到货后不落上架，直接转入出库。
+    executeSuccess: 越库执行完成
+    tip: 提示
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+outbound:
+  order:
+    title: 出库单
+    addOrder: 新增出库单
+    editOrder: 编辑出库单
+    detailTitle: 出库单详情
+    no: 单号
+    orderNo: 出库单号
+    all: 全部
+    customer: 客户
+    customerName: 客户名称
+    typeLabel: 出库类型
+    priority: 优先级
+    materialCode: 物料编码
+    materialCodePh: 如 SKU00001
+    materialName: 物料名称
+    deliveryDate: 交货日期
+    dueDate: 交期
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    tip: 提示
+    updateSuccess: 修改成功
+    createSuccess: 创建成功
+    approvePassed: 审核通过
+    cancelled: 已取消
+    warehouseRequired: 请选择仓库
+    customerRequired: 请输入客户名称
+    materialCodeRequired: 请输入物料编码
+    qtyRequired: 请输入数量
+    approvePassTip: 确认审核通过「{code}」吗？
+    cancelTip: 确认取消「{code}」吗？
+    deleteTip: 确认删除出库单「{code}」吗？
+  wave:
+    title: 波次管理
+    generate: 生成波次
+    release: 下发拣货
+    released: 已下发拣货
+    no: 波次号
+    all: 全部
+    carrier: 承运商
+    carrierMergePh: 按承运商合波（可空）
+    carrierSF: 顺丰速运
+    carrierJD: 京东物流
+    carrierDeppon: 德邦快递
+    carrierSelf: 自有车队
+    orderCount: 订单数
+    totalQty: 总件数
+    statusPending: 待下发
+    statusProcessing: 拣货中
+    statusFinished: 已完成
+    statusCancelled: 已取消
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    tip: 提示
+    warehouseRequired: 请选择仓库
+    waveCreated: 波次 {code} 生成成功
+    releaseTip: 确认将波次「{code}」下发拣货吗？（共 {count} 单 / {qty} 件）
+  picking:
+    title: 拣货任务
+    start: 开始
+    started: 拣货已开始
+    finished: 拣货完成
+    taskNo: 任务号
+    waveNo: 波次号
+    orderNo: 出库单号
+    all: 全部
+    pickLocation: 拣货库位
+    materialCode: 物料编码
+    materialName: 物料名称
+    pickQty: 拣货数量
+    picker: 拣货员
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    tip: 提示
+    startTip: 确认开始拣货任务「{taskNo}」吗？
+    finishTip: 确认任务「{taskNo}」拣货完成？（{material} × {qty}）
+  packing:
+    title: 复核打包
+    review: 复核
+    reviewed: 复核完成
+    no: 单号
+    code: 复核单号
+    all: 全部
+    orderNo: 出库单号
+    waveNo: 波次号
+    materialCode: 物料编码
+    materialName: 物料名称
+    expected: 应复核
+    checked: 已复核
+    expectedQty: 应复核数
+    checkedQty: 复核数量
+    weight: 重量(kg)
+    boxNo: 箱号
+    operator: 操作员
+    statusWaiting: 待复核
+    statusProcessing: 复核中
+    statusFinished: 已完成
+    checkedQtyRequired: 请输入复核数量
+  shipping:
+    title: 发货交接
+    confirmShip: 发货确认
+    confirmSuccess: 发货确认成功
+    no: 单号
+    code: 交接单号
+    all: 全部
+    carrier: 承运商
+    carrierSF: 顺丰速运
+    carrierJD: 京东物流
+    carrierDeppon: 德邦快递
+    carrierSelf: 自有车队
+    orderNo: 出库单号
+    vehicleNo: 车牌号
+    driver: 司机
+    shipDate: 发货日期
+    statusWaiting: 待发货
+    statusShipped: 已发货
+    statusFinished: 已完成
+    tip: 提示
+    confirmTip: 确认交接单「{code}」已装车发货？（承运商：{carrier}，车牌：{vehicle}）
+report:
+  dashboard:
+    totalQty: 库存总量
+    totalValue: 库存总值（元）
+    skuCount: 在库 SKU 数
+    warningCount: 库存预警数
+    categoryStock: 类目库存分布
+    warehouseStock: 各仓库库存占比
+    stockAge: 库龄分布
+    turnoverTop: 周转率 Top10
+  inout:
+    dateRange: 日期范围
+    to: 至
+    startDate: 开始日期
+    endDate: 结束日期
+    all: 全部
+    summary: 出入库汇总
+    trend: 出入库趋势
+    date: 日期
+    inboundQty: 入库数量
+    outboundQty: 出库数量
+    inboundAmount: 入库金额（元）
+    outboundAmount: 出库金额（元）
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+  efficiency:
+    personTitle: 人员效率（按任务数排序）
+    typeDistribution: 任务类型分布
+    personTasks: 人员任务数
+    rank: 排名
+    person: 人员
+    taskCount: 任务数
+    avgMinutes: 平均耗时（分钟）
+    errorRate: 错误率
+  screen:
+    title: WMS 智能仓储数据大屏
+    todayInbound: 今日入库量
+    todayOutbound: 今日出库量
+    onlineDevices: 在线设备
+    taskPending: 待处理任务
+    hourlyFlow: 24 小时出入库流量
+    zoneFill: 库区填充率
+    realtimeAlarm: 实时告警
+    inbound: 入库
+    outbound: 出库
+    zoneTooltip: "{b}：{c}%"
+    alarmHigh: 严重
+    alarmMedium: 一般
+    alarmLow: 提示
+system:
+  user:
+    title: 用户管理
+    all: 全部
+    account: 账号
+    accountPh: 请输入用户账号
+    userAccount: 用户账号
+    nickname: 昵称
+    userNickname: 用户昵称
+    nicknamePh: 请输入用户昵称
+    phone: 手机号
+    phonePh: 请输入手机号
+    email: 邮箱
+    emailPh: 请输入邮箱
+    dept: 部门
+    deptPh: 请输入部门
+    warehouse: 所属仓库
+    warehousePh: 请选择（可多选）
+    role: 角色
+    rolePh: 请选择角色
+    addUser: 新增用户
+    editUser: 编辑用户
+    resetPwd: 重置密码
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteConfirm: 确认删除用户「{name}」吗？
+    resetPwdSuccess: 密码已重置为 123456
+    roleSuperAdmin: 超级管理员
+    roleWarehouseOp: 仓库操作员
+    roleInventoryMgr: 库存管理员
+    roleTransportMgr: 运输调度员
+    wh001: WH001 上海主仓
+    wh002: WH002 广州华南仓
+    wh003: WH003 成都西南仓
+  org:
+    title: 组织架构
+    addOrg: 新增组织
+    editOrg: 编辑组织
+    addChildOrg: 新增子级组织
+    addChild: 新增子级
+    parent: 上级组织
+    parentPh: 顶级组织
+    type: 组织类型
+    typePh: 请选择组织类型
+    name: 组织名称
+    namePh: 请输入组织名称
+    leader: 负责人
+    leaderPh: 请输入负责人
+    phone: 联系电话
+    phonePh: 请输入联系电话
+    typeCompany: 公司
+    typeWarehouse: 仓库
+    typeDept: 部门
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteConfirm: 确认删除组织「{name}」吗？其下级组织将一并失效
+  role:
+    title: 角色管理
+    all: 全部
+    keyword: 关键字
+    keywordPh: 角色编码 / 名称
+    addRole: 新增角色
+    editRole: 编辑角色
+    menuAuth: 菜单授权
+    authTitle: 菜单授权 - {name}
+    code: 角色编码
+    codePh: 请输入角色编码（英文标识）
+    codeMsg: 请输入角色编码
+    name: 角色名称
+    namePh: 请输入角色名称
+    description: 描述
+    descPh: 请输入角色描述
+    memberCount: 成员数
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteConfirm: 确认删除角色「{name}」吗？
+    authSuccess: 角色「{name}」授权成功
+  menu:
+    title: 菜单管理
+    addMenu: 新增菜单
+    editMenu: 编辑菜单
+    addChildMenu: 新增子菜单
+    addChild: 新增子级
+    parent: 上级菜单
+    parentPh: 顶级菜单
+    type: 菜单类型
+    typeMsg: 请选择菜单类型
+    name: 菜单名称
+    namePh: 请输入菜单名称
+    path: 路由地址
+    pathPh: 请输入路由地址，如 /system/user
+    pathMsg: 请输入路由地址
+    component: 组件路径
+    componentPh: 请输入组件路径，如 system/user/index
+    permission: 权限标识
+    permissionPh: 请输入权限标识，如 system:user:add
+    icon: 图标
+    iconPh: 请输入图标标识，如 ep/setting
+    sort: 排序
+    typeDir: 目录
+    typeMenu: 菜单
+    typeButton: 按钮
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteConfirm: 确认删除菜单「{name}」吗？其子节点将一并失效
+  dict:
+    typeTitle: 字典类型
+    addType: 新增类型
+    addTypeTitle: 新增字典类型
+    editTypeTitle: 编辑字典类型
+    keywordPh: 字典名称 / 编码
+    dataTitle: 字典数据
+    addData: 新增数据
+    addDataTitle: 新增字典数据
+    editDataTitle: 编辑字典数据
+    selectedTag: "{name}（{code}）"
+    selectTypeTip: 请在左侧选择字典类型
+    selectTypeFirst: 请先在左侧选择字典类型
+    name: 字典名称
+    namePh: 请输入字典名称
+    code: 字典编码
+    codePh: 请输入字典编码（英文标识）
+    codeMsg: 请输入字典编码
+    itemCount: 数据项
+    type: 所属类型
+    label: 数据标签
+    labelPh: 请输入数据标签（显示名）
+    labelMsg: 请输入数据标签
+    value: 数据键值
+    valuePh: 请输入数据键值（存储值）
+    valueMsg: 请输入数据键值
+    sort: 排序
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteTypeConfirm: 确认删除字典类型「{name}」吗？其字典数据将一并失效
+    deleteDataConfirm: 确认删除字典数据「{name}」吗？
+  param:
+    title: 系统参数
+    all: 全部
+    keyword: 关键字
+    keywordPh: 参数名称 / 参数键
+    source: 来源
+    builtIn: 内置
+    custom: 自定义
+    addParam: 新增参数
+    editParam: 编辑参数
+    name: 参数名称
+    namePh: 请输入参数名称
+    key: 参数键
+    keyPh: 请输入参数键，如 outbound.batch.strategy
+    keyMsg: 请输入参数键
+    value: 参数值
+    valuePh: 请输入参数值
+    builtInTip: 内置参数，参数键不可修改
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    deleteConfirm: 确认删除参数「{name}」吗？
+  notice:
+    titleBar: 消息通知
+    title: 标题
+    all: 全部
+    keywordPh: 请输入消息标题
+    publish: 发布公告
+    markRead: 标记已读
+    detailTitle: 消息详情
+    fullTitle: 消息标题
+    type: 消息类型
+    typeMsg: 请选择消息类型
+    level: 级别
+    levelPh: 请选择级别
+    contentTitle: 消息内容
+    contentPh: 请输入消息内容
+    publisher: 发布人
+    publishTime: 发布时间
+    typeNotice: 通知
+    typeAnnounce: 公告
+    typeWarning: 预警
+    levelHigh: 高
+    levelNormal: 普通
+    levelLow: 低
+    read: 已读
+    unread: 未读
+    publishSuccess: 发布成功
+    readSuccess: 已标记为已读
+    tip: 提示
+    deleteConfirm: 确认删除消息「{title}」吗？
+  log:
+    title: 操作日志
+    all: 全部
+    keyword: 关键字
+    keywordPh: 操作人 / 模块 / 操作
+    result: 执行结果
+    detailTitle: 日志详情
+    operator: 操作人
+    module: 模块
+    action: 操作
+    ip: IP 地址
+    duration: 耗时
+    durationMs: 耗时(ms)
+    time: 操作时间
+    success: 成功
+    failure: 失败
+  permission:
+    desc: 模拟后台根据不同角色返回对应路由，观察左侧菜单变化（管理员角色可查看系统管理菜单、普通角色不可查看系统管理菜单）
+    currentRole: 当前角色：{name}
+    adminRole: 管理员角色
+    commonRole: 普通角色
+    codeList: 当前拥有的code列表：{list}
+    allPermsTip: "*:*:* 代表拥有全部按钮级别权限"
+    componentWay: 组件方式判断权限
+    functionWay: 函数方式判断权限
+    directiveWay: 指令方式判断权限（该方式不能动态修改权限）
+    visibleWithCode: 拥有code：{code} 权限可见
+transport:
+  vehicle:
+    title: 车辆司机
+    add: 新增车辆
+    edit: 编辑车辆
+    all: 全部
+    licensePlate: 车牌号
+    driver: 司机
+    driverPh: 司机姓名
+    phone: 电话
+    phonePh: 联系电话
+    vehicleType: 车型
+    loadTon: 载重(吨)
+    carrier: 所属承运商
+    statusIdle: 空闲
+    statusOnRoute: 在途
+    statusRepair: 维修
+    vehicleNoPh: 如 苏A12345
+    typeBox: 厢式
+    typeFlat: 平板
+    typeRefrigerated: 冷藏
+    carrierSf: 顺丰速运
+    carrierJd: 京东物流
+    carrierDeppon: 德邦快递
+    carrierOwnFleet: 自有车队
+    remarkPh: 备注
+    ton: 吨
+    plsInputVehicleNo: 请输入车牌号
+    plsInputDriver: 请输入司机姓名
+    addSuccess: 新增成功
+    updateSuccess: 修改成功
+    tip: 提示
+    confirmDelete: 确认删除车辆「{vehicleNo}」吗？
+  dispatch:
+    title: 配送单
+    code: 单号
+    customer: 客户
+    customerPh: 客户名称
+    all: 全部
+    deliveryNo: 配送单号
+    outboundNo: 出库单号
+    address: 收货地址
+    carrier: 承运商
+    licensePlate: 车牌号
+    driver: 司机
+    driverPh: 司机姓名
+    sign: 签收
+    assignTitle: 配送调度
+    vehicleNoPh: 如 苏A12345
+    plsSelectCarrier: 请选择承运商
+    plsInputVehicleNo: 请输入车牌号
+    plsInputDriver: 请输入司机姓名
+    carrierSf: 顺丰速运
+    carrierJd: 京东物流
+    carrierDeppon: 德邦快递
+    carrierOwnFleet: 自有车队
+    dispatchSuccess: 调度成功
+    signSuccess: 签收成功
+    tip: 提示
+    confirmSign: 确认配送单「{code}」已签收吗？
+  tracking:
+    title: 在途跟踪
+    code: 单号
+    deliveryNo: 配送单号
+    licensePlate: 车牌号
+    all: 全部
+    carrier: 承运商
+    driver: 司机
+    origin: 起点
+    destination: 终点
+    currentLocation: 当前位置
+    progress: 运输进度
+  carrier:
+    title: 承运商管理
+    add: 新增承运商
+    edit: 编辑承运商
+    all: 全部
+    name: 承运商名称
+    contact: 联系人
+    phone: 电话
+    serviceArea: 服务区域
+    serviceAreaPh: 如 华东/华南
+    settleType: 结算方式
+    settleMonthly: 月结
+    settleImmediate: 现结
+    codePh: 如 CAR006
+    remarkPh: 备注
+    plsInputCode: 请输入编码
+    plsInputName: 请输入承运商名称
+    plsSelectType: 请选择类型
+    addSuccess: 新增成功
+    updateSuccess: 修改成功
+    tip: 提示
+    confirmDelete: 确认删除承运商「{name}」吗？

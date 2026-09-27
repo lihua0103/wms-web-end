@@ -3,6 +3,11 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
+import {
   getMaterialPage,
   addMaterial,
   updateMaterial,
@@ -10,6 +15,9 @@ import {
 } from "@/api/master";
 import type { MaterialItem } from "@/api/master";
 import { materialCategoryOptions, dictLabel } from "@/constants/wms";
+import View from "~icons/ep/view";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useMaterial() {
@@ -32,47 +40,80 @@ export function useMaterial() {
   });
 
   const columns: TableColumnList = [
-    { label: "物料编码", prop: "code", minWidth: 100 },
-    { label: "物料名称", prop: "name", minWidth: 130 },
+    { label: $t("master.material.code"), prop: "code", minWidth: 100 },
+    { label: $t("master.material.name"), prop: "name", minWidth: 130 },
     {
-      label: "分类",
+      label: $t("master.material.category"),
       minWidth: 80,
-      cellRenderer: ({ row }) => dictLabel(materialCategoryOptions, row.category)
+      cellRenderer: ({ row }) =>
+        dictLabel(materialCategoryOptions, row.category)
     },
-    { label: "规格", prop: "spec", minWidth: 80 },
-    { label: "单位", prop: "unit", minWidth: 60 },
-    { label: "条码", prop: "barcode", minWidth: 120 },
-    { label: "货主", prop: "ownerName", minWidth: 110 },
+    { label: $t("master.material.spec"), prop: "spec", minWidth: 80 },
+    { label: $t("common.columns.unit"), prop: "unit", minWidth: 60 },
+    { label: $t("master.material.barcode"), prop: "barcode", minWidth: 120 },
+    { label: $t("common.columns.owner"), prop: "ownerName", minWidth: 110 },
     {
-      label: "效期管理",
+      label: $t("master.material.expiryMgmt"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.isExpiry ? "success" : "info"}>
-          {row.isExpiry ? "是" : "否"}
+          {row.isExpiry ? $t("master.material.yes") : $t("master.material.no")}
         </el-tag>
       )
     },
     {
-      label: "序列号管理",
+      label: $t("master.material.serialMgmt"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={row.isSerial ? "warning" : "info"}>
-          {row.isSerial ? "是" : "否"}
+          {row.isSerial ? $t("master.material.yes") : $t("master.material.no")}
         </el-tag>
       )
     },
-    { label: "安全库存", prop: "safetyQty", minWidth: 70 },
+    { label: $t("master.material.safetyQty"), prop: "safetyQty", minWidth: 70 },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 60,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("master.material.enabled")
+            : $t("master.material.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 180, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: MaterialItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.detail"),
+        icon: View,
+        onClick: () => openDetail(row)
+      },
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.material.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -123,7 +164,7 @@ export function useMaterial() {
           name: row?.name ?? "",
           category: row?.category ?? "finished",
           spec: row?.spec ?? "",
-          unit: row?.unit ?? "件",
+          unit: row?.unit ?? $t("master.material.unitPiece"),
           barcode: row?.barcode ?? "",
           ownerName: row?.ownerName ?? "",
           isExpiry: row?.isExpiry ?? 0,
@@ -138,9 +179,16 @@ export function useMaterial() {
         const formInline = (
           options.props as { formInline: Partial<MaterialItem> }
         ).formInline;
-        const req = formInline.id ? updateMaterial(formInline) : addMaterial(formInline);
+        const req = formInline.id
+          ? updateMaterial(formInline)
+          : addMaterial(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.material.editSuccess")
+              : $t("master.material.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -149,11 +197,15 @@ export function useMaterial() {
   }
 
   function handleDelete(row: MaterialItem) {
-    ElMessageBox.confirm(`确认删除物料「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.material.delTip", { name: row.name }),
+      $t("master.material.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteMaterial([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

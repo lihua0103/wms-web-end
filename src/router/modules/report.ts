@@ -7,33 +7,33 @@ export default {
   redirect: "/report/dashboard",
   meta: {
     icon: "ep/data-analysis",
-    title: "报表分析",
-    rank: 90
+    title: "menus.report",
+    rank: 80
   },
   children: [
     {
       path: "/report/dashboard",
       name: "ReportDashboard",
       component: () => import("@/views/report/dashboard/index.vue"),
-      meta: { title: "库存看板" }
+      meta: { title: "menus.reportDashboard" }
     },
     {
       path: "/report/inout",
       name: "ReportInout",
       component: () => import("@/views/report/inout/index.vue"),
-      meta: { title: "出入库报表" }
+      meta: { title: "menus.reportInout" }
     },
     {
       path: "/report/efficiency",
       name: "ReportEfficiency",
       component: () => import("@/views/report/efficiency/index.vue"),
-      meta: { title: "作业效率" }
+      meta: { title: "menus.reportEfficiency" }
     },
     {
       path: "/report/screen",
       name: "ReportScreen",
       component: () => import("@/views/report/screen/index.vue"),
-      meta: { title: "数据大屏" }
+      meta: { title: "menus.reportScreen" }
     }
   ]
 } satisfies RouteConfigsTable;

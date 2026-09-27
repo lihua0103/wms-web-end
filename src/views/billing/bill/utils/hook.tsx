@@ -1,9 +1,24 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
-import { getBillPage, confirmBill, invoiceBill, settleBill } from "@/api/billing";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
+  getBillPage,
+  confirmBill,
+  invoiceBill,
+  settleBill
+} from "@/api/billing";
 import type { FeeBillItem } from "@/api/billing";
-import { feeTypeOptions, billStatusOptions, dictLabel, dictTag } from "@/constants/wms";
+import {
+  feeTypeOptions,
+  billStatusOptions,
+  dictLabel,
+  dictTag
+} from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
 
 export function useBillingBill() {
   const form = reactive({
@@ -23,17 +38,17 @@ export function useBillingBill() {
   });
 
   const columns: TableColumnList = [
-    { label: "账单编号", prop: "code", minWidth: 140 },
-    { label: "货主", prop: "ownerName", minWidth: 110 },
-    { label: "账期", prop: "period", minWidth: 80 },
+    { label: $t("billing.bill.no"), prop: "code", minWidth: 140 },
+    { label: $t("common.columns.owner"), prop: "ownerName", minWidth: 110 },
+    { label: $t("billing.bill.period"), prop: "period", minWidth: 80 },
     {
-      label: "费用类型",
+      label: $t("billing.bill.feeType"),
       minWidth: 80,
       cellRenderer: ({ row }) => dictLabel(feeTypeOptions, row.feeType)
     },
-    { label: "数量", prop: "qty", minWidth: 70 },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
     {
-      label: "金额（元）",
+      label: $t("billing.bill.amountCol"),
       minWidth: 100,
       formatter: row =>
         Number(row.amount).toLocaleString("zh-CN", {
@@ -42,7 +57,7 @@ export function useBillingBill() {
         })
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(billStatusOptions, row.status)}>
@@ -50,10 +65,57 @@ export function useBillingBill() {
         </el-tag>
       )
     },
-    { label: "确认人", prop: "confirmUser", minWidth: 80, formatter: row => row.confirmUser || "-" },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 110, slot: "operation" }
+    {
+      label: $t("billing.bill.confirmUser"),
+      prop: "confirmUser",
+      minWidth: 80,
+      formatter: row => row.confirmUser || "-"
+    },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} emptyText={"-"} />
+      )
+    }
   ];
+
+  function operationButtons(row: FeeBillItem): TableOperationButton[] {
+    if (row.status === "pending") {
+      return [
+        {
+          label: $t("billing.bill.confirmBtn"),
+          onClick: () => onAction(row, "confirm")
+        }
+      ];
+    }
+    if (row.status === "confirmed") {
+      return [
+        {
+          label: $t("billing.bill.invoiceBtn"),
+          type: "warning",
+          onClick: () => onAction(row, "invoice")
+        }
+      ];
+    }
+    if (row.status === "invoiced") {
+      return [
+        {
+          label: $t("billing.bill.settleBtn"),
+          type: "success",
+          onClick: () => onAction(row, "settle")
+        }
+      ];
+    }
+    return [];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -86,14 +148,31 @@ export function useBillingBill() {
   }
 
   /** 状态流转：确认 / 开票 / 结算 */
-  function onAction(row: FeeBillItem, action: "confirm" | "invoice" | "settle") {
+  function onAction(
+    row: FeeBillItem,
+    action: "confirm" | "invoice" | "settle"
+  ) {
     const map = {
-      confirm: [confirmBill, "账单已确认", `确认账单「${row.code}」吗？`],
-      invoice: [invoiceBill, "开票成功", `确认为账单「${row.code}」开票吗？`],
-      settle: [settleBill, "结算完成", `确认账单「${row.code}」已完成结算吗？`]
+      confirm: [
+        confirmBill,
+        $t("billing.bill.confirmSuccess"),
+        $t("billing.bill.confirmTip", { code: row.code })
+      ],
+      invoice: [
+        invoiceBill,
+        $t("billing.bill.invoiceSuccess"),
+        $t("billing.bill.invoiceTip", { code: row.code })
+      ],
+      settle: [
+        settleBill,
+        $t("billing.bill.settleSuccess"),
+        $t("billing.bill.settleTip", { code: row.code })
+      ]
     } as const;
     const [api, msg, tip] = map[action];
-    ElMessageBox.confirm(tip as string, "提示", { type: "warning" }).then(() => {
+    ElMessageBox.confirm(tip as string, $t("billing.bill.tip"), {
+      type: "warning"
+    }).then(() => {
       (api as (id: number) => Promise<any>)(row.id).then(() => {
         message(msg as string, { type: "success" });
         onSearch();

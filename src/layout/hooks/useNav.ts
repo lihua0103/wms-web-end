@@ -11,6 +11,7 @@ import { computed, type CSSProperties } from "vue";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useGlobal, isAllEmpty } from "@pureadmin/utils";
+import { transformI18n } from "@/plugins/i18n";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import ExitFullscreen from "~icons/ri/fullscreen-exit-fill";
 import Fullscreen from "~icons/ri/fullscreen-fill";
@@ -75,8 +76,9 @@ export function useNav() {
   /** 动态title */
   function changeTitle(meta: routeMetaType) {
     const Title = getConfig().Title;
-    if (Title) document.title = `${meta.title} | ${Title}`;
-    else document.title = meta.title;
+    const routeTitle = transformI18n(meta.title);
+    if (Title) document.title = `${routeTitle} | ${Title}`;
+    else document.title = routeTitle;
   }
 
   /** 退出登录 */

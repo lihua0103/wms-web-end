@@ -103,7 +103,8 @@ export const getInoutReport = (params?: {
   startDate?: string;
   endDate?: string;
   warehouseCode?: string;
-}) => http.request<ApiResult<InoutReport>>("get", "/wms/report/inout", { params });
+}) =>
+  http.request<ApiResult<InoutReport>>("get", "/wms/report/inout", { params });
 
 /** 作业效率报表 */
 export const getEfficiencyReport = () =>

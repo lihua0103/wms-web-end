@@ -1,4 +1,5 @@
 import { reactive, ref, onMounted } from "vue";
+import { $t } from "@/plugins/i18n";
 import { getTrackingPage } from "@/api/transport";
 import type { TrackingItem } from "@/api/transport";
 import { deliveryStatusOptions, dictTag, dictLabel } from "@/constants/wms";
@@ -19,15 +20,35 @@ export function useTracking() {
   });
 
   const columns: TableColumnList = [
-    { label: "配送单号", prop: "code", minWidth: 130 },
-    { label: "承运商", prop: "carrierName", minWidth: 90 },
-    { label: "车牌号", prop: "vehicleNo", minWidth: 90 },
-    { label: "司机", prop: "driverName", minWidth: 70 },
-    { label: "起点", prop: "fromCity", minWidth: 60 },
-    { label: "终点", prop: "toCity", minWidth: 60 },
-    { label: "当前位置", prop: "currentLocation", minWidth: 120 },
+    { label: $t("transport.tracking.deliveryNo"), prop: "code", minWidth: 130 },
     {
-      label: "运输进度",
+      label: $t("transport.tracking.carrier"),
+      prop: "carrierName",
+      minWidth: 90
+    },
+    {
+      label: $t("transport.tracking.licensePlate"),
+      prop: "vehicleNo",
+      minWidth: 90
+    },
+    {
+      label: $t("transport.tracking.driver"),
+      prop: "driverName",
+      minWidth: 70
+    },
+    { label: $t("transport.tracking.origin"), prop: "fromCity", minWidth: 60 },
+    {
+      label: $t("transport.tracking.destination"),
+      prop: "toCity",
+      minWidth: 60
+    },
+    {
+      label: $t("transport.tracking.currentLocation"),
+      prop: "currentLocation",
+      minWidth: 120
+    },
+    {
+      label: $t("transport.tracking.progress"),
       minWidth: 140,
       cellRenderer: ({ row }) => (
         <el-progress
@@ -38,7 +59,7 @@ export function useTracking() {
       )
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(deliveryStatusOptions, row.status)}>
@@ -46,7 +67,7 @@ export function useTracking() {
         </el-tag>
       )
     },
-    { label: "更新时间", prop: "updatedAt", minWidth: 140 }
+    { label: $t("common.columns.updateTime"), prop: "updatedAt", minWidth: 140 }
   ];
 
   async function onSearch() {

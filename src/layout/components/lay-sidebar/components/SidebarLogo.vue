@@ -52,7 +52,7 @@ const { title, getLogo } = useNav();
 
     img {
       display: inline-block;
-      height: 32px;
+      height: 30px;
     }
 
     .sidebar-title {
@@ -61,10 +61,10 @@ const { title, getLogo } = useNav();
       margin: 2px 0 0 12px;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       line-height: 32px;
-      color: var(--pure-theme-sub-menu-active-text);
+      color: #fff;
       white-space: nowrap;
     }
   }

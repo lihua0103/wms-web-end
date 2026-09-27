@@ -5,8 +5,26 @@ import { ok, genRows, pick, randInt, dayStr, offsetStr } from "./_db";
 
 const warehouses = ["WH001 上海主仓", "WH002 广州华南仓", "WH003 成都西南仓"];
 const categories = ["原材料", "半成品", "成品", "包材", "耗材", "备品备件"];
-const taskTypes = ["收货", "质检", "上架", "补货", "拣货", "复核", "移库", "盘点"];
-const persons = ["张伟", "李娜", "王强", "赵敏", "刘洋", "陈静", "杨帆", "周婷"];
+const taskTypes = [
+  "收货",
+  "质检",
+  "上架",
+  "补货",
+  "拣货",
+  "复核",
+  "移库",
+  "盘点"
+];
+const persons = [
+  "张伟",
+  "李娜",
+  "王强",
+  "赵敏",
+  "刘洋",
+  "陈静",
+  "杨帆",
+  "周婷"
+];
 const zones = ["A 收货区", "B 存储区", "C 拣货区", "D 发货区"];
 
 const alarmTexts = [
@@ -35,8 +53,14 @@ export default defineFakeRoute([
           skuCount: randInt(1200, 1600),
           warningCount: randInt(8, 30)
         },
-        categoryStock: categories.map(name => ({ name, value: randInt(20000, 60000) })),
-        warehouseStock: warehouses.map(name => ({ name, value: randInt(40000, 90000) })),
+        categoryStock: categories.map(name => ({
+          name,
+          value: randInt(20000, 60000)
+        })),
+        warehouseStock: warehouses.map(name => ({
+          name,
+          value: randInt(40000, 90000)
+        })),
         stockAge: [
           { name: "0-30天", value: randInt(50000, 80000) },
           { name: "31-60天", value: randInt(30000, 50000) },
@@ -55,7 +79,11 @@ export default defineFakeRoute([
     method: "get",
     response: ({ query }) => {
       const factor =
-        query?.warehouseCode === "WH002" ? 0.62 : query?.warehouseCode === "WH003" ? 0.45 : 1;
+        query?.warehouseCode === "WH002"
+          ? 0.62
+          : query?.warehouseCode === "WH003"
+            ? 0.45
+            : 1;
       const list = genRows(30, i => {
         const d = new Date(Date.now() - (30 - i) * 86400000);
         const inboundQty = Math.round(randInt(800, 2600) * factor);
@@ -69,7 +97,8 @@ export default defineFakeRoute([
         };
       });
       const filtered = list.filter(row => {
-        if (query?.startDate && row.date < String(query.startDate)) return false;
+        if (query?.startDate && row.date < String(query.startDate))
+          return false;
         if (query?.endDate && row.date > String(query.endDate)) return false;
         return true;
       });

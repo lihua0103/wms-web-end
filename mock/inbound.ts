@@ -14,15 +14,38 @@ import {
 // ========================= 种子数据 =========================
 
 const warehouses = ["WH001", "WH002", "WH003"];
-const suppliers = ["华东电子供应有限公司", "精工机械原料厂", "日化包装材料商", "苏州轴承集团", "宁波紧固件厂"];
+const suppliers = [
+  "华东电子供应有限公司",
+  "精工机械原料厂",
+  "日化包装材料商",
+  "苏州轴承集团",
+  "宁波紧固件厂"
+];
 const owners = ["货主A 华东电子", "货主B 精工机械", "货主C 日化用品", "自营"];
-const customers = ["华东商贸有限公司", "联华超市", "美宜佳便利店", "精工机械股份"];
+const customers = [
+  "华东商贸有限公司",
+  "联华超市",
+  "美宜佳便利店",
+  "精工机械股份"
+];
 
 function mkMaterial(i: number) {
   const code = `SKU${String(((i - 1) % 40) + 1).padStart(5, "0")}`;
   return {
     materialCode: code,
-    materialName: ["不锈钢轴承", "伺服电机", "控制主板", "线束组件", "铝合金外壳", "橡胶密封圈", "包装纸箱", "缓冲泡沫", "标签贴纸", "螺丝套件"][(i - 1) % 10] + `-${(i - 1) % 40 + 1}`
+    materialName:
+      [
+        "不锈钢轴承",
+        "伺服电机",
+        "控制主板",
+        "线束组件",
+        "铝合金外壳",
+        "橡胶密封圈",
+        "包装纸箱",
+        "缓冲泡沫",
+        "标签贴纸",
+        "螺丝套件"
+      ][(i - 1) % 10] + `-${((i - 1) % 40) + 1}`
   };
 }
 
@@ -34,7 +57,14 @@ const asns = genRows(35, i => ({
   supplierName: pick(suppliers),
   type: pick(["purchase", "purchase", "return", "transfer", "other"]),
   expectedArrival: offsetStr(-randInt(0, 10) + randInt(0, 5)),
-  status: pick(["draft", "pending", "approved", "finished", "finished", "cancelled"]),
+  status: pick([
+    "draft",
+    "pending",
+    "approved",
+    "finished",
+    "finished",
+    "cancelled"
+  ]),
   remark: "",
   createdAt: pickDate(20, 0) + " 10:30:00"
 }));
@@ -50,7 +80,15 @@ const receipts = genRows(50, i => ({
   receivedQty: randInt(50, 800),
   qualifiedQty: randInt(40, 780),
   rejectedQty: randInt(0, 20),
-  status: pick(["pending", "waiting", "receiving", "qc", "putaway", "finished", "finished"]),
+  status: pick([
+    "pending",
+    "waiting",
+    "receiving",
+    "qc",
+    "putaway",
+    "finished",
+    "finished"
+  ]),
   receiver: pick(["user002", "user003"]),
   createdAt: pickDate(15, 0) + " 14:00:00"
 }));
@@ -68,7 +106,15 @@ const qcs = genRows(40, i => ({
   createdAt: pickDate(15, 0) + " 15:30:00"
 }));
 
-const locations = ["A-01-01", "A-01-02", "A-02-01", "B-03-02", "B-05-01", "C-01-03", "D-02-02"];
+const locations = [
+  "A-01-01",
+  "A-01-02",
+  "A-02-01",
+  "B-03-02",
+  "B-05-01",
+  "C-01-03",
+  "D-02-02"
+];
 const putaways = genRows(40, i => ({
   id: i,
   taskNo: genCode("PA", i),
@@ -99,11 +145,31 @@ const returns = genRows(25, i => ({
 // ========================= 路由 =========================
 
 export default defineFakeRoute([
-  ...crudRoutes({ prefix: "/wms/inbound/asn", seed: asns, searchFields: ["code", "supplierName", "ownerName"] }),
-  ...crudRoutes({ prefix: "/wms/inbound/receipt", seed: receipts, searchFields: ["code", "asnCode", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inbound/qc", seed: qcs, searchFields: ["code", "receiptCode", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inbound/putaway", seed: putaways, searchFields: ["taskNo", "receiptCode", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inbound/return", seed: returns, searchFields: ["code", "customerName", "materialCode"] }),
+  ...crudRoutes({
+    prefix: "/wms/inbound/asn",
+    seed: asns,
+    searchFields: ["code", "supplierName", "ownerName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inbound/receipt",
+    seed: receipts,
+    searchFields: ["code", "asnCode", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inbound/qc",
+    seed: qcs,
+    searchFields: ["code", "receiptCode", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inbound/putaway",
+    seed: putaways,
+    searchFields: ["taskNo", "receiptCode", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inbound/return",
+    seed: returns,
+    searchFields: ["code", "customerName", "materialCode"]
+  }),
   // ASN 审核
   {
     url: "/wms/inbound/asn/approve",

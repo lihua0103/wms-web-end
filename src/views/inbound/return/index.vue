@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import { useReturn } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
@@ -7,10 +8,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 import AddFill from "~icons/ep/plus";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
-import CircleCheck from "~icons/ep/circle-check";
-import CircleClose from "~icons/ep/circle-close";
 
 defineOptions({ name: "InboundReturn" });
 
@@ -26,24 +23,22 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleApprove,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useReturn();
 
 const warehouseOptions = [
-  { value: "WH001", label: "WH001 上海主仓" },
-  { value: "WH002", label: "WH002 广州华南仓" },
-  { value: "WH003", label: "WH003 成都西南仓" }
+  { value: "WH001", label: $t("inbound.return.whShanghai") },
+  { value: "WH002", label: $t("inbound.return.whGuangzhou") },
+  { value: "WH003", label: $t("inbound.return.whChengdu") }
 ];
 
 const statusOptions = [
-  { value: "pending", label: "待审核" },
-  { value: "approved", label: "已审核" },
-  { value: "receiving", label: "收货中" },
-  { value: "finished", label: "已完成" },
-  { value: "cancelled", label: "已取消" }
+  { value: "pending", label: $t("inbound.return.statusPending") },
+  { value: "approved", label: $t("inbound.return.statusApproved") },
+  { value: "receiving", label: $t("inbound.return.statusReceiving") },
+  { value: "finished", label: $t("inbound.return.statusFinished") },
+  { value: "cancelled", label: $t("inbound.return.statusCancelled") }
 ];
 </script>
 
@@ -55,29 +50,75 @@ const statusOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
-        <el-input v-model="form.code" placeholder="退货单号" clearable style="width: 160px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('inbound.return.code')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('inbound.return.returnNo')"
+          clearable
+          style="width: 160px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="仓库" prop="warehouseCode">
-        <el-select v-model="form.warehouseCode" placeholder="全部" clearable style="width: 150px">
-          <el-option v-for="w in warehouseOptions" :key="w.value" :label="w.label" :value="w.value" />
+      <el-form-item
+        :label="$t('common.columns.warehouse')"
+        prop="warehouseCode"
+      >
+        <el-select
+          v-model="form.warehouseCode"
+          :placeholder="$t('inbound.return.all')"
+          clearable
+          style="width: 150px"
+        >
+          <el-option
+            v-for="w in warehouseOptions"
+            :key="w.value"
+            :label="w.label"
+            :value="w.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="s in statusOptions" :key="s.value" :label="s.label" :value="s.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('inbound.return.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="s in statusOptions"
+            :key="s.value"
+            :label="s.label"
+            :value="s.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="退货入库" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('inbound.return.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)" @click="openDialog('新增退货单')">
-          新增退货单
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="openDialog($t('inbound.return.add'))"
+        >
+          {{ $t("inbound.return.add") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -95,46 +136,7 @@ const statusOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="row.status === 'pending'"
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑退货单', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              v-if="row.status === 'pending'"
-              link
-              type="success"
-              :icon="useRenderIcon(CircleCheck)"
-              @click="handleApprove(row, true)"
-            >
-              审批
-            </el-button>
-            <el-button
-              v-if="row.status === 'pending'"
-              link
-              type="warning"
-              :icon="useRenderIcon(CircleClose)"
-              @click="handleApprove(row, false)"
-            >
-              取消
-            </el-button>
-            <el-button
-              v-if="row.status === 'pending'"
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

@@ -7,8 +7,6 @@ import {
   pick,
   randInt,
   pickDate,
-  offsetStr,
-  nowStr,
   genCode,
   dayStr
 } from "./_db";
@@ -23,11 +21,31 @@ const warehouses = [
 
 const materials = genRows(40, i => ({
   code: `SKU${String(i).padStart(5, "0")}`,
-  name: pick(["不锈钢轴承", "伺服电机", "控制主板", "线束组件", "铝合金外壳", "橡胶密封圈", "包装纸箱", "缓冲泡沫", "标签贴纸", "螺丝套件"]) + `-${i}`
+  name:
+    pick([
+      "不锈钢轴承",
+      "伺服电机",
+      "控制主板",
+      "线束组件",
+      "铝合金外壳",
+      "橡胶密封圈",
+      "包装纸箱",
+      "缓冲泡沫",
+      "标签贴纸",
+      "螺丝套件"
+    ]) + `-${i}`
 }));
 
 const owners = ["货主A 华东电子", "货主B 精工机械", "货主C 日化用品", "自营"];
-const locations = ["A-01-01", "A-01-02", "A-02-01", "B-03-02", "B-05-01", "C-01-03", "D-02-02"];
+const locations = [
+  "A-01-01",
+  "A-01-02",
+  "A-02-01",
+  "B-03-02",
+  "B-05-01",
+  "C-01-03",
+  "D-02-02"
+];
 
 function mkMaterial(i: number) {
   const m = materials[(i - 1) % materials.length];
@@ -44,7 +62,13 @@ const ledger = genRows(120, i => {
   const m = mkMaterial(i);
   const qty = randInt(50, 2000);
   const locked = randInt(0, Math.floor(qty * 0.2));
-  const status = pick(["qualified", "qualified", "qualified", "inspecting", "frozen"]);
+  const status = pick([
+    "qualified",
+    "qualified",
+    "qualified",
+    "inspecting",
+    "frozen"
+  ]);
   return {
     id: i,
     warehouseCode: w.code,
@@ -57,7 +81,10 @@ const ledger = genRows(120, i => {
     lockedQty: locked,
     availableQty: qty - locked,
     ownerName: pick(owners),
-    expiredAt: Math.random() > 0.5 ? dayStr(new Date(Date.now() + randInt(30, 720) * 86400000)) : undefined,
+    expiredAt:
+      Math.random() > 0.5
+        ? dayStr(new Date(Date.now() + randInt(30, 720) * 86400000))
+        : undefined,
     createdAt: pickDate(120, 0) + " 10:00:00"
   };
 });
@@ -67,7 +94,14 @@ const ledger = genRows(120, i => {
 const serials = genRows(80, i => {
   const w = mkWarehouse();
   const m = mkMaterial(i);
-  const status = pick(["instock", "instock", "allocated", "outbound", "repairing", "scrapped"]);
+  const status = pick([
+    "instock",
+    "instock",
+    "allocated",
+    "outbound",
+    "repairing",
+    "scrapped"
+  ]);
   const inboundDate = pickDate(300, 10);
   return {
     id: i,
@@ -79,7 +113,10 @@ const serials = genRows(80, i => {
     locationCode: status === "outbound" ? undefined : pick(locations),
     inboundDate,
     outboundDate: status === "outbound" ? pickDate(10, 1) : undefined,
-    orderNo: status === "allocated" || status === "outbound" ? genCode("SO", i) : undefined
+    orderNo:
+      status === "allocated" || status === "outbound"
+        ? genCode("SO", i)
+        : undefined
   };
 });
 
@@ -89,8 +126,12 @@ const batches = genRows(60, i => {
   const w = mkWarehouse();
   const m = mkMaterial(i);
   const prodDate = pickDate(400, 30);
-  const expDate = dayStr(new Date(new Date(prodDate).getTime() + randInt(90, 730) * 86400000));
-  const remainDays = Math.floor((new Date(expDate).getTime() - Date.now()) / 86400000);
+  const expDate = dayStr(
+    new Date(new Date(prodDate).getTime() + randInt(90, 730) * 86400000)
+  );
+  const remainDays = Math.floor(
+    (new Date(expDate).getTime() - Date.now()) / 86400000
+  );
   return {
     id: i,
     ...m,
@@ -137,7 +178,13 @@ const adjustments = genRows(35, i => {
     qtyBefore,
     qtyChange: change,
     qtyAfter: qtyBefore + change,
-    reason: pick(["盘点差异", "破损报损", "抽样损耗", "收货误差", "温湿度变质"]),
+    reason: pick([
+      "盘点差异",
+      "破损报损",
+      "抽样损耗",
+      "收货误差",
+      "温湿度变质"
+    ]),
     status: pick(["pending", "approved", "approved", "rejected"]),
     applicant: pick(["user002", "user004"]),
     createdAt: pickDate(30, 0) + " 14:20:00"
@@ -162,7 +209,10 @@ const stocktakes = genRows(20, i => ({
 const stocktakeDetails = genRows(160, i => {
   const st = stocktakes[(i - 1) % stocktakes.length];
   const bookQty = randInt(10, 400);
-  const counted = st.status === "draft" ? null : pick([bookQty, bookQty, bookQty + randInt(-5, 5)]);
+  const counted =
+    st.status === "draft"
+      ? null
+      : pick([bookQty, bookQty, bookQty + randInt(-5, 5)]);
   return {
     id: i,
     stocktakeId: st.id,
@@ -191,7 +241,16 @@ const warnings = genRows(30, i => {
     batchNo: `B${String(randInt(2401, 2512)).padStart(4, "0")}`,
     qty: randInt(0, 800),
     safetyQty: randInt(100, 300),
-    expiredAt: type === "expiring" || type === "expired" ? dayStr(new Date(Date.now() + (type === "expired" ? -randInt(1, 30) : randInt(1, 25)) * 86400000)) : undefined,
+    expiredAt:
+      type === "expiring" || type === "expired"
+        ? dayStr(
+            new Date(
+              Date.now() +
+                (type === "expired" ? -randInt(1, 30) : randInt(1, 25)) *
+                  86400000
+            )
+          )
+        : undefined,
     days: type === "dead" ? randInt(95, 300) : undefined,
     status: i % 4 === 0 ? "handled" : "active",
     createdAt: pickDate(20, 0) + " 07:00:00"
@@ -201,8 +260,21 @@ const warnings = genRows(30, i => {
 // ========================= 流水 =========================
 
 const transactions = genRows(150, i => {
-  const type = pick(["receive", "putaway", "sales", "transfer_out", "transfer_in", "move", "replenish", "stocktake", "gain", "loss"]);
-  const change = ["sales", "transfer_out", "loss"].includes(type) ? -randInt(1, 200) : randInt(1, 300);
+  const type = pick([
+    "receive",
+    "putaway",
+    "sales",
+    "transfer_out",
+    "transfer_in",
+    "move",
+    "replenish",
+    "stocktake",
+    "gain",
+    "loss"
+  ]);
+  const change = ["sales", "transfer_out", "loss"].includes(type)
+    ? -randInt(1, 200)
+    : randInt(1, 300);
   return {
     id: i,
     transactionNo: genCode("TR", i),
@@ -222,14 +294,46 @@ const transactions = genRows(150, i => {
 // ========================= 路由 =========================
 
 export default defineFakeRoute([
-  ...crudRoutes({ prefix: "/wms/inventory/ledger", seed: ledger, searchFields: ["materialCode", "materialName", "locationCode", "batchNo"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/serial", seed: serials, searchFields: ["serialNo", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/batch", seed: batches, searchFields: ["materialCode", "materialName", "batchNo"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/move", seed: moves, searchFields: ["code", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/adjustment", seed: adjustments, searchFields: ["code", "materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/stocktake", seed: stocktakes, searchFields: ["code"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/warning", seed: warnings, searchFields: ["materialCode", "materialName"] }),
-  ...crudRoutes({ prefix: "/wms/inventory/transaction", seed: transactions, searchFields: ["transactionNo", "materialCode", "materialName", "bizNo"] }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/ledger",
+    seed: ledger,
+    searchFields: ["materialCode", "materialName", "locationCode", "batchNo"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/serial",
+    seed: serials,
+    searchFields: ["serialNo", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/batch",
+    seed: batches,
+    searchFields: ["materialCode", "materialName", "batchNo"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/move",
+    seed: moves,
+    searchFields: ["code", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/adjustment",
+    seed: adjustments,
+    searchFields: ["code", "materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/stocktake",
+    seed: stocktakes,
+    searchFields: ["code"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/warning",
+    seed: warnings,
+    searchFields: ["materialCode", "materialName"]
+  }),
+  ...crudRoutes({
+    prefix: "/wms/inventory/transaction",
+    seed: transactions,
+    searchFields: ["transactionNo", "materialCode", "materialName", "bizNo"]
+  }),
   // 台账冻结/解冻
   {
     url: "/wms/inventory/ledger/freeze",
@@ -237,7 +341,8 @@ export default defineFakeRoute([
     response: ({ body }) => {
       const { ids, freeze } = body || {};
       for (const row of ledger) {
-        if (ids?.includes(row.id)) row.stockStatus = freeze ? "frozen" : "qualified";
+        if (ids?.includes(row.id))
+          row.stockStatus = freeze ? "frozen" : "qualified";
       }
       return ok(true, freeze ? "冻结成功" : "解冻成功");
     }
@@ -333,7 +438,9 @@ export default defineFakeRoute([
     url: "/wms/inventory/stocktake/detail-items",
     method: "get",
     response: ({ query }) => {
-      const list = stocktakeDetails.filter(d => String(d.stocktakeId) === String(query.stocktakeId));
+      const list = stocktakeDetails.filter(
+        d => String(d.stocktakeId) === String(query.stocktakeId)
+      );
       const page = Number(query.page ?? 1);
       const pageSize = Number(query.pageSize ?? 20);
       return ok({

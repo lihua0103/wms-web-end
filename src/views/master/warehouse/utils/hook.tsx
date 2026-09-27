@@ -3,12 +3,19 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
+import {
   getWarehousePage,
   addWarehouse,
   updateWarehouse,
   deleteWarehouse
 } from "@/api/master";
 import type { WarehouseItem } from "@/api/master";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useWarehouse() {
@@ -28,33 +35,64 @@ export function useWarehouse() {
   });
 
   const columns: TableColumnList = [
-    { label: "仓库编码", prop: "code", minWidth: 90 },
-    { label: "仓库名称", prop: "name", minWidth: 100 },
+    { label: $t("master.warehouse.code"), prop: "code", minWidth: 90 },
+    { label: $t("master.warehouse.name"), prop: "name", minWidth: 100 },
     {
-      label: "类型",
+      label: $t("common.columns.type"),
       minWidth: 70,
       cellRenderer: ({ row }) =>
-        ({ normal: "普通", cold: "冷链", dangerous: "危化" })[row.type] || row.type
+        ({
+          normal: $t("master.warehouse.typeNormal"),
+          cold: $t("master.warehouse.typeCold"),
+          dangerous: $t("master.warehouse.typeDangerous")
+        })[row.type] || row.type
     },
-    { label: "地址", prop: "address", minWidth: 140 },
-    { label: "联系人", prop: "contact", minWidth: 70 },
-    { label: "电话", prop: "phone", minWidth: 100 },
+    { label: $t("master.warehouse.address"), prop: "address", minWidth: 140 },
+    { label: $t("master.warehouse.contact"), prop: "contact", minWidth: 70 },
+    { label: $t("master.warehouse.phone"), prop: "phone", minWidth: 100 },
     {
-      label: "面积(㎡)",
+      label: $t("master.warehouse.colArea"),
       minWidth: 100,
       formatter: row => `${row.areaUsed || 0} / ${row.area || 0}`
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("master.warehouse.enabled")
+            : $t("master.warehouse.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: WarehouseItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.warehouse.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -111,9 +149,16 @@ export function useWarehouse() {
         const formInline = (
           options.props as { formInline: Partial<WarehouseItem> }
         ).formInline;
-        const req = formInline.id ? updateWarehouse(formInline) : addWarehouse(formInline);
+        const req = formInline.id
+          ? updateWarehouse(formInline)
+          : addWarehouse(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.warehouse.editSuccess")
+              : $t("master.warehouse.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -122,11 +167,15 @@ export function useWarehouse() {
   }
 
   function handleDelete(row: WarehouseItem) {
-    ElMessageBox.confirm(`确认删除仓库「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.warehouse.delTip", { name: row.name }),
+      $t("master.warehouse.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteWarehouse([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

@@ -57,43 +57,71 @@ export interface ReconcileItem {
 // ========================= 计费规则 =========================
 
 export const getRulePage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<FeeRuleItem>>>("get", "/wms/billing/rule/page", { params });
+  http.request<ApiResult<PageResult<FeeRuleItem>>>(
+    "get",
+    "/wms/billing/rule/page",
+    { params }
+  );
 
 export const addRule = (data: Partial<FeeRuleItem>) =>
-  http.request<ApiResult<FeeRuleItem>>("post", "/wms/billing/rule/add", { data });
+  http.request<ApiResult<FeeRuleItem>>("post", "/wms/billing/rule/add", {
+    data
+  });
 
 export const updateRule = (data: Partial<FeeRuleItem>) =>
-  http.request<ApiResult<FeeRuleItem>>("post", "/wms/billing/rule/update", { data });
+  http.request<ApiResult<FeeRuleItem>>("post", "/wms/billing/rule/update", {
+    data
+  });
 
 export const deleteRule = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/rule/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/rule/delete", {
+    data: { ids }
+  });
 
 // ========================= 费用账单 =========================
 
 export const getBillPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<FeeBillItem>>>("get", "/wms/billing/bill/page", { params });
+  http.request<ApiResult<PageResult<FeeBillItem>>>(
+    "get",
+    "/wms/billing/bill/page",
+    { params }
+  );
 
 /** 确认账单（待确认 → 已确认） */
 export const confirmBill = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/confirm", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/confirm", {
+    data: { id }
+  });
 
 /** 开票（已确认 → 已开票） */
 export const invoiceBill = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/invoice", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/invoice", {
+    data: { id }
+  });
 
 /** 结算（已开票 → 已结算） */
 export const settleBill = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/settle", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/bill/settle", {
+    data: { id }
+  });
 
 // ========================= 对账单 =========================
 
 export const getReconcilePage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ReconcileItem>>>("get", "/wms/billing/reconcile/page", { params });
+  http.request<ApiResult<PageResult<ReconcileItem>>>(
+    "get",
+    "/wms/billing/reconcile/page",
+    { params }
+  );
 
 /** 确认对账（待确认 → 已确认） */
 export const confirmReconcile = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/reconcile/confirm", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/reconcile/confirm", {
+    data: { id }
+  });
 
 /** 提出异议（待确认 → 异议中） */
 export const disputeReconcile = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/billing/reconcile/dispute", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/billing/reconcile/dispute", {
+    data: { id }
+  });

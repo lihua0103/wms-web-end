@@ -33,24 +33,62 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
-        <el-input v-model="form.code" placeholder="配送单号" clearable style="width: 160px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('transport.tracking.code')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('transport.tracking.deliveryNo')"
+          clearable
+          style="width: 160px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="车牌号" prop="vehicleNo">
-        <el-input v-model="form.vehicleNo" placeholder="车牌号" clearable style="width: 140px" @keyup.enter="onSearch" />
+      <el-form-item
+        :label="$t('transport.tracking.licensePlate')"
+        prop="vehicleNo"
+      >
+        <el-input
+          v-model="form.vehicleNo"
+          :placeholder="$t('transport.tracking.licensePlate')"
+          clearable
+          style="width: 140px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 130px">
-          <el-option v-for="d in deliveryStatusOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('transport.tracking.all')"
+          clearable
+          style="width: 130px"
+        >
+          <el-option
+            v-for="d in deliveryStatusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="在途跟踪" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('transport.tracking.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border

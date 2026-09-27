@@ -1,7 +1,12 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
+import { $t } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getIntegrationConfigPage,
   addIntegrationConfig,
@@ -17,19 +22,10 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import Connection from "~icons/ep/connection";
 import formComp from "../form.vue";
-
-/** 认证方式 */
-export const authTypeOptions: DictItem[] = [
-  { label: "Token 令牌", value: "token" },
-  { label: "签名认证", value: "signature" }
-];
-
-/** 配置启停状态 */
-export const configStatusOptions: DictItem[] = [
-  { label: "启用", value: "enabled", tag: "success" },
-  { label: "停用", value: "disabled", tag: "info" }
-];
 
 export function useIntegrationConfig() {
   const form = reactive({
@@ -40,6 +36,22 @@ export function useIntegrationConfig() {
   const loading = ref(false);
   const dataList = ref<IntegrationConfigItem[]>([]);
 
+  /** 认证方式 */
+  const authTypeOptions: DictItem[] = [
+    { label: $t("integration.config.authToken"), value: "token" },
+    { label: $t("integration.config.authSignature"), value: "signature" }
+  ];
+
+  /** 配置启停状态 */
+  const configStatusOptions: DictItem[] = [
+    {
+      label: $t("common.buttons.enabled"),
+      value: "enabled",
+      tag: "success"
+    },
+    { label: $t("common.buttons.disabled"), value: "disabled", tag: "info" }
+  ];
+
   const pagination = reactive({
     pageSize: 10,
     currentPage: 1,
@@ -47,21 +59,29 @@ export function useIntegrationConfig() {
   });
 
   const columns: TableColumnList = [
-    { label: "系统名称", prop: "systemName", minWidth: 120 },
     {
-      label: "系统类型",
+      label: $t("integration.config.systemName"),
+      prop: "systemName",
+      minWidth: 120
+    },
+    {
+      label: $t("integration.config.systemType"),
       minWidth: 100,
       cellRenderer: ({ row }) =>
         dictLabel(integrationTypeOptions, row.systemType)
     },
-    { label: "API 地址", prop: "apiUrl", minWidth: 180 },
     {
-      label: "认证方式",
+      label: $t("integration.config.apiUrlCol"),
+      prop: "apiUrl",
+      minWidth: 180
+    },
+    {
+      label: $t("integration.config.authType"),
       minWidth: 90,
       cellRenderer: ({ row }) => dictLabel(authTypeOptions, row.authType)
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(configStatusOptions, row.status)}>
@@ -69,15 +89,51 @@ export function useIntegrationConfig() {
         </el-tag>
       )
     },
-    { label: "最近同步时间", prop: "lastSyncTime", minWidth: 140 },
     {
-      label: "同步方向",
+      label: $t("integration.config.lastSyncTime"),
+      prop: "lastSyncTime",
+      minWidth: 140
+    },
+    {
+      label: $t("integration.config.syncDirection"),
       minWidth: 130,
       cellRenderer: ({ row }) =>
         dictLabel(apiDirectionOptions, row.syncDirection)
     },
-    { fixed: "right", label: "操作", width: 240, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(
+    row: IntegrationConfigItem
+  ): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.test"),
+        type: "success",
+        icon: Connection,
+        onClick: () => handleTest(row)
+      },
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("integration.config.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -137,7 +193,12 @@ export function useIntegrationConfig() {
           ? updateIntegrationConfig(formInline)
           : addIntegrationConfig(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("integration.config.editSuccess")
+              : $t("integration.config.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -148,17 +209,23 @@ export function useIntegrationConfig() {
   /** 连接测试 */
   function handleTest(row: IntegrationConfigItem) {
     testIntegrationConfig(row.id).then(() => {
-      message(`「${row.systemName}」连接成功`, { type: "success" });
+      message($t("integration.config.testSuccess", { name: row.systemName }), {
+        type: "success"
+      });
       onSearch();
     });
   }
 
   function handleDelete(row: IntegrationConfigItem) {
-    ElMessageBox.confirm(`确认删除集成配置「${row.systemName}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("integration.config.confirmDelete", { name: row.systemName }),
+      $t("integration.config.tipTitle"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteIntegrationConfig([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });
@@ -174,6 +241,7 @@ export function useIntegrationConfig() {
     columns,
     dataList,
     pagination,
+    configStatusOptions,
     onSearch,
     resetForm,
     openDialog,

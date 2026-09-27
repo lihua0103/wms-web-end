@@ -3,6 +3,10 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
   getStocktakePage,
   addStocktake,
   startStocktake,
@@ -19,6 +23,8 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
+import View from "~icons/ep/view";
 import formComp from "../form.vue";
 
 export function useStocktake() {
@@ -37,16 +43,28 @@ export function useStocktake() {
   });
 
   const columns: TableColumnList = [
-    { label: "盘点单号", prop: "code", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 80 },
     {
-      label: "盘点方式",
+      label: $t("inventory.stocktake.stocktakeNo"),
+      prop: "code",
+      minWidth: 130
+    },
+    {
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 80
+    },
+    {
+      label: $t("inventory.stocktake.mode"),
       minWidth: 90,
       cellRenderer: ({ row }) => dictLabel(stocktakeModeOptions, row.mode)
     },
-    { label: "计划日期", prop: "planDate", minWidth: 90 },
     {
-      label: "状态",
+      label: $t("inventory.stocktake.planDate"),
+      prop: "planDate",
+      minWidth: 90
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 100,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(stocktakeStatusOptions, row.status)}>
@@ -54,12 +72,70 @@ export function useStocktake() {
         </el-tag>
       )
     },
-    { label: "盘点项数", prop: "totalCount", minWidth: 80 },
-    { label: "差异数", prop: "diffCount", minWidth: 70 },
-    { label: "创建人", prop: "creator", minWidth: 80 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 240, slot: "operation" }
+    {
+      label: $t("inventory.stocktake.itemCount"),
+      prop: "totalCount",
+      minWidth: 80
+    },
+    {
+      label: $t("inventory.stocktake.diffCount"),
+      prop: "diffCount",
+      minWidth: 70
+    },
+    { label: $t("common.columns.creator"), prop: "creator", minWidth: 80 },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: StocktakeItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("inventory.stocktake.detail"),
+        icon: View,
+        onClick: () => openDetail(row)
+      }
+    ];
+    if (row.status === "draft") {
+      buttons.push({
+        label: $t("inventory.stocktake.start"),
+        onClick: () => onAction(row, "start")
+      });
+    }
+    if (row.status === "counting") {
+      buttons.push({
+        label: $t("inventory.stocktake.submitDiff"),
+        type: "warning",
+        onClick: () => onAction(row, "submit")
+      });
+    }
+    if (row.status === "diff") {
+      buttons.push({
+        label: $t("common.buttons.complete"),
+        type: "success",
+        onClick: () => onAction(row, "finish")
+      });
+    }
+    if (["draft", "counting", "diff"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.cancel"),
+        type: "danger",
+        onClick: () => onAction(row, "cancel")
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -94,7 +170,7 @@ export function useStocktake() {
   /** 创建盘点单 */
   function openDialog() {
     addDialog({
-      title: "创建盘点单",
+      title: $t("inventory.stocktake.create"),
       width: "38%",
       draggable: true,
       closeOnClickModal: false,
@@ -112,7 +188,7 @@ export function useStocktake() {
           options.props as { formInline: Partial<StocktakeItem> }
         ).formInline;
         addStocktake(formInline).then(() => {
-          message("创建成功", { type: "success" });
+          message($t("inventory.stocktake.createSuccess"), { type: "success" });
           done();
           onSearch();
         });
@@ -121,15 +197,36 @@ export function useStocktake() {
   }
 
   /** 状态流转 */
-  function onAction(row: StocktakeItem, action: "start" | "submit" | "finish" | "cancel") {
+  function onAction(
+    row: StocktakeItem,
+    action: "start" | "submit" | "finish" | "cancel"
+  ) {
     const map = {
-      start: [startStocktake, "盘点已开始", "确认开始盘点吗？"],
-      submit: [submitStocktakeDiff, "差异已提交", "确认提交盘点差异吗？"],
-      finish: [finishStocktake, "盘点完成，差异已生成调整单", "确认完成盘点并生成调整单吗？"],
-      cancel: [cancelStocktake, "已取消", "确认取消该盘点单吗？"]
+      start: [
+        startStocktake,
+        $t("inventory.stocktake.started"),
+        $t("inventory.stocktake.startTip")
+      ],
+      submit: [
+        submitStocktakeDiff,
+        $t("inventory.stocktake.diffSubmitted"),
+        $t("inventory.stocktake.submitDiffTip")
+      ],
+      finish: [
+        finishStocktake,
+        $t("inventory.stocktake.finished"),
+        $t("inventory.stocktake.finishTip")
+      ],
+      cancel: [
+        cancelStocktake,
+        $t("inventory.stocktake.cancelled"),
+        $t("inventory.stocktake.cancelTip")
+      ]
     } as const;
     const [api, msg, tip] = map[action];
-    ElMessageBox.confirm(tip as string, "提示", { type: "warning" }).then(() => {
+    ElMessageBox.confirm(tip as string, $t("inventory.stocktake.tip"), {
+      type: "warning"
+    }).then(() => {
       (api as (id: number) => Promise<any>)(row.id).then(() => {
         message(msg as string, { type: "success" });
         onSearch();
@@ -146,14 +243,34 @@ export function useStocktake() {
   const detailPagination = reactive({ pageSize: 20, currentPage: 1, total: 0 });
 
   const detailColumns: TableColumnList = [
-    { label: "库位", prop: "locationCode", minWidth: 80 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "批次", prop: "batchNo", minWidth: 80 },
-    { label: "账面数", prop: "bookQty", minWidth: 70 },
-    { label: "实际数", slot: "actual", minWidth: 130 },
-    { label: "差异数", prop: "diffQty", minWidth: 70 },
-    { label: "操作", slot: "dop", minWidth: 70 }
+    {
+      label: $t("common.columns.location"),
+      prop: "locationCode",
+      minWidth: 80
+    },
+    {
+      label: $t("inventory.stocktake.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("inventory.stocktake.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("inventory.stocktake.batch"), prop: "batchNo", minWidth: 80 },
+    { label: $t("inventory.stocktake.bookQty"), prop: "bookQty", minWidth: 70 },
+    {
+      label: $t("inventory.stocktake.actualQty"),
+      slot: "actual",
+      minWidth: 130
+    },
+    {
+      label: $t("inventory.stocktake.diffCount"),
+      prop: "diffQty",
+      minWidth: 70
+    },
+    { label: $t("common.columns.operation"), slot: "dop", minWidth: 70 }
   ];
 
   async function openDetail(row: StocktakeItem) {
@@ -181,11 +298,11 @@ export function useStocktake() {
 
   function saveActual(row: StocktakeDetailItem) {
     if (row.actualQty === null || row.actualQty === undefined) {
-      message("请先录入实际数量", { type: "warning" });
+      message($t("inventory.stocktake.inputActualFirst"), { type: "warning" });
       return;
     }
     saveStocktakeActual(row.id, row.actualQty).then(() => {
-      message("已保存", { type: "success" });
+      message($t("inventory.stocktake.saved"), { type: "success" });
       fetchDetail();
     });
   }

@@ -1,6 +1,11 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getDeviceTaskPage, cancelDeviceTask } from "@/api/integration";
 import type { DeviceTaskItem } from "@/api/integration";
 import {
@@ -9,6 +14,7 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import CircleClose from "~icons/ep/circle-close";
 
 export function useDeviceTask() {
   const form = reactive({
@@ -28,17 +34,29 @@ export function useDeviceTask() {
   });
 
   const columns: TableColumnList = [
-    { label: "任务号", prop: "taskNo", minWidth: 130 },
-    { label: "设备编码", prop: "deviceCode", minWidth: 90 },
     {
-      label: "设备类型",
+      label: $t("integration.deviceTask.taskNo"),
+      prop: "taskNo",
+      minWidth: 130
+    },
+    {
+      label: $t("integration.device.code"),
+      prop: "deviceCode",
+      minWidth: 90
+    },
+    {
+      label: $t("integration.device.type"),
       minWidth: 90,
       cellRenderer: ({ row }) => dictLabel(deviceTypeOptions, row.deviceType)
     },
-    { label: "业务单号", prop: "bizNo", minWidth: 130 },
-    { label: "数量", prop: "qty", minWidth: 60 },
     {
-      label: "状态",
+      label: $t("integration.deviceTask.bizNo"),
+      prop: "bizNo",
+      minWidth: 130
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 60 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(deviceTaskStatusOptions, row.status)}>
@@ -46,10 +64,39 @@ export function useDeviceTask() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { label: "完成时间", prop: "finishedAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 100, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      label: $t("integration.deviceTask.finishTime"),
+      prop: "finishedAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: DeviceTaskItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (["queued", "executing"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.cancel"),
+        type: "danger",
+        icon: CircleClose,
+        onClick: () => handleCancel(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -83,11 +130,17 @@ export function useDeviceTask() {
 
   /** 取消排队/执行中的设备任务 */
   function handleCancel(row: DeviceTaskItem) {
-    ElMessageBox.confirm(`确认取消任务「${row.taskNo}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("integration.deviceTask.confirmCancel", { taskNo: row.taskNo }),
+      $t("integration.deviceTask.tipTitle"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       cancelDeviceTask(row.id).then(() => {
-        message("任务已取消", { type: "success" });
+        message($t("integration.deviceTask.cancelSuccess"), {
+          type: "success"
+        });
         onSearch();
       });
     });

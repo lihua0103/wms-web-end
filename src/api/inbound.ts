@@ -80,6 +80,7 @@ export interface ReturnInboundItem {
   materialName: string;
   qty: number;
   reason?: string;
+  remark?: string;
   status: string; // pending/approved/receiving/finished/cancelled
   createdAt?: string;
 }
@@ -87,7 +88,9 @@ export interface ReturnInboundItem {
 // ========================= 入库预约 =========================
 
 export const getAsnPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<AsnItem>>>("get", "/wms/inbound/asn/page", { params });
+  http.request<ApiResult<PageResult<AsnItem>>>("get", "/wms/inbound/asn/page", {
+    params
+  });
 
 export const addAsn = (data: Partial<AsnItem>) =>
   http.request<ApiResult<AsnItem>>("post", "/wms/inbound/asn/add", { data });
@@ -96,55 +99,96 @@ export const updateAsn = (data: Partial<AsnItem>) =>
   http.request<ApiResult<AsnItem>>("post", "/wms/inbound/asn/update", { data });
 
 export const deleteAsn = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/asn/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/asn/delete", {
+    data: { ids }
+  });
 
 export const approveAsn = (id: number, pass: boolean) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/asn/approve", { data: { id, pass } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/asn/approve", {
+    data: { id, pass }
+  });
 
 // ========================= 收货管理 =========================
 
 export const getReceiptPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ReceiptItem>>>("get", "/wms/inbound/receipt/page", { params });
+  http.request<ApiResult<PageResult<ReceiptItem>>>(
+    "get",
+    "/wms/inbound/receipt/page",
+    { params }
+  );
 
 export const auditReceipt = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/receipt/audit", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/receipt/audit", {
+    data: { id }
+  });
 
 export const registerReceipt = (data: {
   id: number;
   receivedQty: number;
   qualifiedQty: number;
   rejectedQty: number;
-}) => http.request<ApiResult<boolean>>("post", "/wms/inbound/receipt/register", { data });
+}) =>
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/receipt/register", {
+    data
+  });
 
 // ========================= 质检管理 =========================
 
 export const getQcPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<QcItem>>>("get", "/wms/inbound/qc/page", { params });
+  http.request<ApiResult<PageResult<QcItem>>>("get", "/wms/inbound/qc/page", {
+    params
+  });
 
-export const submitQc = (data: { id: number; qcResult: string; qcRemark?: string }) =>
+export const submitQc = (data: {
+  id: number;
+  qcResult: string;
+  qcRemark?: string;
+}) =>
   http.request<ApiResult<boolean>>("post", "/wms/inbound/qc/submit", { data });
 
 // ========================= 上架任务 =========================
 
 export const getPutawayPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<PutawayTaskItem>>>("get", "/wms/inbound/putaway/page", { params });
+  http.request<ApiResult<PageResult<PutawayTaskItem>>>(
+    "get",
+    "/wms/inbound/putaway/page",
+    { params }
+  );
 
 export const finishPutaway = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/putaway/finish", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/putaway/finish", {
+    data: { id }
+  });
 
 // ========================= 退货入库 =========================
 
 export const getReturnPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ReturnInboundItem>>>("get", "/wms/inbound/return/page", { params });
+  http.request<ApiResult<PageResult<ReturnInboundItem>>>(
+    "get",
+    "/wms/inbound/return/page",
+    { params }
+  );
 
 export const addReturn = (data: Partial<ReturnInboundItem>) =>
-  http.request<ApiResult<ReturnInboundItem>>("post", "/wms/inbound/return/add", { data });
+  http.request<ApiResult<ReturnInboundItem>>(
+    "post",
+    "/wms/inbound/return/add",
+    { data }
+  );
 
 export const updateReturn = (data: Partial<ReturnInboundItem>) =>
-  http.request<ApiResult<ReturnInboundItem>>("post", "/wms/inbound/return/update", { data });
+  http.request<ApiResult<ReturnInboundItem>>(
+    "post",
+    "/wms/inbound/return/update",
+    { data }
+  );
 
 export const deleteReturn = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/return/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/return/delete", {
+    data: { ids }
+  });
 
 export const approveReturn = (id: number, pass: boolean) =>
-  http.request<ApiResult<boolean>>("post", "/wms/inbound/return/approve", { data: { id, pass } });
+  http.request<ApiResult<boolean>>("post", "/wms/inbound/return/approve", {
+    data: { id, pass }
+  });

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import noExist from "@/assets/status/404.svg?component";
+import { $t } from "@/plugins/i18n";
 
 defineOptions({
   name: "404"
@@ -47,7 +48,7 @@ const router = useRouter();
           }
         }"
       >
-        抱歉，你访问的页面不存在
+        {{ $t("error.notFound") }}
       </p>
       <el-button
         v-motion
@@ -66,7 +67,7 @@ const router = useRouter();
         }"
         @click="router.push('/')"
       >
-        返回首页
+        {{ $t("error.backHome") }}
       </el-button>
     </div>
   </div>

@@ -3,6 +3,10 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
   getRolePage,
   addRole,
   updateRole,
@@ -12,6 +16,10 @@ import {
   getMenuTree
 } from "@/api/system";
 import type { RoleItem, MenuItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import Key from "~icons/ep/key";
 import formComp from "../form.vue";
 
 export function useRole() {
@@ -29,22 +37,65 @@ export function useRole() {
   });
 
   const columns: TableColumnList = [
-    { label: "角色编码", prop: "code", minWidth: 110 },
-    { label: "角色名称", prop: "name", minWidth: 100 },
-    { label: "描述", prop: "description", minWidth: 140 },
-    { label: "成员数", prop: "memberCount", minWidth: 70 },
+    { label: $t("system.role.code"), prop: "code", minWidth: 110 },
+    { label: $t("system.role.name"), prop: "name", minWidth: 100 },
     {
-      label: "状态",
+      label: $t("system.role.description"),
+      prop: "description",
+      minWidth: 140
+    },
+    {
+      label: $t("system.role.memberCount"),
+      prop: "memberCount",
+      minWidth: 70
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("common.buttons.enabled")
+            : $t("common.buttons.disabled")}
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 240, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: RoleItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("system.role.menuAuth"),
+        icon: Key,
+        onClick: () => openAuth(row)
+      },
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("system.role.editRole"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -101,7 +152,12 @@ export function useRole() {
           ? updateRole(formInline)
           : addRole(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("system.role.editSuccess")
+              : $t("system.role.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -110,11 +166,15 @@ export function useRole() {
   }
 
   function handleDelete(row: RoleItem) {
-    ElMessageBox.confirm(`确认删除角色「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("system.role.deleteConfirm", { name: row.name }),
+      $t("system.role.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteRole([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });
@@ -159,9 +219,12 @@ export function useRole() {
     saveLoading.value = true;
     saveRoleMenus(currentRole.value.id, menuIds)
       .then(() => {
-        message(`角色「${currentRole.value?.name}」授权成功`, {
-          type: "success"
-        });
+        message(
+          $t("system.role.authSuccess", { name: currentRole.value?.name }),
+          {
+            type: "success"
+          }
+        );
         authVisible.value = false;
       })
       .finally(() => {

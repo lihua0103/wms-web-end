@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 import type { RoleItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
 
 interface Props {
   formInline: Partial<RoleItem>;
@@ -14,8 +15,10 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  code: [{ required: true, message: "请输入角色编码", trigger: "blur" }],
-  name: [{ required: true, message: "请输入角色名称", trigger: "blur" }]
+  code: [
+    { required: true, message: $t("system.role.codeMsg"), trigger: "blur" }
+  ],
+  name: [{ required: true, message: $t("system.role.namePh"), trigger: "blur" }]
 };
 </script>
 
@@ -26,27 +29,30 @@ const rules: FormRules = {
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="角色编码" prop="code">
+    <el-form-item :label="$t('system.role.code')" prop="code">
       <el-input
         v-model="newFormInline.code"
-        placeholder="请输入角色编码（英文标识）"
+        :placeholder="$t('system.role.codePh')"
         :disabled="!!newFormInline.id"
       />
     </el-form-item>
-    <el-form-item label="角色名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入角色名称" />
+    <el-form-item :label="$t('system.role.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('system.role.namePh')"
+      />
     </el-form-item>
-    <el-form-item label="描述" prop="description">
+    <el-form-item :label="$t('system.role.description')" prop="description">
       <el-input
         v-model="newFormInline.description"
         type="textarea"
-        placeholder="请输入角色描述"
+        :placeholder="$t('system.role.descPh')"
       />
     </el-form-item>
-    <el-form-item label="状态" prop="status">
+    <el-form-item :label="$t('common.columns.status')" prop="status">
       <el-radio-group v-model="newFormInline.status">
-        <el-radio :value="1">启用</el-radio>
-        <el-radio :value="0">停用</el-radio>
+        <el-radio :value="1">{{ $t("common.buttons.enabled") }}</el-radio>
+        <el-radio :value="0">{{ $t("common.buttons.disabled") }}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

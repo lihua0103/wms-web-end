@@ -2,6 +2,11 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getProcessPage,
   addProcess,
@@ -12,16 +17,20 @@ import {
 } from "@/api/operation";
 import type { ProcessOrderItem } from "@/api/operation";
 import { docStatusOptions, dictTag } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import VideoPlay from "~icons/ep/video-play";
+import CircleCheck from "~icons/ep/circle-check";
 import formComp from "../form.vue";
 
-const statusMap: Record<string, string> = {
-  pending: "草稿",
-  processing: "加工中",
-  finished: "已完成",
-  cancelled: "已取消"
-};
-
 export function useProcess() {
+  const statusMap: Record<string, string> = {
+    pending: $t("operation.process.statusDraft"),
+    processing: $t("operation.process.statusProcessing"),
+    finished: $t("operation.process.statusFinished"),
+    cancelled: $t("operation.process.statusCancelled")
+  };
+
   const form = reactive({
     code: "",
     processType: "",
@@ -37,15 +46,35 @@ export function useProcess() {
   });
 
   const columns: TableColumnList = [
-    { label: "加工单号", prop: "code", minWidth: 130 },
-    { label: "加工类型", prop: "processType", minWidth: 80 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "投入数量", prop: "inputQty", minWidth: 80 },
-    { label: "产出数量", prop: "outputQty", minWidth: 80 },
+    { label: $t("operation.process.code"), prop: "code", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("operation.process.processType"),
+      prop: "processType",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("operation.process.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("operation.process.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("operation.process.inputQty"), prop: "inputQty", minWidth: 80 },
+    {
+      label: $t("operation.process.outputQty"),
+      prop: "outputQty",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(docStatusOptions, row.status)}>
@@ -53,9 +82,57 @@ export function useProcess() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 200, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ProcessOrderItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("operation.process.editOrder"), row)
+      });
+    }
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("operation.process.start"),
+        type: "warning",
+        icon: VideoPlay,
+        onClick: () => handleStart(row)
+      });
+    }
+    if (row.status === "processing") {
+      buttons.push({
+        label: $t("operation.process.finish"),
+        type: "success",
+        icon: CircleCheck,
+        onClick: () => handleFinish(row)
+      });
+    }
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -110,9 +187,16 @@ export function useProcess() {
         const formInline = (
           options.props as { formInline: Partial<ProcessOrderItem> }
         ).formInline;
-        const req = formInline.id ? updateProcess(formInline) : addProcess(formInline);
+        const req = formInline.id
+          ? updateProcess(formInline)
+          : addProcess(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "创建成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("operation.process.updateSuccess")
+              : $t("operation.process.createSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -122,11 +206,15 @@ export function useProcess() {
 
   /** 开工 */
   function handleStart(row: ProcessOrderItem) {
-    ElMessageBox.confirm(`确认加工单「${row.code}」开始加工吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("operation.process.startConfirm", { code: row.code }),
+      $t("operation.process.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       startProcess(row.id).then(() => {
-        message("已开工", { type: "success" });
+        message($t("operation.process.startSuccess"), { type: "success" });
         onSearch();
       });
     });
@@ -135,7 +223,7 @@ export function useProcess() {
   /** 完工（录入产出数量） */
   function handleFinish(row: ProcessOrderItem) {
     addDialog({
-      title: "完工登记",
+      title: $t("operation.process.finishTitle"),
       width: "32%",
       draggable: true,
       closeOnClickModal: false,
@@ -157,7 +245,7 @@ export function useProcess() {
           options.props as { formInline: { id: number; outputQty: number } }
         ).formInline;
         finishProcess(formInline.id, formInline.outputQty).then(() => {
-          message("完工成功", { type: "success" });
+          message($t("operation.process.finishSuccess"), { type: "success" });
           done();
           onSearch();
         });
@@ -166,11 +254,15 @@ export function useProcess() {
   }
 
   function handleDelete(row: ProcessOrderItem) {
-    ElMessageBox.confirm(`确认删除加工单「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("operation.process.deleteConfirm", { code: row.code }),
+      $t("operation.process.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteProcess([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

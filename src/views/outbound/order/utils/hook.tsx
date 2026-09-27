@@ -1,7 +1,12 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getOutboundPage,
   getOutboundDetail,
@@ -18,6 +23,11 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import View from "~icons/ep/view";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
+import CircleCheck from "~icons/ep/circle-check";
+import CircleClose from "~icons/ep/circle-close";
 import formComp from "../form.vue";
 
 export function useOutboundOrder() {
@@ -40,16 +50,24 @@ export function useOutboundOrder() {
   });
 
   const columns: TableColumnList = [
-    { label: "出库单号", prop: "code", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "客户", prop: "customerName", minWidth: 120 },
+    { label: $t("outbound.order.orderNo"), prop: "code", minWidth: 130 },
     {
-      label: "类型",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("outbound.order.customer"),
+      prop: "customerName",
+      minWidth: 120
+    },
+    {
+      label: $t("common.columns.type"),
       minWidth: 90,
       cellRenderer: ({ row }) => dictLabel(outboundTypeOptions, row.type)
     },
     {
-      label: "优先级",
+      label: $t("outbound.order.priority"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(priorityOptions, row.priority)}>
@@ -57,10 +75,14 @@ export function useOutboundOrder() {
         </el-tag>
       )
     },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "数量", prop: "qty", minWidth: 70 },
     {
-      label: "状态",
+      label: $t("outbound.order.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(outboundStatusOptions, row.status)}>
@@ -68,10 +90,60 @@ export function useOutboundOrder() {
         </el-tag>
       )
     },
-    { label: "交期", prop: "deliveryDate", minWidth: 90 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 220, slot: "operation" }
+    { label: $t("outbound.order.dueDate"), prop: "deliveryDate", minWidth: 90 },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: OutboundOrderItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.detail"),
+        icon: View,
+        onClick: () => openDetail(row)
+      }
+    ];
+    if (row.status === "pending") {
+      buttons.push(
+        {
+          label: $t("common.buttons.edit"),
+          icon: EditPen,
+          onClick: () => openDialog($t("outbound.order.editOrder"), row)
+        },
+        {
+          label: $t("common.buttons.audit"),
+          type: "success",
+          icon: CircleCheck,
+          onClick: () => handleApprove(row, true)
+        },
+        {
+          label: $t("common.buttons.cancel"),
+          type: "warning",
+          icon: CircleClose,
+          onClick: () => handleApprove(row, false)
+        },
+        {
+          label: $t("common.buttons.delete"),
+          type: "danger",
+          icon: Delete,
+          onClick: () => handleDelete(row)
+        }
+      );
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -134,9 +206,16 @@ export function useOutboundOrder() {
         const formInline = (
           options.props as { formInline: Partial<OutboundOrderItem> }
         ).formInline;
-        const req = formInline.id ? updateOutbound(formInline) : addOutbound(formInline);
+        const req = formInline.id
+          ? updateOutbound(formInline)
+          : addOutbound(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "创建成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("outbound.order.updateSuccess")
+              : $t("outbound.order.createSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -146,23 +225,34 @@ export function useOutboundOrder() {
 
   function handleApprove(row: OutboundOrderItem, pass: boolean) {
     ElMessageBox.confirm(
-      pass ? `确认审核通过「${row.code}」吗？` : `确认取消「${row.code}」吗？`,
-      "提示",
+      pass
+        ? $t("outbound.order.approvePassTip", { code: row.code })
+        : $t("outbound.order.cancelTip", { code: row.code }),
+      $t("outbound.order.tip"),
       { type: "warning" }
     ).then(() => {
       approveOutbound(row.id, pass).then(() => {
-        message(pass ? "审核通过" : "已取消", { type: "success" });
+        message(
+          pass
+            ? $t("outbound.order.approvePassed")
+            : $t("outbound.order.cancelled"),
+          { type: "success" }
+        );
         onSearch();
       });
     });
   }
 
   function handleDelete(row: OutboundOrderItem) {
-    ElMessageBox.confirm(`确认删除出库单「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("outbound.order.deleteTip", { code: row.code }),
+      $t("outbound.order.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteOutbound([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

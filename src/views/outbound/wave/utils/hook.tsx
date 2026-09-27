@@ -1,20 +1,26 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getWavePage, generateWave, releaseWave } from "@/api/outbound";
 import type { WaveItem } from "@/api/outbound";
 import { docStatusOptions, dictTag } from "@/constants/wms";
+import Promotion from "~icons/ep/promotion";
 import formComp from "../form.vue";
 
-const statusMap: Record<string, string> = {
-  pending: "待下发",
-  processing: "拣货中",
-  finished: "已完成",
-  cancelled: "已取消"
-};
-
 export function useWave() {
+  const statusMap: Record<string, string> = {
+    pending: $t("outbound.wave.statusPending"),
+    processing: $t("outbound.wave.statusProcessing"),
+    finished: $t("outbound.wave.statusFinished"),
+    cancelled: $t("outbound.wave.statusCancelled")
+  };
+
   const form = reactive({
     code: "",
     warehouseCode: "",
@@ -30,13 +36,17 @@ export function useWave() {
   });
 
   const columns: TableColumnList = [
-    { label: "波次号", prop: "code", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "订单数", prop: "orderCount", minWidth: 70 },
-    { label: "总件数", prop: "qty", minWidth: 70 },
-    { label: "承运商", prop: "carrierName", minWidth: 100 },
+    { label: $t("outbound.wave.no"), prop: "code", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    { label: $t("outbound.wave.orderCount"), prop: "orderCount", minWidth: 70 },
+    { label: $t("outbound.wave.totalQty"), prop: "qty", minWidth: 70 },
+    { label: $t("outbound.wave.carrier"), prop: "carrierName", minWidth: 100 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(docStatusOptions, row.status)}>
@@ -44,9 +54,33 @@ export function useWave() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 110, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: WaveItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("outbound.wave.release"),
+        icon: Promotion,
+        onClick: () => handleRelease(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -81,7 +115,7 @@ export function useWave() {
   /** 生成波次 */
   function openGenerateDialog() {
     addDialog({
-      title: "生成波次",
+      title: $t("outbound.wave.generate"),
       width: "34%",
       draggable: true,
       closeOnClickModal: false,
@@ -94,10 +128,17 @@ export function useWave() {
       },
       beforeSure: (done, { options }) => {
         const formInline = (
-          options.props as { formInline: { warehouseCode: string; carrierName: string } }
+          options.props as {
+            formInline: { warehouseCode: string; carrierName: string };
+          }
         ).formInline;
         generateWave(formInline).then(res => {
-          message(`波次 ${res.data?.code || ""} 生成成功`, { type: "success" });
+          message(
+            $t("outbound.wave.waveCreated", { code: res.data?.code || "" }),
+            {
+              type: "success"
+            }
+          );
           done();
           onSearch();
         });
@@ -108,12 +149,16 @@ export function useWave() {
   /** 下发拣货 */
   function handleRelease(row: WaveItem) {
     ElMessageBox.confirm(
-      `确认将波次「${row.code}」下发拣货吗？（共 ${row.orderCount} 单 / ${row.qty} 件）`,
-      "提示",
+      $t("outbound.wave.releaseTip", {
+        code: row.code,
+        count: row.orderCount,
+        qty: row.qty
+      }),
+      $t("outbound.wave.tip"),
       { type: "warning" }
     ).then(() => {
       releaseWave(row.id).then(() => {
-        message("已下发拣货", { type: "success" });
+        message($t("outbound.wave.released"), { type: "success" });
         onSearch();
       });
     });

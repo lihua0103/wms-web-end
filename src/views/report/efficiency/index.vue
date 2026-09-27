@@ -10,7 +10,11 @@ const { loading, personList, columns, pieRef, barRef } = useReportEfficiency();
 <template>
   <div class="p-2">
     <!-- 人员效率表格 -->
-    <el-card shadow="never" header="人员效率（按任务数排序）" class="mb-3">
+    <el-card
+      shadow="never"
+      :header="$t('report.efficiency.personTitle')"
+      class="mb-3"
+    >
       <pure-table
         border
         align-whole="center"
@@ -27,12 +31,15 @@ const { loading, personList, columns, pieRef, barRef } = useReportEfficiency();
     <!-- 图表区 -->
     <el-row :gutter="12">
       <el-col :xs="24" :lg="12">
-        <el-card shadow="never" header="任务类型分布">
+        <el-card
+          shadow="never"
+          :header="$t('report.efficiency.typeDistribution')"
+        >
           <div ref="pieRef" style="height: 320px" />
         </el-card>
       </el-col>
       <el-col :xs="24" :lg="12">
-        <el-card shadow="never" header="人员任务数">
+        <el-card shadow="never" :header="$t('report.efficiency.personTasks')">
           <div ref="barRef" style="height: 320px" />
         </el-card>
       </el-col>

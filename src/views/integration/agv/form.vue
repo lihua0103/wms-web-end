@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import type { FormRules } from "element-plus";
 import type { AgvTaskItem } from "@/api/integration";
 
@@ -14,13 +15,41 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  agvCode: [{ required: true, message: "请选择 AGV 编号", trigger: "change" }],
-  taskType: [{ required: true, message: "请选择任务类型", trigger: "change" }],
-  fromLocation: [
-    { required: true, message: "请输入起始库位", trigger: "blur" }
+  agvCode: [
+    {
+      required: true,
+      message: $t("integration.agv.codeRequired"),
+      trigger: "change"
+    }
   ],
-  toLocation: [{ required: true, message: "请输入目标库位", trigger: "blur" }],
-  priority: [{ required: true, message: "请选择优先级", trigger: "change" }]
+  taskType: [
+    {
+      required: true,
+      message: $t("integration.agv.typeRequired"),
+      trigger: "change"
+    }
+  ],
+  fromLocation: [
+    {
+      required: true,
+      message: $t("integration.agv.fromRequired"),
+      trigger: "blur"
+    }
+  ],
+  toLocation: [
+    {
+      required: true,
+      message: $t("integration.agv.toRequired"),
+      trigger: "blur"
+    }
+  ],
+  priority: [
+    {
+      required: true,
+      message: $t("integration.agv.priorityRequired"),
+      trigger: "change"
+    }
+  ]
 };
 
 const agvOptions = [
@@ -33,15 +62,20 @@ const agvOptions = [
 ];
 
 const taskTypeOptions = [
-  { value: "搬运", label: "搬运" },
-  { value: "入库", label: "入库" },
-  { value: "出库", label: "出库" },
-  { value: "充电", label: "充电" }
+  { value: "搬运", label: $t("integration.agv.typeCarry") },
+  { value: "入库", label: $t("integration.agv.typeInbound") },
+  { value: "出库", label: $t("integration.agv.typeOutbound") },
+  { value: "充电", label: $t("integration.agv.typeCharge") }
 ];
 
 const priorityOptions = [1, 2, 3, 4, 5].map(v => ({
   value: v,
-  label: `${v} 级${v >= 5 ? "（最紧急）" : v <= 1 ? "（最低）" : ""}`
+  label:
+    v >= 5
+      ? $t("integration.agv.priorityHighest", { v })
+      : v <= 1
+        ? $t("integration.agv.priorityLowest", { v })
+        : $t("integration.agv.priorityLevel", { v })
 }));
 </script>
 
@@ -52,7 +86,7 @@ const priorityOptions = [1, 2, 3, 4, 5].map(v => ({
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="AGV 编号" prop="agvCode">
+    <el-form-item :label="$t('integration.agv.code')" prop="agvCode">
       <el-select v-model="newFormInline.agvCode" style="width: 100%">
         <el-option
           v-for="a in agvOptions"
@@ -62,7 +96,7 @@ const priorityOptions = [1, 2, 3, 4, 5].map(v => ({
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="任务类型" prop="taskType">
+    <el-form-item :label="$t('integration.agv.taskType')" prop="taskType">
       <el-select v-model="newFormInline.taskType" style="width: 100%">
         <el-option
           v-for="t in taskTypeOptions"
@@ -72,13 +106,22 @@ const priorityOptions = [1, 2, 3, 4, 5].map(v => ({
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="起始库位" prop="fromLocation">
-      <el-input v-model="newFormInline.fromLocation" placeholder="如 A-01-01" />
+    <el-form-item
+      :label="$t('integration.agv.fromLocation')"
+      prop="fromLocation"
+    >
+      <el-input
+        v-model="newFormInline.fromLocation"
+        :placeholder="$t('integration.agv.fromExample')"
+      />
     </el-form-item>
-    <el-form-item label="目标库位" prop="toLocation">
-      <el-input v-model="newFormInline.toLocation" placeholder="如 C-02-03" />
+    <el-form-item :label="$t('integration.agv.toLocation')" prop="toLocation">
+      <el-input
+        v-model="newFormInline.toLocation"
+        :placeholder="$t('integration.agv.toExample')"
+      />
     </el-form-item>
-    <el-form-item label="优先级" prop="priority">
+    <el-form-item :label="$t('integration.agv.priority')" prop="priority">
       <el-select v-model="newFormInline.priority" style="width: 100%">
         <el-option
           v-for="p in priorityOptions"

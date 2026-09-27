@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { ref, unref, watch, onMounted, nextTick } from "vue";
+import { $t } from "@/plugins/i18n";
 
 defineOptions({
   name: "LayFrame"
@@ -85,7 +86,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-loading="loading" class="frame" element-loading-text="加载中...">
+  <div
+    v-loading="loading"
+    class="frame"
+    :element-loading-text="$t('common.tips.loading')"
+  >
     <iframe ref="frameRef" :src="frameSrc" class="frame-iframe" />
   </div>
 </template>

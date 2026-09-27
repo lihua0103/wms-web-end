@@ -8,7 +8,7 @@ export const routerArrays: Array<RouteConfigs> =
           path: "/welcome",
           name: "Welcome",
           meta: {
-            title: "首页",
+            title: "menus.home",
             icon: "ep/home-filled"
           }
         }

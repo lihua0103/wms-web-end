@@ -7,8 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { taskTypeOptions, taskStatusOptions } from "@/constants/wms";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import User from "~icons/ep/user";
-import CircleClose from "~icons/ep/circle-close";
 
 defineOptions({ name: "OperationTask" });
 
@@ -22,8 +20,6 @@ const {
   pagination,
   onSearch,
   resetForm,
-  openAssignDialog,
-  handleCancel,
   handleSizeChange,
   handleCurrentChange
 } = useTask();
@@ -37,29 +33,74 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="任务号" prop="taskNo">
-        <el-input v-model="form.taskNo" placeholder="任务号" clearable style="width: 160px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('operation.task.taskNo')" prop="taskNo">
+        <el-input
+          v-model="form.taskNo"
+          :placeholder="$t('operation.task.taskNo')"
+          clearable
+          style="width: 160px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="类型" prop="taskType">
-        <el-select v-model="form.taskType" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in taskTypeOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.type')" prop="taskType">
+        <el-select
+          v-model="form.taskType"
+          :placeholder="$t('operation.task.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in taskTypeOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in taskStatusOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('operation.task.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in taskStatusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item prop="keyword">
-        <el-input v-model="form.keyword" placeholder="单据/物料关键词" clearable style="width: 180px" @keyup.enter="onSearch" />
+        <el-input
+          v-model="form.keyword"
+          :placeholder="$t('operation.task.keywordPh')"
+          clearable
+          style="width: 180px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="任务池" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('operation.task.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -75,28 +116,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="['pending', 'processing', 'error'].includes(row.status)"
-              link
-              type="primary"
-              :icon="useRenderIcon(User)"
-              @click="openAssignDialog(row)"
-            >
-              分配
-            </el-button>
-            <el-button
-              v-if="['pending', 'error'].includes(row.status)"
-              link
-              type="danger"
-              :icon="useRenderIcon(CircleClose)"
-              @click="handleCancel(row)"
-            >
-              取消
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

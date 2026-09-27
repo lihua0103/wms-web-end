@@ -2,6 +2,11 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import {
   getCarrierPage,
   addCarrier,
@@ -10,6 +15,8 @@ import {
 } from "@/api/transport";
 import type { CarrierItem } from "@/api/transport";
 import { carrierTypeOptions, dictLabel, dictTag } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useCarrier() {
@@ -29,28 +36,62 @@ export function useCarrier() {
   });
 
   const columns: TableColumnList = [
-    { label: "编码", prop: "code", minWidth: 90 },
-    { label: "承运商名称", prop: "name", minWidth: 120 },
+    { label: $t("common.columns.code"), prop: "code", minWidth: 90 },
+    { label: $t("transport.carrier.name"), prop: "name", minWidth: 120 },
     {
-      label: "类型",
+      label: $t("common.columns.type"),
       minWidth: 90,
       cellRenderer: ({ row }) => dictLabel(carrierTypeOptions, row.carrierType)
     },
-    { label: "联系人", prop: "contact", minWidth: 80 },
-    { label: "电话", prop: "phone", minWidth: 110 },
-    { label: "服务区域", prop: "serviceArea", minWidth: 100 },
-    { label: "结算方式", prop: "settleType", minWidth: 80 },
+    { label: $t("transport.carrier.contact"), prop: "contact", minWidth: 80 },
+    { label: $t("transport.carrier.phone"), prop: "phone", minWidth: 110 },
     {
-      label: "状态",
+      label: $t("transport.carrier.serviceArea"),
+      prop: "serviceArea",
+      minWidth: 100
+    },
+    {
+      label: $t("transport.carrier.settleType"),
+      prop: "settleType",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("common.buttons.enabled")
+            : $t("common.buttons.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: CarrierItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("transport.carrier.edit"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -107,9 +148,16 @@ export function useCarrier() {
         const formInline = (
           options.props as { formInline: Partial<CarrierItem> }
         ).formInline;
-        const req = formInline.id ? updateCarrier(formInline) : addCarrier(formInline);
+        const req = formInline.id
+          ? updateCarrier(formInline)
+          : addCarrier(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("transport.carrier.updateSuccess")
+              : $t("transport.carrier.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -118,11 +166,15 @@ export function useCarrier() {
   }
 
   function handleDelete(row: CarrierItem) {
-    ElMessageBox.confirm(`确认删除承运商「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("transport.carrier.confirmDelete", { name: row.name }),
+      $t("transport.carrier.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteCarrier([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

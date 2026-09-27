@@ -2,6 +2,8 @@
 import { useNav } from "@/layout/hooks/useNav";
 import LaySearch from "../lay-search/index.vue";
 import LayNotice from "../lay-notice/index.vue";
+import LayAI from "../lay-ai/index.vue";
+import LayLocaleSwitch from "@/components/LayLocaleSwitch/index.vue";
 import LayNavMix from "../lay-sidebar/NavMix.vue";
 import LaySidebarFullScreen from "../lay-sidebar/components/SidebarFullScreen.vue";
 import LaySidebarBreadCrumb from "../lay-sidebar/components/SidebarBreadCrumb.vue";
@@ -40,8 +42,12 @@ const {
     <LayNavMix v-if="layout === 'mix'" />
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
+      <!-- 智能体助手 -->
+      <LayAI id="header-ai" />
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />
+      <!-- 语言切换 -->
+      <LayLocaleSwitch id="header-locale" />
       <!-- 全屏 -->
       <LaySidebarFullScreen id="full-screen" />
       <!-- 消息通知 -->
@@ -59,14 +65,14 @@ const {
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"
               />
-              退出系统
+              {{ $t("navbar.logout") }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span
         class="set-icon navbar-bg-hover"
-        title="打开系统配置"
+        :title="$t('navbar.openSystemConfig')"
         @click="onPanel"
       >
         <IconifyIconOffline :icon="Setting" />

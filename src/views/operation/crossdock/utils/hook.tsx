@@ -1,18 +1,24 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getCrossdockPage, executeCrossdock } from "@/api/operation";
 import type { CrossdockItem } from "@/api/operation";
 import { docStatusOptions, dictTag } from "@/constants/wms";
-
-const statusMap: Record<string, string> = {
-  pending: "待执行",
-  processing: "执行中",
-  finished: "已完成",
-  cancelled: "已取消"
-};
+import VideoPlay from "~icons/ep/video-play";
 
 export function useCrossdock() {
+  const statusMap: Record<string, string> = {
+    pending: $t("operation.crossdock.statusPending"),
+    processing: $t("operation.crossdock.statusProcessing"),
+    finished: $t("operation.crossdock.statusFinished"),
+    cancelled: $t("operation.crossdock.statusCancelled")
+  };
+
   const form = reactive({
     code: "",
     warehouseCode: "",
@@ -28,15 +34,35 @@ export function useCrossdock() {
   });
 
   const columns: TableColumnList = [
-    { label: "越库单号", prop: "code", minWidth: 130 },
-    { label: "入库预约单", prop: "asnCode", minWidth: 130 },
-    { label: "出库单", prop: "outboundCode", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "数量", prop: "qty", minWidth: 70 },
+    { label: $t("operation.crossdock.code"), prop: "code", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("operation.crossdock.asnCode"),
+      prop: "asnCode",
+      minWidth: 130
+    },
+    {
+      label: $t("operation.crossdock.outboundCode"),
+      prop: "outboundCode",
+      minWidth: 130
+    },
+    {
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("operation.crossdock.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("operation.crossdock.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(docStatusOptions, row.status)}>
@@ -44,9 +70,33 @@ export function useCrossdock() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 100, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: CrossdockItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("common.buttons.execute"),
+        icon: VideoPlay,
+        onClick: () => handleExecute(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -81,12 +131,12 @@ export function useCrossdock() {
   /** 执行越库 */
   function handleExecute(row: CrossdockItem) {
     ElMessageBox.confirm(
-      `确认执行越库作业「${row.code}」？到货后不落上架，直接转入出库。`,
-      "提示",
+      $t("operation.crossdock.executeConfirm", { code: row.code }),
+      $t("operation.crossdock.tip"),
       { type: "warning" }
     ).then(() => {
       executeCrossdock(row.id).then(() => {
-        message("越库执行完成", { type: "success" });
+        message($t("operation.crossdock.executeSuccess"), { type: "success" });
         onSearch();
       });
     });

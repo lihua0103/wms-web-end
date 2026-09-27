@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import { useShipping } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import Van from "~icons/ep/van";
 
 defineOptions({ name: "OutboundShipping" });
 
@@ -21,17 +21,21 @@ const {
   statusMap,
   onSearch,
   resetForm,
-  handleConfirm,
   handleSizeChange,
   handleCurrentChange
 } = useShipping();
 
-const carrierOptions = ["顺丰速运", "京东物流", "德邦快递", "自有车队"];
+const carrierOptions = [
+  { value: "顺丰速运", label: $t("outbound.shipping.carrierSF") },
+  { value: "京东物流", label: $t("outbound.shipping.carrierJD") },
+  { value: "德邦快递", label: $t("outbound.shipping.carrierDeppon") },
+  { value: "自有车队", label: $t("outbound.shipping.carrierSelf") }
+];
 
 const statusOptions = [
-  { value: "waiting", label: "待发货" },
-  { value: "shipped", label: "已发货" },
-  { value: "finished", label: "已完成" }
+  { value: "waiting", label: $t("outbound.shipping.statusWaiting") },
+  { value: "shipped", label: $t("outbound.shipping.statusShipped") },
+  { value: "finished", label: $t("outbound.shipping.statusFinished") }
 ];
 </script>
 
@@ -43,26 +47,65 @@ const statusOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
-        <el-input v-model="form.code" placeholder="交接单号" clearable style="width: 150px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('outbound.shipping.no')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('outbound.shipping.code')"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="承运商" prop="carrierName">
-        <el-select v-model="form.carrierName" placeholder="全部" clearable style="width: 140px">
-          <el-option v-for="c in carrierOptions" :key="c" :label="c" :value="c" />
+      <el-form-item :label="$t('outbound.shipping.carrier')" prop="carrierName">
+        <el-select
+          v-model="form.carrierName"
+          :placeholder="$t('outbound.shipping.all')"
+          clearable
+          style="width: 140px"
+        >
+          <el-option
+            v-for="c in carrierOptions"
+            :key="c.value"
+            :label="c.label"
+            :value="c.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="s in statusOptions" :key="s.value" :label="s.label" :value="s.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('outbound.shipping.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="s in statusOptions"
+            :key="s.value"
+            :label="s.label"
+            :value="s.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="发货交接" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('outbound.shipping.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -78,19 +121,7 @@ const statusOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="row.status === 'waiting'"
-              link
-              type="primary"
-              :icon="useRenderIcon(Van)"
-              @click="handleConfirm(row)"
-            >
-              发货确认
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

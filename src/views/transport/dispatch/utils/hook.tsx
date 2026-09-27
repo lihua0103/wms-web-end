@@ -2,13 +2,16 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import { $t } from "@/plugins/i18n";
 import {
-  getDispatchPage,
-  assignDispatch,
-  signDispatch
-} from "@/api/transport";
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { getDispatchPage, assignDispatch, signDispatch } from "@/api/transport";
 import type { DispatchItem } from "@/api/transport";
 import { deliveryStatusOptions, dictTag } from "@/constants/wms";
+import Van from "~icons/ep/van";
+import CircleCheck from "~icons/ep/circle-check";
 import formComp from "../form.vue";
 
 export function useDispatch() {
@@ -27,26 +30,79 @@ export function useDispatch() {
   });
 
   const columns: TableColumnList = [
-    { label: "配送单号", prop: "code", minWidth: 130 },
-    { label: "出库单号", prop: "orderCode", minWidth: 130 },
-    { label: "客户", prop: "customerName", minWidth: 120 },
-    { label: "收货地址", prop: "address", minWidth: 130 },
-    { label: "承运商", prop: "carrierName", minWidth: 90 },
-    { label: "车牌号", prop: "vehicleNo", minWidth: 90 },
-    { label: "司机", prop: "driverName", minWidth: 70 },
-    { label: "数量", prop: "qty", minWidth: 60 },
+    { label: $t("transport.dispatch.deliveryNo"), prop: "code", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("transport.dispatch.outboundNo"),
+      prop: "orderCode",
+      minWidth: 130
+    },
+    {
+      label: $t("transport.dispatch.customer"),
+      prop: "customerName",
+      minWidth: 120
+    },
+    { label: $t("transport.dispatch.address"), prop: "address", minWidth: 130 },
+    {
+      label: $t("transport.dispatch.carrier"),
+      prop: "carrierName",
+      minWidth: 90
+    },
+    {
+      label: $t("transport.dispatch.licensePlate"),
+      prop: "vehicleNo",
+      minWidth: 90
+    },
+    {
+      label: $t("transport.dispatch.driver"),
+      prop: "driverName",
+      minWidth: 70
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 60 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(deliveryStatusOptions, row.status)}>
-          {deliveryStatusOptions.find(d => d.value === row.status)?.label || row.status}
+          {deliveryStatusOptions.find(d => d.value === row.status)?.label ||
+            row.status}
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 150, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: DispatchItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (["pending"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.dispatch"),
+        icon: Van,
+        onClick: () => openAssignDialog(row)
+      });
+    }
+    if (["dispatched", "delivering"].includes(row.status)) {
+      buttons.push({
+        label: $t("transport.dispatch.sign"),
+        type: "success",
+        icon: CircleCheck,
+        onClick: () => handleSign(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -81,7 +137,7 @@ export function useDispatch() {
   /** 调度：指定承运商/车辆/司机 */
   function openAssignDialog(row: DispatchItem) {
     addDialog({
-      title: "配送调度",
+      title: $t("transport.dispatch.assignTitle"),
       width: "40%",
       draggable: true,
       closeOnClickModal: false,
@@ -107,7 +163,9 @@ export function useDispatch() {
           }
         ).formInline;
         assignDispatch(formInline).then(() => {
-          message("调度成功", { type: "success" });
+          message($t("transport.dispatch.dispatchSuccess"), {
+            type: "success"
+          });
           done();
           onSearch();
         });
@@ -117,11 +175,15 @@ export function useDispatch() {
 
   /** 签收 */
   function handleSign(row: DispatchItem) {
-    ElMessageBox.confirm(`确认配送单「${row.code}」已签收吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("transport.dispatch.confirmSign", { code: row.code }),
+      $t("transport.dispatch.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       signDispatch(row.id).then(() => {
-        message("签收成功", { type: "success" });
+        message($t("transport.dispatch.signSuccess"), { type: "success" });
         onSearch();
       });
     });

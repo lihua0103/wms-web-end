@@ -3,6 +3,7 @@ import type { Props } from "../types";
 import { useResizeObserver } from "@pureadmin/utils";
 import { useEpThemeStoreHook } from "@/store/modules/epTheme";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { transformI18n } from "@/plugins/i18n";
 import { ref, computed, getCurrentInstance, onMounted } from "vue";
 import EnterOutlined from "@/assets/svg/enter_outlined.svg?component";
 
@@ -81,7 +82,7 @@ defineExpose({ handleScroll });
     >
       <component :is="useRenderIcon(item.meta?.icon)" />
       <span class="result-item-title">
-        {{ item.meta?.title }}
+        {{ transformI18n(item.meta?.title) }}
       </span>
       <EnterOutlined />
     </div>

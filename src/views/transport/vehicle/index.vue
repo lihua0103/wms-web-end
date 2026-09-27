@@ -7,8 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 import AddFill from "~icons/ep/plus";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
 
 defineOptions({ name: "TransportVehicle" });
 
@@ -23,7 +21,6 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useVehicle();
@@ -37,29 +34,72 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="车牌号" prop="vehicleNo">
-        <el-input v-model="form.vehicleNo" placeholder="车牌号" clearable style="width: 140px" @keyup.enter="onSearch" />
+      <el-form-item
+        :label="$t('transport.vehicle.licensePlate')"
+        prop="vehicleNo"
+      >
+        <el-input
+          v-model="form.vehicleNo"
+          :placeholder="$t('transport.vehicle.licensePlate')"
+          clearable
+          style="width: 140px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="司机" prop="driverName">
-        <el-input v-model="form.driverName" placeholder="司机姓名" clearable style="width: 140px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('transport.vehicle.driver')" prop="driverName">
+        <el-input
+          v-model="form.driverName"
+          :placeholder="$t('transport.vehicle.driverPh')"
+          clearable
+          style="width: 140px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option label="空闲" value="空闲" />
-          <el-option label="在途" value="在途" />
-          <el-option label="维修" value="维修" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('transport.vehicle.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option :label="$t('transport.vehicle.statusIdle')" value="空闲" />
+          <el-option
+            :label="$t('transport.vehicle.statusOnRoute')"
+            value="在途"
+          />
+          <el-option
+            :label="$t('transport.vehicle.statusRepair')"
+            value="维修"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="车辆司机" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('transport.vehicle.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)" @click="openDialog('新增车辆')">
-          新增车辆
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="openDialog($t('transport.vehicle.add'))"
+        >
+          {{ $t("transport.vehicle.add") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -77,26 +117,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑车辆', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

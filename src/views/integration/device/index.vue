@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import { useDevice } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
@@ -8,9 +9,6 @@ import { deviceTypeOptions, deviceStatusOptions } from "@/constants/wms";
 import AddFill from "~icons/ep/plus";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
-import SwitchBtn from "~icons/ep/switch-button";
 
 defineOptions({ name: "IntegrationDevice" });
 
@@ -25,16 +23,14 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleToggle,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useDevice();
 
 const warehouseOptions = [
-  { value: "WH001", label: "WH001 上海主仓" },
-  { value: "WH002", label: "WH002 广州华南仓" },
-  { value: "WH003", label: "WH003 成都西南仓" }
+  { value: "WH001", label: $t("integration.device.wh001") },
+  { value: "WH002", label: $t("integration.device.wh002") },
+  { value: "WH003", label: $t("integration.device.wh003") }
 ];
 </script>
 
@@ -46,28 +42,28 @@ const warehouseOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="编码" prop="code">
+      <el-form-item :label="$t('common.columns.code')" prop="code">
         <el-input
           v-model="form.code"
-          placeholder="设备编码"
+          :placeholder="$t('integration.device.code')"
           clearable
           style="width: 140px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="名称" prop="name">
+      <el-form-item :label="$t('common.columns.name')" prop="name">
         <el-input
           v-model="form.name"
-          placeholder="设备名称"
+          :placeholder="$t('integration.device.name')"
           clearable
           style="width: 150px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="类型" prop="deviceType">
+      <el-form-item :label="$t('common.columns.type')" prop="deviceType">
         <el-select
           v-model="form.deviceType"
-          placeholder="全部"
+          :placeholder="$t('integration.device.all')"
           clearable
           style="width: 130px"
         >
@@ -79,10 +75,13 @@ const warehouseOptions = [
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="仓库" prop="warehouseCode">
+      <el-form-item
+        :label="$t('common.columns.warehouse')"
+        prop="warehouseCode"
+      >
         <el-select
           v-model="form.warehouseCode"
-          placeholder="全部"
+          :placeholder="$t('integration.device.all')"
           clearable
           style="width: 160px"
         >
@@ -94,10 +93,10 @@ const warehouseOptions = [
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('common.columns.status')" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="全部"
+          :placeholder="$t('integration.device.all')"
           clearable
           style="width: 120px"
         >
@@ -114,24 +113,28 @@ const warehouseOptions = [
           type="primary"
           :icon="useRenderIcon(SearchIcon)"
           @click="onSearch"
-          >搜索</el-button
+          >{{ $t("common.buttons.search") }}</el-button
         >
         <el-button
           :icon="useRenderIcon(RefreshIcon)"
           @click="resetForm(searchFormRef)"
-          >重置</el-button
+          >{{ $t("common.buttons.reset") }}</el-button
         >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="设备管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('integration.device.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="openDialog('新增设备')"
+          @click="openDialog($t('integration.device.addDevice'))"
         >
-          新增设备
+          {{ $t("integration.device.addDevice") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -149,34 +152,7 @@ const warehouseOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑设备', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              :type="row.status === 'offline' ? 'success' : 'warning'"
-              :icon="useRenderIcon(SwitchBtn)"
-              @click="handleToggle(row)"
-            >
-              {{ row.status === "offline" ? "启用" : "停用" }}
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

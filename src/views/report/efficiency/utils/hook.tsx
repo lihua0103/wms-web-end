@@ -2,6 +2,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import * as echarts from "echarts";
 import { getEfficiencyReport } from "@/api/report";
 import type { PersonEfficiency, TypeCountItem } from "@/api/report";
+import { $t } from "@/plugins/i18n";
 
 export function useReportEfficiency() {
   const loading = ref(false);
@@ -15,15 +16,23 @@ export function useReportEfficiency() {
 
   const columns: TableColumnList = [
     {
-      label: "排名",
+      label: $t("report.efficiency.rank"),
       minWidth: 60,
       cellRenderer: ({ index }) => `${index + 1}`
     },
-    { label: "人员", prop: "name", minWidth: 100 },
-    { label: "任务数", prop: "taskCount", minWidth: 90 },
-    { label: "平均耗时（分钟）", prop: "avgMinutes", minWidth: 120 },
+    { label: $t("report.efficiency.person"), prop: "name", minWidth: 100 },
     {
-      label: "错误率",
+      label: $t("report.efficiency.taskCount"),
+      prop: "taskCount",
+      minWidth: 90
+    },
+    {
+      label: $t("report.efficiency.avgMinutes"),
+      prop: "avgMinutes",
+      minWidth: 120
+    },
+    {
+      label: $t("report.efficiency.errorRate"),
       minWidth: 90,
       cellRenderer: ({ row }) => (
         <span style={row.errorRate >= 0.05 ? "color:#f56c6c" : ""}>
@@ -38,7 +47,9 @@ export function useReportEfficiency() {
     try {
       const { data } = await getEfficiencyReport();
       // 双保险：前端再按任务数降序
-      personList.value = [...data.personList].sort((a, b) => b.taskCount - a.taskCount);
+      personList.value = [...data.personList].sort(
+        (a, b) => b.taskCount - a.taskCount
+      );
       typeList.value = data.typeList;
     } finally {
       loading.value = false;
@@ -70,7 +81,9 @@ export function useReportEfficiency() {
     if (barRef.value) {
       if (!barChart) barChart = echarts.init(barRef.value);
       // 升序排列，y 轴自下而上渲染后任务数最多者显示在最上方
-      const sorted = [...personList.value].sort((a, b) => a.taskCount - b.taskCount);
+      const sorted = [...personList.value].sort(
+        (a, b) => a.taskCount - b.taskCount
+      );
       barChart.setOption(
         {
           tooltip: { trigger: "axis" },
@@ -82,7 +95,7 @@ export function useReportEfficiency() {
               type: "bar",
               barWidth: 14,
               data: sorted.map(p => p.taskCount),
-              itemStyle: { color: "#409eff", borderRadius: [0, 4, 4, 0] }
+              itemStyle: { color: "#0e7490", borderRadius: [0, 4, 4, 0] }
             }
           ]
         },

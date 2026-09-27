@@ -68,35 +68,63 @@ export interface TrackingItem {
 // ========================= 承运商 =========================
 
 export const getCarrierPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<CarrierItem>>>("get", "/wms/transport/carrier/page", { params });
+  http.request<ApiResult<PageResult<CarrierItem>>>(
+    "get",
+    "/wms/transport/carrier/page",
+    { params }
+  );
 
 export const addCarrier = (data: Partial<CarrierItem>) =>
-  http.request<ApiResult<CarrierItem>>("post", "/wms/transport/carrier/add", { data });
+  http.request<ApiResult<CarrierItem>>("post", "/wms/transport/carrier/add", {
+    data
+  });
 
 export const updateCarrier = (data: Partial<CarrierItem>) =>
-  http.request<ApiResult<CarrierItem>>("post", "/wms/transport/carrier/update", { data });
+  http.request<ApiResult<CarrierItem>>(
+    "post",
+    "/wms/transport/carrier/update",
+    { data }
+  );
 
 export const deleteCarrier = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/transport/carrier/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/transport/carrier/delete", {
+    data: { ids }
+  });
 
 // ========================= 车辆司机 =========================
 
 export const getVehiclePage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<VehicleItem>>>("get", "/wms/transport/vehicle/page", { params });
+  http.request<ApiResult<PageResult<VehicleItem>>>(
+    "get",
+    "/wms/transport/vehicle/page",
+    { params }
+  );
 
 export const addVehicle = (data: Partial<VehicleItem>) =>
-  http.request<ApiResult<VehicleItem>>("post", "/wms/transport/vehicle/add", { data });
+  http.request<ApiResult<VehicleItem>>("post", "/wms/transport/vehicle/add", {
+    data
+  });
 
 export const updateVehicle = (data: Partial<VehicleItem>) =>
-  http.request<ApiResult<VehicleItem>>("post", "/wms/transport/vehicle/update", { data });
+  http.request<ApiResult<VehicleItem>>(
+    "post",
+    "/wms/transport/vehicle/update",
+    { data }
+  );
 
 export const deleteVehicle = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/transport/vehicle/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/transport/vehicle/delete", {
+    data: { ids }
+  });
 
 // ========================= 配送单 =========================
 
 export const getDispatchPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<DispatchItem>>>("get", "/wms/transport/dispatch/page", { params });
+  http.request<ApiResult<PageResult<DispatchItem>>>(
+    "get",
+    "/wms/transport/dispatch/page",
+    { params }
+  );
 
 /** 调度 */
 export const assignDispatch = (data: {
@@ -104,13 +132,22 @@ export const assignDispatch = (data: {
   carrierName: string;
   vehicleNo: string;
   driverName: string;
-}) => http.request<ApiResult<boolean>>("post", "/wms/transport/dispatch/assign", { data });
+}) =>
+  http.request<ApiResult<boolean>>("post", "/wms/transport/dispatch/assign", {
+    data
+  });
 
 /** 签收 */
 export const signDispatch = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/transport/dispatch/sign", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/transport/dispatch/sign", {
+    data: { id }
+  });
 
 // ========================= 在途跟踪 =========================
 
 export const getTrackingPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<TrackingItem>>>("get", "/wms/transport/tracking/page", { params });
+  http.request<ApiResult<PageResult<TrackingItem>>>(
+    "get",
+    "/wms/transport/tracking/page",
+    { params }
+  );

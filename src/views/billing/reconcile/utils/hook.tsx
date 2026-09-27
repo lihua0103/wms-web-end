@@ -1,9 +1,18 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
-import { getReconcilePage, confirmReconcile, disputeReconcile } from "@/api/billing";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
+  getReconcilePage,
+  confirmReconcile,
+  disputeReconcile
+} from "@/api/billing";
 import type { ReconcileItem } from "@/api/billing";
 import { billStatusOptions, dictLabel, dictTag } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
 
 /** 对账单状态：取账单状态字典的子集（待确认/已确认/异议中） */
 const reconcileStatusOptions = billStatusOptions.filter(o =>
@@ -27,12 +36,16 @@ export function useBillingReconcile() {
   });
 
   const columns: TableColumnList = [
-    { label: "对账单号", prop: "code", minWidth: 140 },
-    { label: "货主", prop: "ownerName", minWidth: 110 },
-    { label: "账期", prop: "period", minWidth: 80 },
-    { label: "账单数", prop: "billCount", minWidth: 70 },
+    { label: $t("billing.reconcile.no"), prop: "code", minWidth: 140 },
+    { label: $t("common.columns.owner"), prop: "ownerName", minWidth: 110 },
+    { label: $t("billing.reconcile.period"), prop: "period", minWidth: 80 },
     {
-      label: "总金额（元）",
+      label: $t("billing.reconcile.billCount"),
+      prop: "billCount",
+      minWidth: 70
+    },
+    {
+      label: $t("billing.reconcile.totalAmountCol"),
       minWidth: 100,
       formatter: row =>
         Number(row.totalAmount).toLocaleString("zh-CN", {
@@ -41,10 +54,14 @@ export function useBillingReconcile() {
         })
     },
     {
-      label: "差异金额（元）",
+      label: $t("billing.reconcile.diffAmountCol"),
       minWidth: 110,
       cellRenderer: ({ row }) => (
-        <span style={Number(row.diffAmount) !== 0 ? "color:#f56c6c;font-weight:600" : ""}>
+        <span
+          style={
+            Number(row.diffAmount) !== 0 ? "color:#f56c6c;font-weight:600" : ""
+          }
+        >
           {Number(row.diffAmount).toLocaleString("zh-CN", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
@@ -53,7 +70,7 @@ export function useBillingReconcile() {
       )
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(reconcileStatusOptions, row.status)}>
@@ -61,9 +78,36 @@ export function useBillingReconcile() {
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 190, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} emptyText={"-"} />
+      )
+    }
   ];
+
+  function operationButtons(row: ReconcileItem): TableOperationButton[] {
+    if (row.status !== "pending") return [];
+    return [
+      {
+        label: $t("billing.reconcile.confirmBtn"),
+        onClick: () => onAction(row, "confirm")
+      },
+      {
+        label: $t("billing.reconcile.disputeBtn"),
+        type: "danger",
+        onClick: () => onAction(row, "dispute")
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -98,11 +142,21 @@ export function useBillingReconcile() {
   /** 确认对账 / 提出异议 */
   function onAction(row: ReconcileItem, action: "confirm" | "dispute") {
     const map = {
-      confirm: [confirmReconcile, "对账已确认", `确认对账单「${row.code}」吗？`],
-      dispute: [disputeReconcile, "已提交异议", `确认对账单「${row.code}」提出异议吗？`]
+      confirm: [
+        confirmReconcile,
+        $t("billing.reconcile.confirmSuccess"),
+        $t("billing.reconcile.confirmTip", { code: row.code })
+      ],
+      dispute: [
+        disputeReconcile,
+        $t("billing.reconcile.disputeSuccess"),
+        $t("billing.reconcile.disputeTip", { code: row.code })
+      ]
     } as const;
     const [api, msg, tip] = map[action];
-    ElMessageBox.confirm(tip as string, "提示", { type: "warning" }).then(() => {
+    ElMessageBox.confirm(tip as string, $t("billing.reconcile.tip"), {
+      type: "warning"
+    }).then(() => {
       (api as (id: number) => Promise<any>)(row.id).then(() => {
         message(msg as string, { type: "success" });
         onSearch();

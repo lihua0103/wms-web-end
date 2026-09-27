@@ -143,6 +143,15 @@ VITE_PROXY = /api:http://localhost:8080
 - 集成配置 `/wms/integration/config`：标准 CRUD + POST `/test` `{id}`
 - 接口日志 `/wms/integration/apilog`：page
 
+### 海关对接（src/api/customs.ts，mock/customs.ts）
+
+- 账册 `/wms/customs/ledger`：标准 CRUD（行内含料号底账数组 `goods`）
+- 核注清单 `/wms/customs/verifylist`：page/detail + POST `/declare` `{id}`（草稿/退单 → 已申报）、`/sync-receipt` `{id}`（已申报 → 审核通过 → 已核扣）
+- 核放单 `/wms/customs/release`：page/detail + POST `/declare`、`/release`、`/cross`、`/cancel`（均 `{id}`；状态机 待申报 → 已申报 → 已放行 → 已过卡）
+- 三单 `/wms/customs/tripledoc`：page/detail + POST `/push` `{id}`（待推送/对碰失败 → 推送并返回对碰结果）
+- 报文 `/wms/customs/msglog`：page/detail + POST `/resend` `{id}`（失败报文重发）
+- 字段结构以 `src/api/customs.ts` 的 interface 为准；字典枚举见 `src/constants/wms.ts` 海关对接段落（监管方式、核注清单/核放单/三单状态、申报通道等）
+
 ## 四、字典枚举对照
 
 所有枚举值（单据状态、库区类型、库存状态、任务类型、设备类型等）以
@@ -150,4 +159,4 @@ VITE_PROXY = /api:http://localhost:8080
 
 ## 五、验证清单
 
-切换后建议逐页冒烟：登录 → 工作台 → 主数据 8 页 → 入库 5 页 → 出库 5 页 → 库存 8 页 → 库内 4 页 → 运输 4 页 → 计费 3 页 → 报表 4 页 → 设备集成 5 页（共 54 页），确认列表加载、新增/编辑、状态流转按钮可用。
+切换后建议逐页冒烟：登录 → 工作台 → 主数据 8 页 → 入库 5 页 → 出库 5 页 → 库存 8 页 → 库内 4 页 → 运输 4 页 → 计费 3 页 → 报表 4 页 → 设备集成 5 页 → 海关对接 5 页（共 59 页），确认列表加载、新增/编辑、状态流转按钮可用。

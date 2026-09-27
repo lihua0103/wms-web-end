@@ -90,14 +90,14 @@ onMounted(() => {
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"
               />
-              退出系统
+              {{ $t("navbar.logout") }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span
         class="set-icon navbar-bg-hover"
-        title="打开系统配置"
+        :title="$t('navbar.openSystemConfig')"
         @click="onPanel"
       >
         <IconifyIconOffline :icon="Setting" />

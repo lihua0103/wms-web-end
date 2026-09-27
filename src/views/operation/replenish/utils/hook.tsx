@@ -2,19 +2,46 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { getReplenishPage, addReplenish, finishReplenish } from "@/api/operation";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import {
+  getReplenishPage,
+  addReplenish,
+  finishReplenish
+} from "@/api/operation";
 import type { ReplenishItem } from "@/api/operation";
 import { dictTag } from "@/constants/wms";
+import type { DictItem } from "@/constants/wms";
+import CircleCheck from "~icons/ep/circle-check";
 import formComp from "../form.vue";
 
-const statusOptions = [
-  { label: "待执行", value: "pending", tag: "info" },
-  { label: "执行中", value: "processing", tag: "primary" },
-  { label: "已完成", value: "finished", tag: "success" },
-  { label: "已取消", value: "cancelled", tag: "danger" }
-];
-
 export function useReplenish() {
+  const statusOptions: DictItem[] = [
+    {
+      label: $t("operation.replenish.statusPending"),
+      value: "pending",
+      tag: "info"
+    },
+    {
+      label: $t("operation.replenish.statusProcessing"),
+      value: "processing",
+      tag: "primary"
+    },
+    {
+      label: $t("operation.replenish.statusFinished"),
+      value: "finished",
+      tag: "success"
+    },
+    {
+      label: $t("operation.replenish.statusCancelled"),
+      value: "cancelled",
+      tag: "danger"
+    }
+  ];
+
   const form = reactive({
     code: "",
     warehouseCode: "",
@@ -30,36 +57,86 @@ export function useReplenish() {
   });
 
   const columns: TableColumnList = [
-    { label: "补货单号", prop: "code", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "源库位", prop: "fromLocation", minWidth: 90 },
-    { label: "目标库位", prop: "toLocation", minWidth: 90 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 120 },
-    { label: "数量", prop: "qty", minWidth: 70 },
+    { label: $t("operation.replenish.code"), prop: "code", minWidth: 130 },
     {
-      label: "触发方式",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("operation.replenish.fromLocation"),
+      prop: "fromLocation",
+      minWidth: 90
+    },
+    {
+      label: $t("operation.replenish.toLocation"),
+      prop: "toLocation",
+      minWidth: 90
+    },
+    {
+      label: $t("operation.replenish.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("operation.replenish.materialName"),
+      prop: "materialName",
+      minWidth: 120
+    },
+    { label: $t("common.columns.quantity"), prop: "qty", minWidth: 70 },
+    {
+      label: $t("operation.replenish.triggerType"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={row.trigger === "auto" ? "warning" : "info"}>
-          {row.trigger === "auto" ? "自动" : "手动"}
+          {row.trigger === "auto"
+            ? $t("operation.replenish.triggerAuto")
+            : $t("operation.replenish.triggerManual")}
         </el-tag>
       )
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(statusOptions, row.status)}>
-          {{ pending: "待执行", processing: "执行中", finished: "已完成", cancelled: "已取消" }[
-            row.status
-          ] || row.status}
+          {{
+            pending: $t("operation.replenish.statusPending"),
+            processing: $t("operation.replenish.statusProcessing"),
+            finished: $t("operation.replenish.statusFinished"),
+            cancelled: $t("operation.replenish.statusCancelled")
+          }[row.status] || row.status}
         </el-tag>
       )
     },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 120, slot: "operation" }
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ReplenishItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (["pending", "processing"].includes(row.status)) {
+      buttons.push({
+        label: $t("common.buttons.complete"),
+        type: "success",
+        icon: CircleCheck,
+        onClick: () => handleFinish(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -94,7 +171,7 @@ export function useReplenish() {
   /** 手动补货 */
   function openDialog() {
     addDialog({
-      title: "手动补货",
+      title: $t("operation.replenish.manualReplenish"),
       width: "40%",
       draggable: true,
       closeOnClickModal: false,
@@ -115,7 +192,7 @@ export function useReplenish() {
           options.props as { formInline: Partial<ReplenishItem> }
         ).formInline;
         addReplenish(formInline).then(() => {
-          message("补货任务已创建", { type: "success" });
+          message($t("operation.replenish.createSuccess"), { type: "success" });
           done();
           onSearch();
         });
@@ -124,11 +201,15 @@ export function useReplenish() {
   }
 
   function handleFinish(row: ReplenishItem) {
-    ElMessageBox.confirm(`确认补货单「${row.code}」已执行完成吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("operation.replenish.finishConfirm", { code: row.code }),
+      $t("operation.replenish.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       finishReplenish(row.id).then(() => {
-        message("补货完成", { type: "success" });
+        message($t("operation.replenish.finishSuccess"), { type: "success" });
         onSearch();
       });
     });

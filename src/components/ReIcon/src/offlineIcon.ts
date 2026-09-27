@@ -20,6 +20,8 @@ import EpVan from "~icons/ep/van?raw";
 import EpCoin from "~icons/ep/coin?raw";
 import EpDataAnalysis from "~icons/ep/data-analysis?raw";
 import EpCpu from "~icons/ep/cpu?raw";
+import EpMagicStick from "~icons/ep/magic-stick?raw";
+import EpStamp from "~icons/ep/stamp?raw";
 
 const icons = [
   // Element Plus Icon: https://github.com/element-plus/element-plus-icons
@@ -37,7 +39,9 @@ const icons = [
   ["ep/van", EpVan],
   ["ep/coin", EpCoin],
   ["ep/data-analysis", EpDataAnalysis],
-  ["ep/cpu", EpCpu]
+  ["ep/cpu", EpCpu],
+  ["ep/magic-stick", EpMagicStick],
+  ["ep/stamp", EpStamp]
 ];
 
 // 本地菜单图标，后端在路由的 icon 中返回对应的图标字符串并且前端在此处使用 addIcon 添加即可渲染菜单图标

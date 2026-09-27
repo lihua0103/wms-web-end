@@ -2,9 +2,16 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
 import { getZonePage, addZone, updateZone, deleteZone } from "@/api/master";
 import type { ZoneItem } from "@/api/master";
 import { zoneTypeOptions, dictLabel } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 
 export function useZone() {
@@ -24,26 +31,61 @@ export function useZone() {
   });
 
   const columns: TableColumnList = [
-    { label: "库区编码", prop: "code", minWidth: 100 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 90 },
-    { label: "库区名称", prop: "name", minWidth: 120 },
+    { label: $t("master.zone.code"), prop: "code", minWidth: 100 },
     {
-      label: "库区类型",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 90
+    },
+    { label: $t("master.zone.name"), prop: "name", minWidth: 120 },
+    {
+      label: $t("master.zone.type"),
       minWidth: 100,
       cellRenderer: ({ row }) => dictLabel(zoneTypeOptions, row.zoneType)
     },
-    { label: "库位数", prop: "locationCount", minWidth: 70 },
     {
-      label: "状态",
+      label: $t("master.zone.locationCount"),
+      prop: "locationCount",
+      minWidth: 70
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={row.status === 1 ? "success" : "danger"}>
-          {row.status === 1 ? "启用" : "停用"}
+          {row.status === 1
+            ? $t("master.zone.enabled")
+            : $t("master.zone.disabled")}
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ZoneItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.zone.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -94,12 +136,18 @@ export function useZone() {
         }
       },
       beforeSure: (done, { options }) => {
-        const formInline = (
-          options.props as { formInline: Partial<ZoneItem> }
-        ).formInline;
-        const req = formInline.id ? updateZone(formInline) : addZone(formInline);
+        const formInline = (options.props as { formInline: Partial<ZoneItem> })
+          .formInline;
+        const req = formInline.id
+          ? updateZone(formInline)
+          : addZone(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.zone.editSuccess")
+              : $t("master.zone.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -108,11 +156,15 @@ export function useZone() {
   }
 
   function handleDelete(row: ZoneItem) {
-    ElMessageBox.confirm(`确认删除库区「${row.name}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.zone.delTip", { name: row.name }),
+      $t("master.zone.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteZone([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });

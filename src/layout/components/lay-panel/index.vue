@@ -51,10 +51,10 @@ onBeforeUnmount(() => {
       <div
         class="project-configuration border-0 border-b-[1px] border-solid border-[var(--pure-border-color)]"
       >
-        <h4 class="dark:text-white">系统配置</h4>
+        <h4 class="dark:text-white">{{ $t("panels.systemConfig") }}</h4>
         <span
           v-tippy="{
-            content: '关闭配置',
+            content: $t('panels.closeConfig'),
             placement: 'bottom-start',
             zIndex: 41000
           }"
@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
       >
         <el-button
           v-tippy="{
-            content: '清空缓存并返回登录页',
+            content: $t('panels.clearCacheTip'),
             placement: 'left-start',
             zIndex: 41000
           }"
@@ -87,7 +87,7 @@ onBeforeUnmount(() => {
           bg
           @click="onReset"
         >
-          清空缓存
+          {{ $t("panels.clearCache") }}
         </el-button>
       </div>
     </div>

@@ -7,7 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { deviceTypeOptions, deviceTaskStatusOptions } from "@/constants/wms";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import CircleClose from "~icons/ep/circle-close";
 
 defineOptions({ name: "IntegrationDeviceTask" });
 
@@ -21,7 +20,6 @@ const {
   pagination,
   onSearch,
   resetForm,
-  handleCancel,
   handleSizeChange,
   handleCurrentChange
 } = useDeviceTask();
@@ -35,37 +33,40 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="任务号" prop="taskNo">
+      <el-form-item :label="$t('integration.deviceTask.taskNo')" prop="taskNo">
         <el-input
           v-model="form.taskNo"
-          placeholder="设备任务号"
+          :placeholder="$t('integration.deviceTask.taskNoPh')"
           clearable
           style="width: 170px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="设备" prop="deviceCode">
+      <el-form-item
+        :label="$t('integration.deviceTask.device')"
+        prop="deviceCode"
+      >
         <el-input
           v-model="form.deviceCode"
-          placeholder="设备编码"
+          :placeholder="$t('integration.device.code')"
           clearable
           style="width: 130px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="业务单号" prop="bizNo">
+      <el-form-item :label="$t('integration.deviceTask.bizNo')" prop="bizNo">
         <el-input
           v-model="form.bizNo"
-          placeholder="关联业务单号"
+          :placeholder="$t('integration.deviceTask.bizNoPh')"
           clearable
           style="width: 160px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="类型" prop="deviceType">
+      <el-form-item :label="$t('common.columns.type')" prop="deviceType">
         <el-select
           v-model="form.deviceType"
-          placeholder="全部"
+          :placeholder="$t('integration.deviceTask.all')"
           clearable
           style="width: 130px"
         >
@@ -77,10 +78,10 @@ const {
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('common.columns.status')" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="全部"
+          :placeholder="$t('integration.deviceTask.all')"
           clearable
           style="width: 120px"
         >
@@ -97,17 +98,21 @@ const {
           type="primary"
           :icon="useRenderIcon(SearchIcon)"
           @click="onSearch"
-          >搜索</el-button
+          >{{ $t("common.buttons.search") }}</el-button
         >
         <el-button
           :icon="useRenderIcon(RefreshIcon)"
           @click="resetForm(searchFormRef)"
-          >重置</el-button
+          >{{ $t("common.buttons.reset") }}</el-button
         >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="设备任务" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('integration.deviceTask.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -123,19 +128,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              v-if="['queued', 'executing'].includes(row.status)"
-              link
-              type="danger"
-              :icon="useRenderIcon(CircleClose)"
-              @click="handleCancel(row)"
-            >
-              取消
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

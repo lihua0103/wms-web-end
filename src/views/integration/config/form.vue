@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { $t } from "@/plugins/i18n";
 import type { FormRules } from "element-plus";
 import type { IntegrationConfigItem } from "@/api/integration";
 import { integrationTypeOptions, apiDirectionOptions } from "@/constants/wms";
@@ -15,20 +16,46 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  systemName: [{ required: true, message: "请输入系统名称", trigger: "blur" }],
-  systemType: [
-    { required: true, message: "请选择系统类型", trigger: "change" }
+  systemName: [
+    {
+      required: true,
+      message: $t("integration.config.systemNameRequired"),
+      trigger: "blur"
+    }
   ],
-  apiUrl: [{ required: true, message: "请输入接口地址", trigger: "blur" }],
-  authType: [{ required: true, message: "请选择认证方式", trigger: "change" }],
+  systemType: [
+    {
+      required: true,
+      message: $t("integration.config.systemTypeRequired"),
+      trigger: "change"
+    }
+  ],
+  apiUrl: [
+    {
+      required: true,
+      message: $t("integration.config.apiUrlRequired"),
+      trigger: "blur"
+    }
+  ],
+  authType: [
+    {
+      required: true,
+      message: $t("integration.config.authTypeRequired"),
+      trigger: "change"
+    }
+  ],
   syncDirection: [
-    { required: true, message: "请选择同步方向", trigger: "change" }
+    {
+      required: true,
+      message: $t("integration.config.syncDirectionRequired"),
+      trigger: "change"
+    }
   ]
 };
 
 const authTypeOptions = [
-  { value: "token", label: "Token 令牌" },
-  { value: "signature", label: "签名认证" }
+  { value: "token", label: $t("integration.config.authToken") },
+  { value: "signature", label: $t("integration.config.authSignature") }
 ];
 </script>
 
@@ -39,16 +66,22 @@ const authTypeOptions = [
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="系统名称" prop="systemName">
+    <el-form-item
+      :label="$t('integration.config.systemName')"
+      prop="systemName"
+    >
       <el-input
         v-model="newFormInline.systemName"
-        placeholder="如 用友 U8 ERP"
+        :placeholder="$t('integration.config.systemNameExample')"
       />
     </el-form-item>
-    <el-form-item label="系统类型" prop="systemType">
+    <el-form-item
+      :label="$t('integration.config.systemType')"
+      prop="systemType"
+    >
       <el-select
         v-model="newFormInline.systemType"
-        placeholder="请选择系统类型"
+        :placeholder="$t('integration.config.systemTypeRequired')"
         style="width: 100%"
       >
         <el-option
@@ -59,13 +92,13 @@ const authTypeOptions = [
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="接口地址" prop="apiUrl">
+    <el-form-item :label="$t('integration.config.apiUrl')" prop="apiUrl">
       <el-input
         v-model="newFormInline.apiUrl"
-        placeholder="如 https://erp.demo.com/api"
+        :placeholder="$t('integration.config.apiUrlExample')"
       />
     </el-form-item>
-    <el-form-item label="认证方式" prop="authType">
+    <el-form-item :label="$t('integration.config.authType')" prop="authType">
       <el-radio-group v-model="newFormInline.authType">
         <el-radio
           v-for="a in authTypeOptions"
@@ -75,7 +108,10 @@ const authTypeOptions = [
         >
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="同步方向" prop="syncDirection">
+    <el-form-item
+      :label="$t('integration.config.syncDirection')"
+      prop="syncDirection"
+    >
       <el-select v-model="newFormInline.syncDirection" style="width: 100%">
         <el-option
           v-for="d in apiDirectionOptions"
@@ -85,10 +121,12 @@ const authTypeOptions = [
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="状态" prop="status">
+    <el-form-item :label="$t('common.columns.status')" prop="status">
       <el-radio-group v-model="newFormInline.status">
-        <el-radio value="enabled">启用</el-radio>
-        <el-radio value="disabled">停用</el-radio>
+        <el-radio value="enabled">{{ $t("common.buttons.enabled") }}</el-radio>
+        <el-radio value="disabled">{{
+          $t("common.buttons.disabled")
+        }}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

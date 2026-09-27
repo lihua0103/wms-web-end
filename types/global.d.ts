@@ -108,6 +108,12 @@ declare global {
     TooltipEffect?: Effect;
     ResponsiveStorageNameSpace?: string;
     MenuSearchHistory?: number;
+    /** 智能体功能总开关 */
+    AiEnabled?: boolean;
+    /** Agent 网关地址；为空时前端使用本地预览引擎 */
+    AiEndpoint?: string;
+    /** 展示用默认模型名 */
+    AiModel?: string;
   }
 
   /**

@@ -1,4 +1,9 @@
 import { reactive, ref, onMounted } from "vue";
+import { $t } from "@/plugins/i18n";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getApiLogPage } from "@/api/integration";
 import type { ApiLogItem } from "@/api/integration";
 import {
@@ -7,6 +12,7 @@ import {
   dictLabel,
   dictTag
 } from "@/constants/wms";
+import View from "~icons/ep/view";
 
 export function useApiLog() {
   const form = reactive({
@@ -28,17 +34,33 @@ export function useApiLog() {
   });
 
   const columns: TableColumnList = [
-    { label: "请求 ID", prop: "requestId", minWidth: 140 },
-    { label: "系统名称", prop: "systemName", minWidth: 110 },
-    { label: "接口路径", prop: "apiPath", minWidth: 140 },
     {
-      label: "方向",
+      label: $t("integration.apiLog.requestId"),
+      prop: "requestId",
+      minWidth: 140
+    },
+    {
+      label: $t("integration.apiLog.systemName"),
+      prop: "systemName",
+      minWidth: 110
+    },
+    {
+      label: $t("integration.apiLog.apiPath"),
+      prop: "apiPath",
+      minWidth: 140
+    },
+    {
+      label: $t("integration.apiLog.direction"),
       minWidth: 130,
       cellRenderer: ({ row }) => dictLabel(apiDirectionOptions, row.direction)
     },
-    { label: "耗时(ms)", prop: "duration", minWidth: 80 },
     {
-      label: "状态",
+      label: $t("integration.apiLog.durationCol"),
+      prop: "duration",
+      minWidth: 80
+    },
+    {
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(apiLogStatusOptions, row.status)}>
@@ -46,10 +68,36 @@ export function useApiLog() {
         </el-tag>
       )
     },
-    { label: "错误信息", prop: "errorMsg", minWidth: 190 },
-    { label: "创建时间", prop: "createdAt", minWidth: 140 },
-    { fixed: "right", label: "操作", width: 90, slot: "operation" }
+    {
+      label: $t("integration.apiLog.errorMsg"),
+      prop: "errorMsg",
+      minWidth: 190
+    },
+    {
+      label: $t("common.columns.createTime"),
+      prop: "createdAt",
+      minWidth: 140
+    },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: ApiLogItem): TableOperationButton[] {
+    return [
+      {
+        label: $t("common.buttons.detail"),
+        icon: View,
+        onClick: () => openDetail(row)
+      }
+    ];
+  }
 
   async function onSearch() {
     loading.value = true;

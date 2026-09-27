@@ -26,6 +26,9 @@ export default {
     "prettier/prettier": true,
     "selector-class-pattern": null,
     "no-descending-specificity": null,
+    // 皮肤文件（wms-theme.scss）按章节分块组织，同一作用域选择器分块出现是刻意结构
+    "no-duplicate-selectors": null,
+    "property-no-unknown": [true, { ignoreProperties: ["text-fill-color"] }],
     "scss/dollar-variable-pattern": null,
     "selector-pseudo-class-no-unknown": [
       true,

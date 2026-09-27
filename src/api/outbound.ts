@@ -86,60 +86,112 @@ export interface ShippingItem {
 // ========================= 出库单 =========================
 
 export const getOutboundPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<OutboundOrderItem>>>("get", "/wms/outbound/order/page", { params });
+  http.request<ApiResult<PageResult<OutboundOrderItem>>>(
+    "get",
+    "/wms/outbound/order/page",
+    { params }
+  );
 
 export const getOutboundDetail = (id: number) =>
-  http.request<ApiResult<OutboundOrderItem>>("get", "/wms/outbound/order/detail", { params: { id } });
+  http.request<ApiResult<OutboundOrderItem>>(
+    "get",
+    "/wms/outbound/order/detail",
+    { params: { id } }
+  );
 
 export const addOutbound = (data: Partial<OutboundOrderItem>) =>
-  http.request<ApiResult<OutboundOrderItem>>("post", "/wms/outbound/order/add", { data });
+  http.request<ApiResult<OutboundOrderItem>>(
+    "post",
+    "/wms/outbound/order/add",
+    { data }
+  );
 
 export const updateOutbound = (data: Partial<OutboundOrderItem>) =>
-  http.request<ApiResult<OutboundOrderItem>>("post", "/wms/outbound/order/update", { data });
+  http.request<ApiResult<OutboundOrderItem>>(
+    "post",
+    "/wms/outbound/order/update",
+    { data }
+  );
 
 export const deleteOutbound = (ids: number[]) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/order/delete", { data: { ids } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/order/delete", {
+    data: { ids }
+  });
 
 export const approveOutbound = (id: number, pass: boolean) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/order/approve", { data: { id, pass } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/order/approve", {
+    data: { id, pass }
+  });
 
 // ========================= 波次 =========================
 
 export const getWavePage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<WaveItem>>>("get", "/wms/outbound/wave/page", { params });
+  http.request<ApiResult<PageResult<WaveItem>>>(
+    "get",
+    "/wms/outbound/wave/page",
+    { params }
+  );
 
-export const generateWave = (data: { warehouseCode: string; carrierName?: string }) =>
-  http.request<ApiResult<WaveItem>>("post", "/wms/outbound/wave/generate", { data });
+export const generateWave = (data: {
+  warehouseCode: string;
+  carrierName?: string;
+}) =>
+  http.request<ApiResult<WaveItem>>("post", "/wms/outbound/wave/generate", {
+    data
+  });
 
 export const releaseWave = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/wave/release", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/wave/release", {
+    data: { id }
+  });
 
 // ========================= 拣货 =========================
 
 export const getPickingPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<PickingTaskItem>>>("get", "/wms/outbound/picking/page", { params });
+  http.request<ApiResult<PageResult<PickingTaskItem>>>(
+    "get",
+    "/wms/outbound/picking/page",
+    { params }
+  );
 
 export const startPicking = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/picking/start", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/picking/start", {
+    data: { id }
+  });
 
 export const finishPicking = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/picking/finish", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/picking/finish", {
+    data: { id }
+  });
 
 // ========================= 复核打包 =========================
 
 export const getPackingPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<PackingItem>>>("get", "/wms/outbound/packing/page", { params });
+  http.request<ApiResult<PageResult<PackingItem>>>(
+    "get",
+    "/wms/outbound/packing/page",
+    { params }
+  );
 
 export const checkPacking = (data: {
   id: number;
   checkedQty: number;
   weight?: number;
-}) => http.request<ApiResult<boolean>>("post", "/wms/outbound/packing/check", { data });
+}) =>
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/packing/check", {
+    data
+  });
 
 // ========================= 发货交接 =========================
 
 export const getShippingPage = (params?: PageQuery) =>
-  http.request<ApiResult<PageResult<ShippingItem>>>("get", "/wms/outbound/shipping/page", { params });
+  http.request<ApiResult<PageResult<ShippingItem>>>(
+    "get",
+    "/wms/outbound/shipping/page",
+    { params }
+  );
 
 export const confirmShipping = (id: number) =>
-  http.request<ApiResult<boolean>>("post", "/wms/outbound/shipping/confirm", { data: { id } });
+  http.request<ApiResult<boolean>>("post", "/wms/outbound/shipping/confirm", {
+    data: { id }
+  });

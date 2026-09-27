@@ -1,9 +1,16 @@
 import { reactive, ref, onMounted } from "vue";
 import { ElMessageBox } from "element-plus";
+import { $t } from "@/plugins/i18n";
 import { message } from "@/utils/message";
+import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
 import { getPickingPage, startPicking, finishPicking } from "@/api/outbound";
 import type { PickingTaskItem } from "@/api/outbound";
 import { taskStatusOptions, dictTag, dictLabel } from "@/constants/wms";
+import VideoPlay from "~icons/ep/video-play";
+import CircleCheck from "~icons/ep/circle-check";
 
 export function usePicking() {
   const form = reactive({
@@ -21,16 +28,32 @@ export function usePicking() {
   });
 
   const columns: TableColumnList = [
-    { label: "任务号", prop: "taskNo", minWidth: 130 },
-    { label: "波次号", prop: "waveCode", minWidth: 130 },
-    { label: "出库单号", prop: "orderCode", minWidth: 130 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "拣货库位", prop: "locationCode", minWidth: 90 },
-    { label: "物料编码", prop: "materialCode", minWidth: 100 },
-    { label: "物料名称", prop: "materialName", minWidth: 110 },
-    { label: "拣货数量", prop: "pickQty", minWidth: 70 },
+    { label: $t("outbound.picking.taskNo"), prop: "taskNo", minWidth: 130 },
+    { label: $t("outbound.picking.waveNo"), prop: "waveCode", minWidth: 130 },
+    { label: $t("outbound.picking.orderNo"), prop: "orderCode", minWidth: 130 },
     {
-      label: "状态",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    {
+      label: $t("outbound.picking.pickLocation"),
+      prop: "locationCode",
+      minWidth: 90
+    },
+    {
+      label: $t("outbound.picking.materialCode"),
+      prop: "materialCode",
+      minWidth: 100
+    },
+    {
+      label: $t("outbound.picking.materialName"),
+      prop: "materialName",
+      minWidth: 110
+    },
+    { label: $t("outbound.picking.pickQty"), prop: "pickQty", minWidth: 70 },
+    {
+      label: $t("common.columns.status"),
       minWidth: 80,
       cellRenderer: ({ row }) => (
         <el-tag type={dictTag(taskStatusOptions, row.status)}>
@@ -38,9 +61,37 @@ export function usePicking() {
         </el-tag>
       )
     },
-    { label: "拣货员", prop: "picker", minWidth: 70 },
-    { fixed: "right", label: "操作", width: 150, slot: "operation" }
+    { label: $t("outbound.picking.picker"), prop: "picker", minWidth: 70 },
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: PickingTaskItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [];
+    if (row.status === "pending") {
+      buttons.push({
+        label: $t("outbound.picking.start"),
+        icon: VideoPlay,
+        onClick: () => handleStart(row)
+      });
+    }
+    if (row.status === "processing") {
+      buttons.push({
+        label: $t("common.buttons.complete"),
+        type: "success",
+        icon: CircleCheck,
+        onClick: () => handleFinish(row)
+      });
+    }
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -73,11 +124,15 @@ export function usePicking() {
   }
 
   function handleStart(row: PickingTaskItem) {
-    ElMessageBox.confirm(`确认开始拣货任务「${row.taskNo}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("outbound.picking.startTip", { taskNo: row.taskNo }),
+      $t("outbound.picking.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       startPicking(row.id).then(() => {
-        message("拣货已开始", { type: "success" });
+        message($t("outbound.picking.started"), { type: "success" });
         onSearch();
       });
     });
@@ -85,12 +140,16 @@ export function usePicking() {
 
   function handleFinish(row: PickingTaskItem) {
     ElMessageBox.confirm(
-      `确认任务「${row.taskNo}」拣货完成？（${row.materialName} × ${row.pickQty}）`,
-      "提示",
+      $t("outbound.picking.finishTip", {
+        taskNo: row.taskNo,
+        material: row.materialName,
+        qty: row.pickQty
+      }),
+      $t("outbound.picking.tip"),
       { type: "warning" }
     ).then(() => {
       finishPicking(row.id).then(() => {
-        message("拣货完成", { type: "success" });
+        message($t("outbound.picking.finished"), { type: "success" });
         onSearch();
       });
     });

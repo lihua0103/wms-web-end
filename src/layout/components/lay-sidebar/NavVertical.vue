@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
     <LaySidebarLogo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar
       wrap-class="scrollbar-wrapper"
-      :class="[device === 'mobile' ? 'mobile' : 'pc']"
+      :class="device === 'mobile' ? 'mobile' : 'pc'"
     >
       <el-menu
         unique-opened

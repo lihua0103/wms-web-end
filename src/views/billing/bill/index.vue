@@ -5,6 +5,7 @@ import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { feeTypeOptions, billStatusOptions } from "@/constants/wms";
+import { $t } from "@/plugins/i18n";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 
@@ -20,16 +21,16 @@ const {
   pagination,
   onSearch,
   resetForm,
-  onAction,
   handleSizeChange,
   handleCurrentChange
 } = useBillingBill();
 
+// value 为 mock 数据匹配值，保持原文；label 为展示文案
 const ownerOptions = [
-  { value: "货主A 华东电子", label: "货主A 华东电子" },
-  { value: "货主B 精工机械", label: "货主B 精工机械" },
-  { value: "货主C 日化用品", label: "货主C 日化用品" },
-  { value: "自营", label: "自营" }
+  { value: "货主A 华东电子", label: $t("billing.bill.ownerA") },
+  { value: "货主B 精工机械", label: $t("billing.bill.ownerB") },
+  { value: "货主C 日化用品", label: $t("billing.bill.ownerC") },
+  { value: "自营", label: $t("billing.bill.selfOwned") }
 ];
 </script>
 
@@ -41,50 +42,91 @@ const ownerOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="单号" prop="code">
+      <el-form-item :label="$t('billing.bill.noLabel')" prop="code">
         <el-input
           v-model="form.code"
-          placeholder="账单编号"
+          :placeholder="$t('billing.bill.no')"
           clearable
           style="width: 180px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="货主" prop="ownerName">
-        <el-select v-model="form.ownerName" placeholder="全部" clearable style="width: 170px">
-          <el-option v-for="o in ownerOptions" :key="o.value" :label="o.label" :value="o.value" />
+      <el-form-item :label="$t('common.columns.owner')" prop="ownerName">
+        <el-select
+          v-model="form.ownerName"
+          :placeholder="$t('billing.bill.all')"
+          clearable
+          style="width: 170px"
+        >
+          <el-option
+            v-for="o in ownerOptions"
+            :key="o.value"
+            :label="o.label"
+            :value="o.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="账期" prop="period">
+      <el-form-item :label="$t('billing.bill.period')" prop="period">
         <el-input
           v-model="form.period"
-          placeholder="如 2026-08"
+          :placeholder="$t('billing.bill.periodPh')"
           clearable
           style="width: 130px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="费用类型" prop="feeType">
-        <el-select v-model="form.feeType" placeholder="全部" clearable style="width: 130px">
-          <el-option v-for="d in feeTypeOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('billing.bill.feeType')" prop="feeType">
+        <el-select
+          v-model="form.feeType"
+          :placeholder="$t('billing.bill.all')"
+          clearable
+          style="width: 130px"
+        >
+          <el-option
+            v-for="d in feeTypeOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="form.status" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="d in billStatusOptions" :key="d.value" :label="d.label" :value="d.value" />
+      <el-form-item :label="$t('common.columns.status')" prop="status">
+        <el-select
+          v-model="form.status"
+          :placeholder="$t('billing.bill.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="d in billStatusOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">
-          搜索
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+        >
+          {{ $t("common.buttons.search") }}
         </el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">
-          重置
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+        >
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="费用账单" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('billing.bill.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
@@ -100,30 +142,7 @@ const ownerOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button v-if="row.status === 'pending'" link type="primary" @click="onAction(row, 'confirm')">
-              确认
-            </el-button>
-            <el-button
-              v-else-if="row.status === 'confirmed'"
-              link
-              type="warning"
-              @click="onAction(row, 'invoice')"
-            >
-              开票
-            </el-button>
-            <el-button
-              v-else-if="row.status === 'invoiced'"
-              link
-              type="success"
-              @click="onAction(row, 'settle')"
-            >
-              结算
-            </el-button>
-            <span v-else class="text-gray-400">-</span>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

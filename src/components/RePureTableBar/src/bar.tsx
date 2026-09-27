@@ -1,5 +1,6 @@
 import Sortable from "sortablejs";
 import { useEpThemeStoreHook } from "@/store/modules/epTheme";
+import { $t } from "@/plugins/i18n";
 import {
   type PropType,
   ref,
@@ -29,7 +30,7 @@ const props = {
   /** 头部最左边的标题 */
   title: {
     type: String,
-    default: "列表"
+    default: $t("components.list")
   },
   /** 对于树形表格，如果想启用展开和折叠功能，传入当前表格的ref即可 */
   tableRef: {
@@ -166,19 +167,19 @@ export default defineComponent({
             style={getDropdownItemStyle.value("large")}
             onClick={() => (size.value = "large")}
           >
-            宽松
+            {$t("components.sizeLoose")}
           </el-dropdown-item>
           <el-dropdown-item
             style={getDropdownItemStyle.value("default")}
             onClick={() => (size.value = "default")}
           >
-            默认
+            {$t("components.sizeDefault")}
           </el-dropdown-item>
           <el-dropdown-item
             style={getDropdownItemStyle.value("small")}
             onClick={() => (size.value = "small")}
           >
-            紧凑
+            {$t("components.sizeCompact")}
           </el-dropdown-item>
         </el-dropdown-menu>
       )
@@ -240,7 +241,7 @@ export default defineComponent({
       reference: () => (
         <SettingIcon
           class={["w-[16px]", iconClass.value]}
-          v-tippy={rendTippyProps("列设置")}
+          v-tippy={rendTippyProps($t("components.columnSettings"))}
         />
       )
     };
@@ -277,7 +278,9 @@ export default defineComponent({
                       transform: isExpandAll.value ? "none" : "rotate(-90deg)"
                     }}
                     v-tippy={rendTippyProps(
-                      isExpandAll.value ? "折叠" : "展开"
+                      isExpandAll.value
+                        ? $t("common.buttons.collapse")
+                        : $t("common.buttons.expand")
                     )}
                     onClick={() => onExpand()}
                   />
@@ -290,14 +293,14 @@ export default defineComponent({
                   iconClass.value,
                   loading.value ? "animate-spin" : ""
                 ]}
-                v-tippy={rendTippyProps("刷新")}
+                v-tippy={rendTippyProps($t("common.buttons.refresh"))}
                 onClick={() => onReFresh()}
               />
               <el-divider direction="vertical" />
               <el-dropdown
                 v-slots={dropdown}
                 trigger="click"
-                v-tippy={rendTippyProps("密度")}
+                v-tippy={rendTippyProps($t("components.density"))}
               >
                 <CollapseIcon class={["w-[16px]", iconClass.value]} />
               </el-dropdown>
@@ -313,13 +316,13 @@ export default defineComponent({
                 <div class={[topClass.value]}>
                   <el-checkbox
                     class="-mr-1!"
-                    label="列展示"
+                    label={$t("components.columnDisplay")}
                     v-model={checkAll.value}
                     indeterminate={isIndeterminate.value}
                     onChange={value => handleCheckAllChange(value)}
                   />
                   <el-button type="primary" link onClick={() => onReset()}>
-                    重置
+                    {$t("common.buttons.reset")}
                   </el-button>
                 </div>
 
@@ -377,7 +380,11 @@ export default defineComponent({
               <iconifyIconOffline
                 class={["w-[16px]", iconClass.value]}
                 icon={isFullscreen.value ? ExitFullscreen : Fullscreen}
-                v-tippy={isFullscreen.value ? "退出全屏" : "全屏"}
+                v-tippy={
+                  isFullscreen.value
+                    ? $t("components.exitFullscreen")
+                    : $t("components.fullscreen")
+                }
                 onClick={() => onFullscreen()}
               />
             </div>

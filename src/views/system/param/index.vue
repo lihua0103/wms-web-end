@@ -7,8 +7,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import AddFill from "~icons/ep/plus";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
 
 defineOptions({ name: "SystemParam" });
 
@@ -23,7 +21,6 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useParams();
@@ -37,19 +34,19 @@ const {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="关键字" prop="keyword">
+      <el-form-item :label="$t('system.param.keyword')" prop="keyword">
         <el-input
           v-model="form.keyword"
-          placeholder="参数名称 / 参数键"
+          :placeholder="$t('system.param.keywordPh')"
           clearable
           style="width: 220px"
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="来源" prop="builtIn">
+      <el-form-item :label="$t('system.param.source')" prop="builtIn">
         <el-select
           v-model="form.builtIn"
-          placeholder="全部"
+          :placeholder="$t('system.param.all')"
           clearable
           style="width: 140px"
         >
@@ -67,25 +64,29 @@ const {
           :icon="useRenderIcon(SearchIcon)"
           @click="onSearch"
         >
-          搜索
+          {{ $t("common.buttons.search") }}
         </el-button>
         <el-button
           :icon="useRenderIcon(RefreshIcon)"
           @click="resetForm(searchFormRef)"
         >
-          重置
+          {{ $t("common.buttons.reset") }}
         </el-button>
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="系统参数" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('system.param.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="openDialog('新增参数')"
+          @click="openDialog($t('system.param.addParam'))"
         >
-          新增参数
+          {{ $t("system.param.addParam") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -103,26 +104,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑参数', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

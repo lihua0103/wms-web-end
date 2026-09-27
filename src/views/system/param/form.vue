@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import type { FormRules } from "element-plus";
 import type { ParamItem } from "@/api/system";
+import { $t } from "@/plugins/i18n";
 
 interface Props {
   formInline: Partial<ParamItem>;
@@ -14,9 +15,15 @@ const formRef = ref();
 const newFormInline = reactive(props.formInline);
 
 const rules: FormRules = {
-  name: [{ required: true, message: "请输入参数名称", trigger: "blur" }],
-  key: [{ required: true, message: "请输入参数键", trigger: "blur" }],
-  value: [{ required: true, message: "请输入参数值", trigger: "blur" }]
+  name: [
+    { required: true, message: $t("system.param.namePh"), trigger: "blur" }
+  ],
+  key: [
+    { required: true, message: $t("system.param.keyMsg"), trigger: "blur" }
+  ],
+  value: [
+    { required: true, message: $t("system.param.valuePh"), trigger: "blur" }
+  ]
 };
 </script>
 
@@ -27,27 +34,33 @@ const rules: FormRules = {
     :rules="rules"
     label-width="100px"
   >
-    <el-form-item label="参数名称" prop="name">
-      <el-input v-model="newFormInline.name" placeholder="请输入参数名称" />
+    <el-form-item :label="$t('system.param.name')" prop="name">
+      <el-input
+        v-model="newFormInline.name"
+        :placeholder="$t('system.param.namePh')"
+      />
     </el-form-item>
-    <el-form-item label="参数键" prop="key">
+    <el-form-item :label="$t('system.param.key')" prop="key">
       <el-input
         v-model="newFormInline.key"
-        placeholder="请输入参数键，如 outbound.batch.strategy"
+        :placeholder="$t('system.param.keyPh')"
         :disabled="newFormInline.builtIn === 1"
       />
       <span v-if="newFormInline.builtIn === 1" class="text-xs text-gray-400">
-        内置参数，参数键不可修改
+        {{ $t("system.param.builtInTip") }}
       </span>
     </el-form-item>
-    <el-form-item label="参数值" prop="value">
-      <el-input v-model="newFormInline.value" placeholder="请输入参数值" />
+    <el-form-item :label="$t('system.param.value')" prop="value">
+      <el-input
+        v-model="newFormInline.value"
+        :placeholder="$t('system.param.valuePh')"
+      />
     </el-form-item>
-    <el-form-item label="备注" prop="remark">
+    <el-form-item :label="$t('common.columns.remark')" prop="remark">
       <el-input
         v-model="newFormInline.remark"
         type="textarea"
-        placeholder="备注"
+        :placeholder="$t('common.columns.remark')"
       />
     </el-form-item>
   </el-form>

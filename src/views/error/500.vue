@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import noServer from "@/assets/status/500.svg?component";
+import { $t } from "@/plugins/i18n";
 
 defineOptions({
   name: "500"
@@ -47,7 +48,7 @@ const router = useRouter();
           }
         }"
       >
-        抱歉，服务器出错了
+        {{ $t("error.serverError") }}
       </p>
       <el-button
         v-motion
@@ -66,7 +67,7 @@ const router = useRouter();
         }"
         @click="router.push('/')"
       >
-        返回首页
+        {{ $t("error.backHome") }}
       </el-button>
     </div>
   </div>

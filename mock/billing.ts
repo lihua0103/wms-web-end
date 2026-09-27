@@ -26,7 +26,9 @@ function recentPeriods(n: number): string[] {
   for (let i = 0; i < n; i++) {
     const d = new Date();
     d.setMonth(d.getMonth() - i);
-    list.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+    list.push(
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+    );
   }
   return list;
 }
@@ -80,7 +82,13 @@ const bills = genRows(48, i => {
 
 const recos = genRows(20, i => {
   const billCount = randInt(5, 40);
-  const status = pick(["pending", "pending", "confirmed", "confirmed", "disputed"]);
+  const status = pick([
+    "pending",
+    "pending",
+    "confirmed",
+    "confirmed",
+    "disputed"
+  ]);
   return {
     id: i,
     code: genCode("REC", i),
@@ -97,7 +105,11 @@ const recos = genRows(20, i => {
 // ========================= 路由 =========================
 
 export default defineFakeRoute([
-  ...crudRoutes({ prefix: "/wms/billing/rule", seed: rules, searchFields: ["code", "ownerName"] }),
+  ...crudRoutes({
+    prefix: "/wms/billing/rule",
+    seed: rules,
+    searchFields: ["code", "ownerName"]
+  }),
   // 账单：page 与状态流转端点共享同一数组，确认/开票/结算后刷新立即可见
   {
     url: "/wms/billing/bill/page",

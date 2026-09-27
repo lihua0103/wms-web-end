@@ -4,11 +4,10 @@ import { useWarehouse } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { $t } from "@/plugins/i18n";
 import SearchIcon from "~icons/ep/search";
 import RefreshIcon from "~icons/ep/refresh";
 import AddFill from "~icons/ep/plus";
-import EditPen from "~icons/ep/edit-pen";
-import Delete from "~icons/ep/delete";
 
 defineOptions({ name: "MasterWarehouse" });
 
@@ -23,15 +22,14 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useWarehouse();
 
 const typeOptions = [
-  { value: "normal", label: "普通" },
-  { value: "cold", label: "冷链" },
-  { value: "dangerous", label: "危化" }
+  { value: "normal", label: $t("master.warehouse.typeNormal") },
+  { value: "cold", label: $t("master.warehouse.typeCold") },
+  { value: "dangerous", label: $t("master.warehouse.typeDangerous") }
 ];
 </script>
 
@@ -43,27 +41,66 @@ const typeOptions = [
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="编码" prop="code">
-        <el-input v-model="form.code" placeholder="仓库编码" clearable style="width: 140px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('common.columns.code')" prop="code">
+        <el-input
+          v-model="form.code"
+          :placeholder="$t('master.warehouse.code')"
+          clearable
+          style="width: 140px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" placeholder="仓库名称" clearable style="width: 150px" @keyup.enter="onSearch" />
+      <el-form-item :label="$t('common.columns.name')" prop="name">
+        <el-input
+          v-model="form.name"
+          :placeholder="$t('master.warehouse.name')"
+          clearable
+          style="width: 150px"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="form.type" placeholder="全部" clearable style="width: 120px">
-          <el-option v-for="t in typeOptions" :key="t.value" :label="t.label" :value="t.value" />
+      <el-form-item :label="$t('common.columns.type')" prop="type">
+        <el-select
+          v-model="form.type"
+          :placeholder="$t('master.warehouse.all')"
+          clearable
+          style="width: 120px"
+        >
+          <el-option
+            v-for="t in typeOptions"
+            :key="t.value"
+            :label="t.label"
+            :value="t.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="useRenderIcon(SearchIcon)" @click="onSearch">搜索</el-button>
-        <el-button :icon="useRenderIcon(RefreshIcon)" @click="resetForm(searchFormRef)">重置</el-button>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(SearchIcon)"
+          @click="onSearch"
+          >{{ $t("common.buttons.search") }}</el-button
+        >
+        <el-button
+          :icon="useRenderIcon(RefreshIcon)"
+          @click="resetForm(searchFormRef)"
+          >{{ $t("common.buttons.reset") }}</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="仓库管理" :columns="columns" @refresh="onSearch">
+    <PureTableBar
+      :title="$t('master.warehouse.title')"
+      :columns="columns"
+      @refresh="onSearch"
+    >
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)" @click="openDialog('新增仓库')">
-          新增仓库
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="openDialog($t('master.warehouse.addTitle'))"
+        >
+          {{ $t("master.warehouse.addTitle") }}
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -81,26 +118,7 @@ const typeOptions = [
           :adaptiveConfig="{ offsetBottom: 120 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              link
-              type="primary"
-              :icon="useRenderIcon(EditPen)"
-              @click="openDialog('编辑仓库', row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              link
-              type="danger"
-              :icon="useRenderIcon(Delete)"
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

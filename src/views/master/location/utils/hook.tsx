@@ -3,6 +3,11 @@ import { ElMessageBox } from "element-plus";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
+  ReTableOperation,
+  type TableOperationButton
+} from "@/components/ReTableOperation";
+import { $t } from "@/plugins/i18n";
+import {
   getLocationPage,
   addLocation,
   updateLocation,
@@ -11,16 +16,18 @@ import {
 } from "@/api/master";
 import type { LocationItem } from "@/api/master";
 import { locationTypeOptions, dictLabel } from "@/constants/wms";
+import EditPen from "~icons/ep/edit-pen";
+import Delete from "~icons/ep/delete";
 import formComp from "../form.vue";
 import genForm from "../gen-form.vue";
 
-const statusMap: Record<string, { label: string; tag: string }> = {
-  idle: { label: "空闲", tag: "success" },
-  occupied: { label: "占用", tag: "primary" },
-  disabled: { label: "禁用", tag: "danger" }
-};
-
 export function useLocation() {
+  const statusMap: Record<string, { label: string; tag: string }> = {
+    idle: { label: $t("master.location.statusIdle"), tag: "success" },
+    occupied: { label: $t("master.location.statusOccupied"), tag: "primary" },
+    disabled: { label: $t("master.location.statusDisabled"), tag: "danger" }
+  };
+
   const form = reactive({
     code: "",
     warehouseCode: "",
@@ -37,23 +44,37 @@ export function useLocation() {
   });
 
   const columns: TableColumnList = [
-    { label: "库位编码", prop: "code", minWidth: 140 },
-    { label: "仓库", prop: "warehouseCode", minWidth: 70 },
-    { label: "库区", prop: "zoneCode", minWidth: 80 },
+    { label: $t("master.location.code"), prop: "code", minWidth: 140 },
     {
-      label: "库位类型",
+      label: $t("common.columns.warehouse"),
+      prop: "warehouseCode",
+      minWidth: 70
+    },
+    { label: $t("common.columns.zone"), prop: "zoneCode", minWidth: 80 },
+    {
+      label: $t("master.location.type"),
       minWidth: 90,
-      cellRenderer: ({ row }) => dictLabel(locationTypeOptions, row.locationType)
+      cellRenderer: ({ row }) =>
+        dictLabel(locationTypeOptions, row.locationType)
     },
-    { label: "最大承重(kg)", prop: "maxWeight", minWidth: 100 },
-    { label: "最大容积(m³)", prop: "maxVolume", minWidth: 100 },
     {
-      label: "混放",
+      label: $t("master.location.maxWeight"),
+      prop: "maxWeight",
+      minWidth: 100
+    },
+    {
+      label: $t("master.location.maxVolume"),
+      prop: "maxVolume",
+      minWidth: 100
+    },
+    {
+      label: $t("master.location.colMix"),
       minWidth: 60,
-      cellRenderer: ({ row }) => (row.isMix ? "允许" : "禁止")
+      cellRenderer: ({ row }) =>
+        row.isMix ? $t("master.location.allow") : $t("master.location.forbid")
     },
     {
-      label: "状态",
+      label: $t("common.columns.status"),
       minWidth: 70,
       cellRenderer: ({ row }) => (
         <el-tag type={statusMap[row.status]?.tag || "info"}>
@@ -61,8 +82,33 @@ export function useLocation() {
         </el-tag>
       )
     },
-    { fixed: "right", label: "操作", width: 140, slot: "operation" }
+    {
+      fixed: "right",
+      label: $t("common.columns.operation"),
+      minWidth: 190,
+      showOverflowTooltip: false,
+      cellRenderer: ({ row }) => (
+        <ReTableOperation buttons={operationButtons(row)} />
+      )
+    }
   ];
+
+  function operationButtons(row: LocationItem): TableOperationButton[] {
+    const buttons: TableOperationButton[] = [
+      {
+        label: $t("common.buttons.edit"),
+        icon: EditPen,
+        onClick: () => openDialog($t("master.location.editTitle"), row)
+      },
+      {
+        label: $t("common.buttons.delete"),
+        type: "danger",
+        icon: Delete,
+        onClick: () => handleDelete(row)
+      }
+    ];
+    return buttons;
+  }
 
   async function onSearch() {
     loading.value = true;
@@ -118,9 +164,16 @@ export function useLocation() {
         const formInline = (
           options.props as { formInline: Partial<LocationItem> }
         ).formInline;
-        const req = formInline.id ? updateLocation(formInline) : addLocation(formInline);
+        const req = formInline.id
+          ? updateLocation(formInline)
+          : addLocation(formInline);
         req.then(() => {
-          message(formInline.id ? "修改成功" : "新增成功", { type: "success" });
+          message(
+            formInline.id
+              ? $t("master.location.editSuccess")
+              : $t("master.location.addSuccess"),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -131,7 +184,7 @@ export function useLocation() {
   /** 批量生成库位 */
   function openGenDialog() {
     addDialog({
-      title: "批量生成库位",
+      title: $t("master.location.genTitle"),
       width: "40%",
       draggable: true,
       closeOnClickModal: false,
@@ -160,7 +213,10 @@ export function useLocation() {
           }
         ).formInline;
         generateLocations(formInline).then(res => {
-          message(res.msg || `成功生成 ${res.data} 个库位`, { type: "success" });
+          message(
+            res.msg || $t("master.location.genSuccess", { count: res.data }),
+            { type: "success" }
+          );
           done();
           onSearch();
         });
@@ -169,11 +225,15 @@ export function useLocation() {
   }
 
   function handleDelete(row: LocationItem) {
-    ElMessageBox.confirm(`确认删除库位「${row.code}」吗？`, "提示", {
-      type: "warning"
-    }).then(() => {
+    ElMessageBox.confirm(
+      $t("master.location.delTip", { code: row.code }),
+      $t("master.location.tip"),
+      {
+        type: "warning"
+      }
+    ).then(() => {
       deleteLocation([row.id]).then(() => {
-        message("删除成功", { type: "success" });
+        message($t("common.tips.deleteSuccess"), { type: "success" });
         onSearch();
       });
     });
