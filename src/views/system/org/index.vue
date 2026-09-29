@@ -29,7 +29,6 @@ const { loading, columns, dataList, onSearch, openDialog } = useOrg();
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
-          align-whole="center"
           row-key="id"
           show-overflow-tooltip
           default-expand-all
@@ -43,7 +42,7 @@ const { loading, columns, dataList, onSearch, openDialog } = useOrg();
           :loading="loading"
           :size="size"
           adaptive
-          :adaptiveConfig="{ offsetBottom: 120 }"
+          :adaptiveConfig="{ offsetBottom: 140 }"
         />
       </template>
     </PureTableBar>

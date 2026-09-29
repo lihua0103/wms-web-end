@@ -40,32 +40,47 @@ const { title, getLogo } = useNav();
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 48px;
+  height: 58px;
   overflow: hidden;
 
   .sidebar-logo-link {
     display: flex;
     flex-wrap: nowrap;
+    gap: 10px;
     align-items: center;
     height: 100%;
-    padding-left: 10px;
+    padding: 0 14px;
 
     img {
       display: inline-block;
+      flex-shrink: 0;
+      width: 30px;
       height: 30px;
+      border-radius: 7px;
     }
 
     .sidebar-title {
-      display: inline-block;
-      height: 32px;
-      margin: 2px 0 0 12px;
+      display: block;
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 32px;
-      color: #fff;
+      font-size: 15px;
+      font-weight: 650;
+      line-height: 20px;
+      color: var(--pure-theme-sub-menu-active-text, #fff);
+      letter-spacing: 0.2px;
       white-space: nowrap;
+    }
+  }
+
+  &.collapses {
+    .sidebar-logo-link {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .sidebar-title {
+      display: none;
     }
   }
 }

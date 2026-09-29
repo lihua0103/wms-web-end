@@ -139,7 +139,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
   if (!externalLink) {
     to.matched.some(item => {
       if (!item.meta.title) return "";
-      const Title = getConfig().Title;
+      const Title = transformI18n(getConfig().Title);
       const routeTitle = transformI18n(item.meta.title);
       if (Title) document.title = `${routeTitle} | ${Title}`;
       else document.title = routeTitle;

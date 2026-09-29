@@ -83,12 +83,11 @@ const {
           </el-form>
           <pure-table
             border
-            align-whole="center"
             row-key="id"
             show-overflow-tooltip
             highlight-current-row
             adaptive
-            :adaptiveConfig="{ offsetBottom: 180 }"
+            :adaptiveConfig="{ offsetBottom: 200 }"
             :data="typeList"
             :columns="typeColumns"
             :pagination="typePagination"
@@ -140,11 +139,10 @@ const {
           <pure-table
             v-else
             border
-            align-whole="center"
             row-key="id"
             show-overflow-tooltip
             adaptive
-            :adaptiveConfig="{ offsetBottom: 180 }"
+            :adaptiveConfig="{ offsetBottom: 200 }"
             :data="dataList"
             :columns="dataColumns"
             :loading="dataLoading"

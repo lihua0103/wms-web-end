@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { getConfig } from "@/config";
+import { $t } from "@/plugins/i18n";
 
-const TITLE = getConfig("Title");
+defineOptions({
+  name: "LayFooter"
+});
+
+const Title = $t("app.title");
+const version = getConfig()?.Version ?? "";
+const year = new Date().getFullYear();
 </script>
 
 <template>
   <footer
-    class="layout-footer text-[rgba(0,0,0,0.6)] dark:text-[rgba(220,220,242,0.8)]"
+    class="layout-footer text-[rgba(0,0,0,0.45)] dark:text-[rgba(220,220,242,0.65)]"
   >
-    Copyright © 2020-present
-    <a
-      class="hover:text-primary!"
-      href="https://github.com/pure-admin"
-      target="_blank"
-    >
-      &nbsp;{{ TITLE }}
-    </a>
+    <span>
+      {{ $t("app.footerCopyright", { year, title: Title }) }}
+      <span v-if="version" class="footer-version">v{{ version }}</span>
+    </span>
   </footer>
 </template>
 
@@ -26,6 +29,11 @@ const TITLE = getConfig("Title");
   justify-content: center;
   width: 100%;
   padding: 0 0 8px;
-  font-size: 14px;
+  font-size: 13px;
+
+  .footer-version {
+    margin-left: 8px;
+    color: var(--el-text-color-secondary);
+  }
 }
 </style>

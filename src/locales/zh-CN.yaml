@@ -1,6 +1,7 @@
 app:
   title: 智联仓储 WMS
   subtitle: 一体化管理平台
+  footerCopyright: "© {year} {title} · 智联物流集团"
 common:
   language: 语言
   buttons:
@@ -298,6 +299,20 @@ dict:
     outbound: 已出库
     scrapped: 已报废
     repairing: 维修中
+  batchStatus:
+    normal: 正常
+    expiring: 临期
+    expired: 已过期
+  adjustType:
+    gain: 报溢
+    loss: 报损
+  adjustStatus:
+    pending: 待审批
+    approved: 已通过
+    rejected: 已驳回
+  warningStatus:
+    active: 待处理
+    handled: 已处理
   taskType:
     receive: 收货
     qc: 质检
@@ -1275,19 +1290,123 @@ inventory:
     whChengdu: WH003 成都西南仓
   transaction:
     title: 库存流水
-    building: 页面建设中
+    all: 全部
+    transactionNo: 流水号
+    transactionType: 事务类型
+    materialCode: 物料编码
+    materialName: 物料名称
+    qtyChange: 变动数量
+    balanceQty: 结存数量
+    bizNo: 关联单号
+    operator: 操作人
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
   batch:
     title: 批次效期
-    building: 页面建设中
+    all: 全部
+    materialCode: 物料编码
+    materialName: 物料名称
+    productionDate: 生产日期
+    expiredAt: 到期日期
+    remainDays: 剩余天数
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
   serial:
     title: 序列号管理
-    building: 页面建设中
+    all: 全部
+    serialNo: 序列号
+    serialNoExample: 如 SN2025092800001
+    materialCode: 物料编码
+    materialCodeExample: 如 SKU00001
+    materialName: 物料名称
+    batch: 批次
+    inboundDate: 入库日期
+    outboundDate: 出库日期
+    orderNo: 关联单号
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
+    addTitle: 新增序列号
+    editTitle: 编辑序列号
+    detailTitle: 序列号详情
+    serialNoRequired: 请输入序列号
+    materialCodeRequired: 请输入物料编码
+    materialNameRequired: 请输入物料名称
+    selectWarehouse: 请选择仓库
+    addSuccess: 新增成功
+    editSuccess: 修改成功
+    tip: 提示
+    delTip: 确认删除序列号「{serialNo}」吗？
+    scrap: 报废
+    scrapTip: 确认报废序列号「{serialNo}」吗？报废后不可恢复
+    scrapped: 已报废
   adjustment:
     title: 库存调整
-    building: 页面建设中
+    all: 全部
+    docNo: 单号
+    adjustNo: 调整单号
+    adjustType: 调整类型
+    materialCode: 物料编码
+    materialCodeExample: 如 SKU00001
+    materialName: 物料名称
+    batch: 批次
+    beforeQty: 调整前数量
+    changeQty: 调整数量
+    afterQty: 调整后数量
+    reason: 调整原因
+    reasonPh: 如盘点差异、破损报损
+    reasonRequired: 请输入调整原因
+    applicant: 申请人
+    addTitle: 新增调整单
+    createSuccess: 创建成功
+    selectWarehouse: 请选择仓库
+    locationRequired: 请输入库位
+    locationExample: 如 A-01-01
+    materialCodeRequired: 请输入物料编码
+    selectAdjustType: 请选择调整类型
+    qtyChangeRequired: 调整数量不能为 0
+    approve: 审批
+    approveTip: 确认通过调整单「{code}」吗？
+    approved: 审批通过
+    reject: 驳回
+    rejectTip: 确认驳回调整单「{code}」吗？
+    rejected: 已驳回
+    tip: 提示
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
   move:
     title: 移库管理
-    building: 页面建设中
+    all: 全部
+    docNo: 单号
+    moveNo: 移库单号
+    moveType: 移库类型
+    materialCode: 物料编码
+    materialCodeExample: 如 SKU00001
+    materialName: 物料名称
+    batch: 批次
+    fromLocation: 源库位
+    toLocation: 目标库位
+    locationExample: 如 A-01-01
+    operator: 操作人
+    addTitle: 新增移库单
+    createSuccess: 创建成功
+    selectWarehouse: 请选择仓库
+    selectMoveType: 请选择移库类型
+    materialCodeRequired: 请输入物料编码
+    fromLocationRequired: 请输入源库位
+    toLocationRequired: 请输入目标库位
+    qtyRequired: 请输入数量
+    executeTip: 确认执行该移库单吗？
+    executed: 移库完成
+    cancelTip: 确认取消该移库单吗？
+    cancelled: 已取消
+    tip: 提示
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
   stocktake:
     title: 盘点管理
     all: 全部
@@ -1327,7 +1446,21 @@ inventory:
     whChengdu: WH003 成都西南仓
   warning:
     title: 库存预警
-    building: 页面建设中
+    all: 全部
+    warningType: 预警类型
+    materialCode: 物料编码
+    materialName: 物料名称
+    safetyQty: 安全库存
+    expiredAt: 到期日期
+    days: 呆滞天数
+    handle: 处理
+    handleTip: 确认将物料「{code}」的预警标记为已处理吗？
+    handleRemarkPh: 处理备注（可不填）
+    handled: 已处理
+    tip: 提示
+    whShanghai: WH001 上海主仓
+    whGuangzhou: WH002 广州华南仓
+    whChengdu: WH003 成都西南仓
 master:
   warehouse:
     title: 仓库管理
@@ -1536,40 +1669,27 @@ master:
     addSuccess: 新增成功
     editSuccess: 修改成功
 login:
-  brandMark: 仓
-  brandTitle: 智联仓储
-  brandTagline: 让每一件货物的入库、存储、拣选与发运，全程在线、清晰可控
-  features:
+  eyebrow: AI-DRIVEN GLOBAL WAREHOUSE CONTROL TOWER
+  headlineA: 让全球库存
+  headlineB: 在同一视野里流动
+  brandTagline: 从仓内作业到跨境履约，连接每一个仓库、节点与异常，让库存、关务与运输在一个智能视野中持续协同。
+  capability:
     inbound: 入库协同
-    inboundSub: 预约 · 收货 · 质检
     outbound: 出库履约
-    outboundSub: 波次 · 拣货 · 发运
-    inventory: 库存管控
-    inventorySub: 批次 · 序列号 · 效期
-    equipment: 设备调度
-    equipmentSub: AGV · 立库 · 输送线
-    insight: 数据洞察
-    insightSub: 看板 · 大屏 · 绩效
-  week:
-    mon: 一
-    tue: 二
-    wed: 三
-    thu: 四
-    fri: 五
-    sat: 六
-    sun: 日
-  dashboard:
-    todayWork: 今日作业
-    inboundOrders: 入库单
-    outboundOrders: 出库单
-    last7Days: 近 7 日出入库量
-    fillRate: 库区填充率
-    fillRateAria: 库区填充率 78%
-    occupancy: 占用率
-  welcomeTitle: 欢迎登录 {title}
-  continueHint: 登录以继续
+    inventory: 全域库存
+    ai: AI 智能体
+  live:
+    inboundTitle: 入库收货完成
+    inboundSub: ASN-20260929-018 · 上海枢纽仓
+    customsTitle: 跨境申报已放行
+    customsSub: 三单对碰通过 · 深圳保税仓
+    agvTitle: AGV-07 搬运中
+    agvSub: A 区 03 排 → 出库暂存区
+  welcomeTitle: 欢迎回来
+  continueHint: 登录 {title}，继续管理全球仓网与履约任务
   username: 账号
   password: 密码
+  cta: 登录
   usernamePlaceholder: 请输入账号
   passwordPlaceholder: 请输入密码
   rememberMe: 记住我
@@ -1579,8 +1699,9 @@ login:
   userAgreement: 《用户协议》
   agreeAnd: 和
   privacyPolicy: 《隐私政策》
-  secureNote: 安全访问 · 仅限授权用户
+  secureNote: 授权访问 · 全链路加密传输
   demoAccount: 演示账号：admin / admin123
+  demoFill: 一键填入
   success: 登录成功
   failed: 登录失败
   agreeFirst: 请先阅读并同意《用户协议》和《隐私政策》

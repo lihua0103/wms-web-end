@@ -262,24 +262,37 @@ onBeforeUnmount(() => {
       </el-col>
     </el-row>
 
+    <!-- 待办事项：登录后第一优先级 -->
+    <el-row :gutter="12" class="mb-3">
+      <el-col :span="24">
+        <el-card shadow="never" class="todo-card" :header="$t('welcome.todoTitle')">
+          <el-row :gutter="12">
+            <el-col
+              v-for="todo in stats?.todos || []"
+              :key="todo.title"
+              :xs="12"
+              :sm="6"
+            >
+              <div class="todo-item" @click="router.push(todo.path)">
+                <div class="text-[#64748b] text-sm">{{ transformI18n(todo.title) }}</div>
+                <div class="text-xl font-semibold mt-1 tabular-nums">
+                  <span :class="todo.count > 0 ? 'text-[#dc2626]' : 'text-[#059669]'">{{ todo.count }}</span>
+                  <span class="text-xs text-[#94a3b8] ml-1">{{ $t("welcome.todoPending") }}</span>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+
     <!-- 快捷操作 -->
     <el-row :gutter="12" class="mb-3">
       <el-col :span="24">
-        <el-card
-          shadow="never"
-          :header="$t('welcome.quickTitle')"
-          body-style="padding: 12px 16px"
-        >
+        <el-card shadow="never" :header="$t('welcome.quickTitle')" body-style="padding: 12px 16px">
           <div class="flex flex-wrap gap-2.5">
-            <div
-              v-for="action in quickActions"
-              :key="action.title"
-              class="quick-action"
-              @click="router.push(action.path)"
-            >
-              <el-icon :size="15" :class="`tone-${action.tone}`">
-                <component :is="action.icon" />
-              </el-icon>
+            <div v-for="action in quickActions" :key="action.title" class="quick-action" @click="router.push(action.path)">
+              <el-icon :size="15" :class="`tone-${action.tone}`"><component :is="action.icon" /></el-icon>
               {{ action.title }}
             </div>
           </div>
@@ -301,39 +314,6 @@ onBeforeUnmount(() => {
       </el-col>
     </el-row>
 
-    <!-- 待办事项 -->
-    <el-row :gutter="12">
-      <el-col :span="24">
-        <el-card shadow="never" :header="$t('welcome.todoTitle')">
-          <el-row :gutter="12">
-            <el-col
-              v-for="todo in stats?.todos || []"
-              :key="todo.title"
-              :xs="12"
-              :sm="6"
-            >
-              <div class="todo-item" @click="router.push(todo.path)">
-                <div class="text-[#64748b] text-sm">
-                  {{ transformI18n(todo.title) }}
-                </div>
-                <div class="text-xl font-semibold mt-1 tabular-nums">
-                  <span
-                    :class="
-                      todo.count > 0 ? 'text-[#dc2626]' : 'text-[#059669]'
-                    "
-                  >
-                    {{ todo.count }}
-                  </span>
-                  <span class="text-xs text-[#94a3b8] ml-1">
-                    {{ $t("welcome.todoPending") }}
-                  </span>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 

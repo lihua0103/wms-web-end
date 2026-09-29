@@ -45,8 +45,11 @@
 
   .main-container {
     position: relative;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
-    min-height: 100%;
+    min-height: 0;
+    overflow: hidden;
     margin-left: $sideBarWidth;
     background: #f0f2f5;
 
@@ -59,12 +62,20 @@
     }
   }
 
+  .main-container > div {
+    min-height: 0;
+  }
+
   .fixed-header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 998;
-    width: calc(100% - #{$sideBarWidth});
+    position: relative;
+    top: auto;
+    right: auto;
+    z-index: 2;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
 
     /* fixed-header 属性左上角动画 */
     transition: width var(--pure-transition-duration);
@@ -108,8 +119,8 @@
 
     &.has-logo {
       .el-scrollbar.pc {
-        /* logo: 48px、leftCollapse: 40px、leftCollapse-shadow: 4px */
-        height: calc(100% - 92px);
+        /* logo: 58px、leftCollapse: 40px、leftCollapse-shadow: 4px */
+        height: calc(100% - 102px);
       }
 
       /* logo: 48px */
@@ -196,7 +207,6 @@
 
     .el-menu .el-menu--inline .el-sub-menu__title,
     & .el-sub-menu .el-menu-item {
-      min-width: $sideBarWidth !important;
       font-size: 14px;
       background-color: var(--pure-theme-sub-menu-bg) !important;
     }
@@ -558,9 +568,13 @@
 }
 
 body[layout="vertical"] {
-  $sideBarWidth: 210px;
+  $sideBarWidth: 220px;
 
   @include merge-style($sideBarWidth);
+
+  .sidebar-container {
+    border-radius: 0;
+  }
 
   .el-menu--collapse {
     width: 54px;
@@ -652,9 +666,13 @@ body[layout="horizontal"] {
 }
 
 body[layout="mix"] {
-  $sideBarWidth: 210px;
+  $sideBarWidth: 220px;
 
   @include merge-style($sideBarWidth);
+
+  .sidebar-container {
+    border-radius: 0;
+  }
 
   .el-menu--collapse {
     width: 54px;

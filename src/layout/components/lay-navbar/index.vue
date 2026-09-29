@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useNav } from "@/layout/hooks/useNav";
-import LaySearch from "../lay-search/index.vue";
 import LayNotice from "../lay-notice/index.vue";
 import LayAI from "../lay-ai/index.vue";
 import LayLocaleSwitch from "@/components/LayLocaleSwitch/index.vue";
@@ -44,8 +43,6 @@ const {
     <div v-if="layout === 'vertical'" class="vertical-header-right">
       <!-- 智能体助手 -->
       <LayAI id="header-ai" />
-      <!-- 菜单搜索 -->
-      <LaySearch id="header-search" />
       <!-- 语言切换 -->
       <LayLocaleSwitch id="header-locale" />
       <!-- 全屏 -->

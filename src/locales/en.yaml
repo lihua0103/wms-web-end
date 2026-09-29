@@ -1,6 +1,7 @@
 app:
   title: ZL WMS
   subtitle: Integrated Management Platform
+  footerCopyright: "© {year} {title} · ZhiLian Logistics Group"
 common:
   language: Language
   buttons:
@@ -298,6 +299,20 @@ dict:
     outbound: Outbound
     scrapped: Scrapped
     repairing: Under Repair
+  batchStatus:
+    normal: Normal
+    expiring: Expiring Soon
+    expired: Expired
+  adjustType:
+    gain: Overage
+    loss: Loss
+  adjustStatus:
+    pending: Pending Approval
+    approved: Approved
+    rejected: Rejected
+  warningStatus:
+    active: Unhandled
+    handled: Handled
   taskType:
     receive: Receiving
     qc: QC
@@ -1275,19 +1290,123 @@ inventory:
     whChengdu: WH003 Chengdu Southwest Warehouse
   transaction:
     title: Inventory Transactions
-    building: Page under construction
+    all: All
+    transactionNo: Transaction No.
+    transactionType: Transaction Type
+    materialCode: Material Code
+    materialName: Material Name
+    qtyChange: Qty Change
+    balanceQty: Balance Qty
+    bizNo: Related Doc No.
+    operator: Operator
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
   batch:
     title: Batch Expiry
-    building: Page under construction
+    all: All
+    materialCode: Material Code
+    materialName: Material Name
+    productionDate: Production Date
+    expiredAt: Expiry Date
+    remainDays: Remaining Days
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
   serial:
     title: Serial Number Management
-    building: Page under construction
+    all: All
+    serialNo: Serial No.
+    serialNoExample: e.g. SN2025092800001
+    materialCode: Material Code
+    materialCodeExample: e.g. SKU00001
+    materialName: Material Name
+    batch: Batch
+    inboundDate: Inbound Date
+    outboundDate: Outbound Date
+    orderNo: Related Doc No.
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
+    addTitle: Add Serial Number
+    editTitle: Edit Serial Number
+    detailTitle: Serial Number Details
+    serialNoRequired: Please enter the serial number
+    materialCodeRequired: Please enter the material code
+    materialNameRequired: Please enter the material name
+    selectWarehouse: Please select a warehouse
+    addSuccess: Added successfully
+    editSuccess: Updated successfully
+    tip: Notice
+    delTip: Are you sure you want to delete serial number {serialNo}?
+    scrap: Scrap
+    scrapTip: Are you sure you want to scrap serial number {serialNo}? This cannot be undone
+    scrapped: Scrapped successfully
   adjustment:
     title: Inventory Adjustment
-    building: Page under construction
+    all: All
+    docNo: Doc No.
+    adjustNo: Adjustment No.
+    adjustType: Adjustment Type
+    materialCode: Material Code
+    materialCodeExample: e.g. SKU00001
+    materialName: Material Name
+    batch: Batch
+    beforeQty: Qty Before
+    changeQty: Qty Change
+    afterQty: Qty After
+    reason: Reason
+    reasonPh: e.g. stocktake difference, damage write-off
+    reasonRequired: Please enter the reason
+    applicant: Applicant
+    addTitle: Add Adjustment Order
+    createSuccess: Created successfully
+    selectWarehouse: Please select a warehouse
+    locationRequired: Please enter the location
+    locationExample: e.g. A-01-01
+    materialCodeRequired: Please enter the material code
+    selectAdjustType: Please select an adjustment type
+    qtyChangeRequired: Quantity change cannot be 0
+    approve: Approve
+    approveTip: Confirm approving adjustment order {code}?
+    approved: Approved
+    reject: Reject
+    rejectTip: Confirm rejecting adjustment order {code}?
+    rejected: Rejected
+    tip: Notice
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
   move:
     title: Transfer Management
-    building: Page under construction
+    all: All
+    docNo: Doc No.
+    moveNo: Transfer Order No.
+    moveType: Transfer Type
+    materialCode: Material Code
+    materialCodeExample: e.g. SKU00001
+    materialName: Material Name
+    batch: Batch
+    fromLocation: From Location
+    toLocation: To Location
+    locationExample: e.g. A-01-01
+    operator: Operator
+    addTitle: Add Transfer Order
+    createSuccess: Created successfully
+    selectWarehouse: Please select a warehouse
+    selectMoveType: Please select a transfer type
+    materialCodeRequired: Please enter the material code
+    fromLocationRequired: Please enter the source location
+    toLocationRequired: Please enter the target location
+    qtyRequired: Please enter the quantity
+    executeTip: Confirm executing this transfer order?
+    executed: Transfer completed
+    cancelTip: Confirm cancelling this transfer order?
+    cancelled: Cancelled
+    tip: Notice
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
   stocktake:
     title: Stocktake Management
     all: All
@@ -1327,7 +1446,21 @@ inventory:
     whChengdu: WH003 Chengdu Southwest Warehouse
   warning:
     title: Inventory Alerts
-    building: Page under construction
+    all: All
+    warningType: Alert Type
+    materialCode: Material Code
+    materialName: Material Name
+    safetyQty: Safety Stock
+    expiredAt: Expiry Date
+    days: Dormant Days
+    handle: Handle
+    handleTip: Confirm marking the alert for material {code} as handled?
+    handleRemarkPh: Handling remark (optional)
+    handled: Handled
+    tip: Notice
+    whShanghai: WH001 Shanghai Main Warehouse
+    whGuangzhou: WH002 Guangzhou South China Warehouse
+    whChengdu: WH003 Chengdu Southwest Warehouse
 master:
   warehouse:
     title: Warehouse Management
@@ -1536,40 +1669,27 @@ master:
     addSuccess: Added successfully
     editSuccess: Updated successfully
 login:
-  brandMark: W
-  brandTitle: ZhiLian Warehousing
-  brandTagline: Keep every item's inbound, storage, picking and dispatch fully online, clear and under control
-  features:
+  eyebrow: AI-DRIVEN GLOBAL WAREHOUSE CONTROL TOWER
+  headlineA: Global inventory,
+  headlineB: moving in one view.
+  brandTagline: From in-warehouse operations to cross-border fulfillment, connect every warehouse, node and exception — stock, customs and transport working as one.
+  capability:
     inbound: Inbound
-    inboundSub: Booking · Receiving · QC
-    outbound: Outbound
-    outboundSub: Waves · Picking · Shipping
-    inventory: Inventory
-    inventorySub: Batch · Serial No. · Expiry
-    equipment: Equipment
-    equipmentSub: AGV · AS-RS · Conveyor
-    insight: Insights
-    insightSub: Dashboards · Big Screen · KPI
-  week:
-    mon: Mon
-    tue: Tue
-    wed: Wed
-    thu: Thu
-    fri: Fri
-    sat: Sat
-    sun: Sun
-  dashboard:
-    todayWork: Today's Operations
-    inboundOrders: Inbound Orders
-    outboundOrders: Outbound Orders
-    last7Days: In/Out Volume (Last 7 Days)
-    fillRate: Zone Fill Rate
-    fillRateAria: Zone fill rate 78%
-    occupancy: Occupancy
-  welcomeTitle: Welcome to {title}
-  continueHint: Sign in to continue
-  username: Account
+    outbound: Fulfillment
+    inventory: Global Inventory
+    ai: AI Agents
+  live:
+    inboundTitle: Receiving completed
+    inboundSub: ASN-20260929-018 · Shanghai Hub
+    customsTitle: Customs cleared
+    customsSub: 3-doc match passed · Shenzhen Bonded
+    agvTitle: AGV-07 in transit
+    agvSub: Zone A · Row 03 → Outbound staging
+  welcomeTitle: Welcome back
+  continueHint: Sign in to {title} to manage your global warehouse network
+  username: Username
   password: Password
+  cta: Sign in
   usernamePlaceholder: Enter your username
   passwordPlaceholder: Enter your password
   rememberMe: Remember me
@@ -1579,8 +1699,9 @@ login:
   userAgreement: User Agreement
   agreeAnd: and
   privacyPolicy: Privacy Policy
-  secureNote: Secure access · Authorized users only
+  secureNote: Authorized access · End-to-end encrypted
   demoAccount: "Demo account: admin / admin123"
+  demoFill: Fill in
   success: Login successful
   failed: Login failed
   agreeFirst: Please read and agree to the User Agreement and Privacy Policy first

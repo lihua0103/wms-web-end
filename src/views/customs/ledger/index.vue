@@ -124,7 +124,6 @@ const {
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
-          align-whole="center"
           row-key="id"
           show-overflow-tooltip
           :data="dataList"
@@ -133,7 +132,7 @@ const {
           :loading="loading"
           :size="size"
           adaptive
-          :adaptiveConfig="{ offsetBottom: 120 }"
+          :adaptiveConfig="{ offsetBottom: 140 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         />
@@ -204,25 +203,21 @@ const {
           prop="unit"
           :label="$t('common.columns.unit')"
           width="70"
-          align="center"
         />
         <el-table-column
           prop="declaredQty"
           :label="$t('customs.ledger.declaredQty')"
           width="90"
-          align="center"
         />
         <el-table-column
           prop="usedQty"
           :label="$t('customs.ledger.usedQty')"
           width="90"
-          align="center"
         />
         <el-table-column
           prop="availQty"
           :label="$t('customs.ledger.availQty')"
           width="90"
-          align="center"
         />
       </el-table>
     </el-drawer>

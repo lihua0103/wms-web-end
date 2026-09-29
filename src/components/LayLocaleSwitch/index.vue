@@ -19,6 +19,7 @@ function handleCommand(lang: string) {
       :title="$t('common.language')"
     >
       <IconifyIconOffline :icon="Global" />
+      <span class="locale-code">{{ currentLocale === 'zh-CN' ? '中' : 'EN' }}</span>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
@@ -45,13 +46,21 @@ function handleCommand(lang: string) {
 
 <style lang="scss" scoped>
 .locale-switch {
-  display: flex;
+  display: inline-flex;
+  gap: 5px;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 58px;
   height: 48px;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
+
+  .locale-code {
+    min-width: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
 }
 
 .locale-item {

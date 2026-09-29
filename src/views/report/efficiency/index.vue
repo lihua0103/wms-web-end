@@ -17,7 +17,6 @@ const { loading, personList, columns, pieRef, barRef } = useReportEfficiency();
     >
       <pure-table
         border
-        align-whole="center"
         row-key="name"
         show-overflow-tooltip
         :data="personList"

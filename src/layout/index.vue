@@ -179,7 +179,7 @@ const LayHeader = defineComponent({
         pureSetting.hiddenSideBar ? 'main-hidden' : ''
       ]"
     >
-      <div v-if="set.fixedHeader">
+      <div v-if="set.fixedHeader" class="layout-fixed-shell">
         <LayHeader />
         <!-- 主体内容 -->
         <LayContent :fixed-header="set.fixedHeader" />
@@ -206,6 +206,7 @@ const LayHeader = defineComponent({
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 0;
 
   &::after {
     clear: both;
@@ -216,6 +217,23 @@ const LayHeader = defineComponent({
   &.mobile.openSidebar {
     position: fixed;
     top: 0;
+  }
+
+  :deep(.main-container) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  :deep(.main-container > div) {
+    min-height: 0;
+  }
+
+  :deep(.layout-fixed-shell) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
   }
 }
 

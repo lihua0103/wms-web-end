@@ -79,6 +79,12 @@ function renderIcon(icon?: Component) {
     margin-left: 8px;
   }
 
+  /* "更多"外层是 el-dropdown 而非 el-button,上面的相邻选择器覆盖不到,
+     补齐与前面按钮一致的间距 */
+  .el-button + .el-dropdown {
+    margin-left: 8px;
+  }
+
   &__arrow {
     margin-left: 2px;
   }

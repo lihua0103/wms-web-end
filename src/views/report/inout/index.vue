@@ -98,30 +98,25 @@ const warehouseOptions = [
           :label="$t('report.inout.date')"
           prop="date"
           width="160"
-          align="center"
         />
         <el-table-column
           :label="$t('report.inout.inboundQty')"
           prop="inboundQty"
-          align="center"
           :formatter="formatQty"
         />
         <el-table-column
           :label="$t('report.inout.outboundQty')"
           prop="outboundQty"
-          align="center"
           :formatter="formatQty"
         />
         <el-table-column
           :label="$t('report.inout.inboundAmount')"
           prop="inboundAmount"
-          align="center"
           :formatter="formatAmount"
         />
         <el-table-column
           :label="$t('report.inout.outboundAmount')"
           prop="outboundAmount"
-          align="center"
           :formatter="formatAmount"
         />
       </el-table>

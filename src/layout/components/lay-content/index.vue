@@ -49,26 +49,12 @@ const getMainWidth = computed(() => {
 });
 
 const getSectionStyle = computed(() => {
+  if (props.fixedHeader) return ["padding-top: 0;", "min-height: 0;"];
   return [
-    hideTabs.value && layout ? "padding-top: 48px;" : "",
-    !hideTabs.value && layout
-      ? showModel.value == "chrome"
-        ? "padding-top: 85px;"
-        : "padding-top: 81px;"
-      : "",
-    hideTabs.value && !layout.value ? "padding-top: 48px;" : "",
-    !hideTabs.value && !layout.value
-      ? showModel.value == "chrome"
-        ? "padding-top: 85px;"
-        : "padding-top: 81px;"
-      : "",
-    props.fixedHeader
-      ? ""
-      : `padding-top: 0;${
-          hideTabs.value
-            ? "min-height: calc(100vh - 48px);"
-            : "min-height: calc(100vh - 86px);"
-        }`
+    hideTabs.value ? "padding-top: 48px;" : "padding-top: 86px;",
+    hideTabs.value
+      ? "min-height: calc(100vh - 48px);"
+      : "min-height: calc(100vh - 86px);"
   ];
 });
 
@@ -116,6 +102,8 @@ const transitionMain = defineComponent({
           <template #default="{ Comp, fullPath, frameInfo }">
             <el-scrollbar
               v-if="fixedHeader"
+              class="content-scrollbar"
+              height="100%"
               :wrap-style="{
                 display: 'flex',
                 'flex-wrap': 'wrap',
@@ -126,7 +114,8 @@ const transitionMain = defineComponent({
               :view-style="{
                 display: 'flex',
                 flex: 'auto',
-                overflow: 'hidden',
+                'min-height': '0',
+                overflow: 'visible',
                 'flex-direction': 'column'
               }"
             >
@@ -136,7 +125,7 @@ const transitionMain = defineComponent({
               >
                 <BackTopIcon />
               </el-backtop>
-              <div class="grow">
+              <div class="grow content-grow">
                 <transitionMain :route="route">
                   <keep-alive
                     v-if="isKeepAlive"
@@ -160,7 +149,7 @@ const transitionMain = defineComponent({
               </div>
               <LayFooter v-if="!hideFooter" />
             </el-scrollbar>
-            <div v-else class="grow">
+            <div v-else class="grow content-grow">
               <transitionMain :route="route">
                 <keep-alive
                   v-if="isKeepAlive"
@@ -195,9 +184,12 @@ const transitionMain = defineComponent({
 <style scoped>
 .app-main {
   position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   width: 100%;
-  height: 100vh;
-  overflow-x: hidden;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .app-main-nofixed-header {
@@ -205,9 +197,21 @@ const transitionMain = defineComponent({
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: calc(100vh - 48px);
+}
+
+.content-scrollbar {
+  flex: 1;
+  min-height: 0;
+}
+
+.content-grow {
+  flex: 1;
+  min-height: 0;
 }
 
 .main-content {
+  min-height: 0;
   margin: 24px;
 }
 </style>

@@ -129,7 +129,6 @@ const {
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
-          align-whole="center"
           row-key="id"
           show-overflow-tooltip
           :data="dataList"
@@ -138,7 +137,7 @@ const {
           :loading="loading"
           :size="size"
           adaptive
-          :adaptiveConfig="{ offsetBottom: 120 }"
+          :adaptiveConfig="{ offsetBottom: 140 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         />
@@ -216,37 +215,31 @@ const {
             prop="qty"
             :label="$t('customs.verify.declareQty')"
             min-width="90"
-            align="center"
           />
           <el-table-column
             prop="unit"
             :label="$t('common.columns.unit')"
             width="70"
-            align="center"
           />
           <el-table-column
             prop="price"
             :label="$t('customs.verify.price')"
             min-width="90"
-            align="center"
           />
           <el-table-column
             prop="currency"
             :label="$t('customs.verify.currency')"
             width="80"
-            align="center"
           />
           <el-table-column
             prop="grossWeight"
             :label="$t('customs.verify.grossWeightKg')"
             min-width="90"
-            align="center"
           />
           <el-table-column
             prop="netWeight"
             :label="$t('customs.verify.netWeightKg')"
             min-width="90"
-            align="center"
           />
         </el-table>
       </template>

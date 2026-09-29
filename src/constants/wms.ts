@@ -255,6 +255,36 @@ export const moveTypeOptions: DictItem[] = [
   { label: $t("dict.moveType.transfer"), value: "transfer" }
 ];
 
+/** 批次效期状态 */
+export const batchStatusOptions: DictItem[] = [
+  { label: $t("dict.batchStatus.normal"), value: "normal", tag: "success" },
+  { label: $t("dict.batchStatus.expiring"), value: "expiring", tag: "warning" },
+  { label: $t("dict.batchStatus.expired"), value: "expired", tag: "danger" }
+];
+
+/** 库存调整类型 */
+export const adjustTypeOptions: DictItem[] = [
+  { label: $t("dict.adjustType.gain"), value: "gain", tag: "success" },
+  { label: $t("dict.adjustType.loss"), value: "loss", tag: "danger" }
+];
+
+/** 库存调整单状态 */
+export const adjustStatusOptions: DictItem[] = [
+  { label: $t("dict.adjustStatus.pending"), value: "pending", tag: "warning" },
+  {
+    label: $t("dict.adjustStatus.approved"),
+    value: "approved",
+    tag: "success"
+  },
+  { label: $t("dict.adjustStatus.rejected"), value: "rejected", tag: "danger" }
+];
+
+/** 预警处理状态 */
+export const warningStatusOptions: DictItem[] = [
+  { label: $t("dict.warningStatus.active"), value: "active", tag: "danger" },
+  { label: $t("dict.warningStatus.handled"), value: "handled", tag: "success" }
+];
+
 /** 盘点状态 */
 export const stocktakeStatusOptions: DictItem[] = [
   { label: $t("dict.stocktakeStatus.draft"), value: "draft", tag: "info" },

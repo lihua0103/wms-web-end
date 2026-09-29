@@ -1,11 +1,23 @@
 /* ==========================================================================
    WMS 专属设计系统 —— 「深海藏青 × 远航青」
-   深海藏青导航（#182C4E 实色）+ 远航青主色 #0E7490 + 降饱和语义色板，
-   圆角胶囊菜单（主色实心激活胶囊），卡片化工作区，胶囊状态标签（带语义
-   圆点），数字化表格。仅作用域 light 模式与 default 侧边栏，不侵入 dark
+   一块品牌画布（深海藏青）贯穿登录页与侧边栏，远航青主色承担全部交互态，
+   信号青作为唯一点缀色（航线/指示条/脉冲）。工作区为中性冷灰卡片化布局，
+   语义色整体降饱和一档。仅作用域 light 模式与 default 侧边栏，不侵入 dark
    模式与 pure-admin 主题切换机制；颜色一律取主题变量（见文件末注释）。
    设计规范文档见 docs/UI设计规范.md
    ========================================================================== */
+
+/* ---------- 0. 品牌画布（明暗模式共用） ---------- */
+
+/* 登录页品牌舞台与侧边栏共用同一块藏青，保证「进门」与「进系统」是同一个世界 */
+:root {
+  --wms-navy: #182c4e; // 藏青画布（侧栏底 / 登录舞台顶）
+  --wms-navy-deep: #0f1d38; // 藏青深层（登录舞台底 / 侧栏子菜单面板）
+  --wms-navy-line: rgb(255 255 255 / 10%); // 画布上的发丝线
+  --wms-navy-text: rgb(214 226 242 / 78%); // 画布上的常规文字
+  --wms-navy-text-dim: rgb(214 226 242 / 46%); // 画布上的次级文字
+  --wms-signal: #22b8cf; // 信号青：航线、指示条、脉冲（与 Logo 渐变第二色一致）
+}
 
 /* ---------- 1. 设计令牌 ---------- */
 html:not(.dark) {
@@ -253,49 +265,35 @@ html:not(.dark) {
   }
 }
 
-/* ---------- 6. 侧边栏「远航蓝」+ 顶栏 ---------- */
+/* ---------- 6. 侧边栏「深海藏青」+ 顶栏 ---------- */
 
 /* 色板走 pure-admin data-theme 机制：各主题的菜单底色/文字由 theme.scss 提供
-   （此处仅定制 default 主题的藏青蓝），几何与激活态对全部深色主题生效。
+   （此处仅定制 default 主题的藏青），几何与交互态对全部深色主题生效。
    激活项底色一律取 --el-color-primary，主色随设置面板的主题色联动。 */
 html[data-theme="default"] {
-  --pure-theme-menu-bg: #182c4e;
-  --pure-theme-sidebar-logo: #1c3459;
+  --pure-theme-menu-bg: var(--wms-navy);
+  --pure-theme-sidebar-logo: var(--wms-navy);
   --pure-theme-menu-hover: rgb(255 255 255 / 7%);
-  --pure-theme-menu-active-before: #46c2dd;
-  --pure-theme-menu-text: rgb(203 222 241 / 74%);
+  --pure-theme-menu-active-before: var(--wms-signal);
+  --pure-theme-menu-text: var(--wms-navy-text);
   --pure-theme-sub-menu-active-text: #fff;
   --pure-theme-menu-title-hover: #fff;
-  --pure-theme-sub-menu-bg: #14243f;
+  --pure-theme-sub-menu-bg: var(--wms-navy-deep);
 }
 
 html:not([data-theme="light"]) {
   .sidebar-container {
-    border-right-color: rgb(0 0 0 / 12%);
-    box-shadow: 3px 0 14px -6px rgb(8 22 48 / 40%);
+    border-right-color: rgb(0 0 0 / 14%);
+    box-shadow: 2px 0 12px -8px rgb(8 22 48 / 45%);
 
-    /* Logo 区：一行系统名 + 发丝分隔线（企业平台标准形态） */
+    /* Logo 区：Logo + 系统名单行，发丝分隔线 */
     .sidebar-logo-container {
-      box-shadow: inset 0 -1px 0 rgb(148 163 184 / 12%);
-
-      .sidebar-logo-link {
-        img {
-          height: 30px;
-          border-radius: 6px;
-        }
-
-        .sidebar-title {
-          font-size: 16px;
-          font-weight: 600;
-          color: #fff;
-          letter-spacing: 0.4px;
-        }
-      }
+      box-shadow: inset 0 -1px 0 var(--wms-navy-line);
     }
 
     /* 滚动条：细窄低对比 */
     .el-scrollbar__bar.is-vertical {
-      right: 2px;
+      right: 3px;
       width: 5px;
     }
 
@@ -303,34 +301,51 @@ html:not([data-theme="light"]) {
       background: rgb(148 163 184 / 28%);
     }
 
-    /* ===== 菜单（标准结构 + 交付级细节）=====
-       图标有独立着色状态：灰蓝（静息）→ 白（悬停/选中）；
-       字重层级：顶层 500 → 选中 600；子级 400 → 选中 500；
-       选中条：主色微渐变 + 顶部内高光 + 轻投影（质感而非发光）；
-       子级组：连续圆角面板（深一档底色），行间无条纹。 */
+    /* ===== 菜单交互模型 =====
+       三种状态、三种信号，互不重叠：
+       · 悬停 → 浮层微亮（背景），并轻微右移 2px 给出「可按」反馈
+       · 展开父级 → 仅文字/图标点亮 + 箭头转信号青，不加底色
+       · 选中 → 主色实底 + 左侧 3px 信号青指示条（整栏唯一的强信号）
+       顶层 40px / 子级 36px 双密度，图标独立着色。 */
     .el-menu-item,
     .el-sub-menu__title {
       position: relative;
-      height: 44px;
+      height: 40px;
       margin: 2px 8px;
+      font-size: 14px;
       font-weight: 500;
-      line-height: 44px;
-      letter-spacing: 0.3px;
+      line-height: 40px;
+      letter-spacing: 0.2px;
       border-radius: 6px;
       transition:
-        background-color 0.2s,
-        color 0.2s;
+        background-color 0.18s ease,
+        color 0.18s ease,
+        padding-left 0.18s ease;
+
+      /* 选中指示条（默认收起，选中时展开为 18px） */
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 3px;
+        height: 0;
+        content: "";
+        background: var(--pure-theme-menu-active-before);
+        border-radius: 0 3px 3px 0;
+        transform: translateY(-50%);
+        transition: height 0.2s ease;
+      }
 
       div,
       span {
-        height: 44px;
-        line-height: 44px;
+        height: 40px;
+        line-height: 40px;
       }
 
       .sub-menu-icon {
-        font-size: 17px;
+        font-size: 16px;
         color: rgb(203 222 241 / 60%);
-        transition: color 0.2s;
+        transition: color 0.18s ease;
       }
 
       &:hover {
@@ -341,25 +356,38 @@ html:not([data-theme="light"]) {
           color: #fff;
         }
       }
+
+      /* 键盘可达：focus-visible 与悬停同态 */
+      &:focus-visible {
+        color: var(--pure-theme-menu-title-hover) !important;
+        outline: none;
+        background: var(--pure-theme-menu-hover) !important;
+      }
     }
 
-    .el-menu-item {
-      font-size: 14px;
+    /* 顶层项悬停右移 2px（仅根菜单直系子项；折叠态与子级面板不位移，避免抖动） */
+    .el-menu.outer-most:not(.el-menu--collapse) > .el-menu-item:hover,
+    .el-menu.outer-most:not(.el-menu--collapse)
+      > .el-sub-menu
+      > .el-sub-menu__title:hover {
+      padding-left: 22px !important;
     }
 
     .el-sub-menu__title .el-sub-menu__icon-arrow {
       font-size: 11px;
       color: rgb(148 163 184 / 70%);
-      transition: color 0.2s;
+      transition:
+        color 0.18s ease,
+        transform var(--el-transition-duration);
     }
 
-    /* 含选中项/展开中的父级：文字点亮 + 图标提亮 + 强调色箭头 */
+    /* 展开中/含选中的父级：仅文字点亮 + 信号青箭头，不加底色 */
     .el-sub-menu.is-active > .el-sub-menu__title,
     .el-sub-menu.is-open > .el-sub-menu__title {
       color: var(--pure-theme-menu-title-hover) !important;
 
       .sub-menu-icon {
-        color: rgb(203 222 241 / 92%);
+        color: rgb(226 238 250 / 92%);
       }
 
       .el-sub-menu__icon-arrow {
@@ -367,28 +395,29 @@ html:not([data-theme="light"]) {
       }
     }
 
-    /* 子级组：连续圆角面板（深一档底色，无行间条纹） */
+    /* 子级组：深一档整条面板（缩进表达层级，无行间条纹） */
     .el-menu--inline {
-      padding: 4px 0;
+      padding: 3px 0;
       margin: 2px 8px 6px;
       background: var(--pure-theme-sub-menu-bg);
-      border-radius: 8px;
+      border-radius: 6px;
 
       .el-menu-item {
-        height: 38px;
+        min-width: 0;
+        height: 36px;
         margin: 1px 6px;
         font-size: 13.5px;
         font-weight: 400;
-        line-height: 38px;
+        line-height: 36px;
         color: var(--pure-theme-menu-text);
         letter-spacing: 0.2px;
         background-color: transparent !important;
-        border-radius: 5px;
+        border-radius: 4px;
 
         div,
         span {
-          height: 38px;
-          line-height: 38px;
+          height: 36px;
+          line-height: 36px;
         }
 
         .sub-menu-icon {
@@ -397,7 +426,7 @@ html:not([data-theme="light"]) {
 
         &:hover {
           color: var(--pure-theme-menu-title-hover) !important;
-          background: rgb(255 255 255 / 6%) !important;
+          background: rgb(255 255 255 / 7%) !important;
 
           .sub-menu-icon {
             color: #fff;
@@ -406,27 +435,37 @@ html:not([data-theme="light"]) {
       }
     }
 
-    /* 选中（顶层叶节点）：主色实底条 + 顶部内高光 + 轻投影 */
-    .is-active.submenu-title-noDropdown.outer-most::before {
-      inset: 0 8px;
-      margin: 2px 0;
-      background: linear-gradient(
-        90deg,
-        var(--el-color-primary),
-        color-mix(
-          in srgb,
-          var(--el-color-primary) 82%,
-          var(--el-color-primary-light-3)
-        )
-      ) !important;
+    /* 选中（顶层叶节点/子级通用）：主色实底 + 白字 + 顶部内高光 */
+    .is-active.submenu-title-noDropdown.outer-most::before,
+    .el-menu-item.is-active.nest-menu::before {
+      inset: 0;
+      margin: 0;
+      content: "";
+      background: var(--el-color-primary) !important;
       border-radius: 6px;
       box-shadow:
-        0 2px 8px -2px
-          color-mix(in srgb, var(--el-color-primary) 40%, transparent),
-        inset 0 1px 0 rgb(255 255 255 / 14%);
+        inset 0 1px 0 rgb(255 255 255 / 14%),
+        0 4px 12px -4px
+          color-mix(in srgb, var(--el-color-primary) 70%, transparent);
     }
 
-    .is-active.submenu-title-noDropdown.outer-most > * {
+    .is-active.submenu-title-noDropdown.outer-most::after,
+    .el-menu-item.is-active.nest-menu::after {
+      left: -8px;
+      height: 18px;
+    }
+
+    .el-menu--inline .el-menu-item.is-active.nest-menu::before {
+      border-radius: 4px;
+    }
+
+    .el-menu--inline .el-menu-item.is-active.nest-menu::after {
+      left: -6px;
+    }
+
+    .is-active.submenu-title-noDropdown.outer-most > *,
+    .el-menu-item.is-active.nest-menu > * {
+      z-index: 1;
       font-weight: 600;
       color: #fff !important;
 
@@ -435,43 +474,35 @@ html:not([data-theme="light"]) {
       }
     }
 
-    /* 选中（子级）：同款主色实底条，层级靠面板缩进表达 */
-    .el-menu-item.is-active.nest-menu::before {
-      inset: 0 6px;
-      margin: 2px 0;
-      background: linear-gradient(
-        90deg,
-        var(--el-color-primary),
-        color-mix(
-          in srgb,
-          var(--el-color-primary) 82%,
-          var(--el-color-primary-light-3)
-        )
-      ) !important;
-      border-radius: 5px;
-      box-shadow:
-        0 2px 8px -2px
-          color-mix(in srgb, var(--el-color-primary) 40%, transparent),
-        inset 0 1px 0 rgb(255 255 255 / 14%);
-    }
-
-    .el-menu-item.is-active.nest-menu > * {
+    .el-menu--inline .el-menu-item.is-active.nest-menu > * {
       font-weight: 500;
-      color: #fff !important;
-
-      &.sub-menu-icon {
-        color: #fff !important;
-      }
     }
 
-    /* 折叠模式：收窄留白 */
-    .el-menu--collapse .el-menu-item,
-    .el-menu--collapse .el-sub-menu__title {
-      margin-inline: 6px;
+    /* 折叠模式：仅图标，收窄留白；含选中子项的父级用图标着色 + 指示条提示 */
+    .el-menu--collapse {
+      .el-menu-item,
+      .el-sub-menu__title {
+        margin-inline: 8px;
+      }
+
+      .is-active.outer-most.el-sub-menu > .el-sub-menu__title {
+        .sub-menu-icon {
+          color: var(--pure-theme-menu-active-before);
+        }
+
+        &::before {
+          display: none;
+        }
+
+        &::after {
+          left: -8px;
+          height: 18px;
+        }
+      }
     }
   }
 
-  /* 折叠态弹出菜单：深色浮层 */
+  /* 折叠态弹出菜单：深色浮层，激活主色实底 */
   .el-popper.el-menu--vertical,
   .el-popper.el-menu--horizontal {
     overflow: hidden;
@@ -488,30 +519,61 @@ html:not([data-theme="light"]) {
       border-radius: 6px;
 
       &:hover {
-        background: rgb(255 255 255 / 6%) !important;
+        background: rgb(255 255 255 / 7%) !important;
       }
     }
 
     .el-menu--popup .el-menu-item.is-active {
       font-weight: 500;
       color: #fff !important;
-      background: linear-gradient(
-        90deg,
-        var(--el-color-primary),
-        color-mix(
-          in srgb,
-          var(--el-color-primary) 82%,
-          var(--el-color-primary-light-3)
-        )
-      ) !important;
+      background: var(--el-color-primary) !important;
+    }
+  }
+
+  /* 底部折叠按钮：与画布同底，发丝线分隔，悬停浮层 */
+  .sidebar-container .left-collapse {
+    background: var(--pure-theme-menu-bg);
+    box-shadow: inset 0 1px 0 var(--wms-navy-line);
+
+    svg {
+      color: var(--wms-navy-text-dim) !important;
+      transition: color 0.18s ease;
+    }
+
+    &:hover svg {
+      color: #fff !important;
+    }
+  }
+
+  /* 侧栏边缘折叠把手：藏青底 + 信号青箭头 */
+  .sidebar-container .center-collapse {
+    background: var(--pure-theme-sub-menu-bg);
+    border-color: rgb(148 163 184 / 22%);
+
+    svg {
+      color: var(--pure-theme-menu-active-before) !important;
     }
   }
 }
 
 html:not(.dark) {
   .navbar {
+    color: var(--el-text-color-primary);
     border-bottom: 1px solid var(--wms-border);
     box-shadow: none;
+
+    .vertical-header-right {
+      color: var(--el-text-color-primary);
+
+      .el-dropdown-link {
+        color: var(--el-text-color-primary);
+      }
+    }
+  }
+
+  /* 顶栏图标按钮：悬停浅底 */
+  .navbar .navbar-bg-hover:hover {
+    background: var(--el-fill-color);
   }
 
   /* 多标签页：白底胶囊化激活项 */

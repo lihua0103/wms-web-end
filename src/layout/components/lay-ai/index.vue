@@ -432,47 +432,53 @@ function clearSession() {
 </template>
 
 <style lang="scss" scoped>
-/* 顶栏入口：品牌渐变胶囊（颜色跟随主题色变量） */
+/* 悬浮智能体入口：保持常驻可见，但不占用顶栏操作区 */
 .ai-entry {
+  position: fixed;
+  right: 26px;
+  bottom: 30px;
+  z-index: 1200;
   display: inline-flex;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
-  height: 30px;
-  padding: 0 12px 0 10px;
-  margin-right: 4px;
+  height: 56px;
+  padding: 0 16px 0 12px;
   font-size: 13px;
   color: #fff;
   cursor: pointer;
-  background: linear-gradient(
-    135deg,
-    var(--el-color-primary),
-    var(--el-color-primary-light-3)
-  );
-  border-radius: 999px;
-  box-shadow: 0 3px 8px -2px
-    color-mix(in srgb, var(--el-color-primary) 45%, transparent);
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  background: var(--el-color-primary);
+  border: 2px solid color-mix(in srgb, var(--pure-theme-menu-active-before) 75%, #fff);
+  border-radius: 30px;
+  box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--el-color-primary) 80%, transparent), 0 0 0 5px color-mix(in srgb, var(--el-color-primary) 12%, transparent);
+  transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
-    box-shadow: 0 5px 14px -2px
-      color-mix(in srgb, var(--el-color-primary) 60%, transparent);
-    transform: translateY(-1px);
+    box-shadow: 0 14px 30px -10px color-mix(in srgb, var(--el-color-primary) 82%, transparent);
+    transform: translateY(-2px);
   }
 
-  .label {
-    font-weight: 500;
+  &::before {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    content: "AI";
+    font-size: 11px;
+    font-weight: 800;
     letter-spacing: 0.5px;
+    color: var(--el-color-primary);
+    background: #fff;
+    border-radius: 50%;
   }
 
-  .dot {
-    width: 6px;
-    height: 6px;
-    background: #4ade80;
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px rgb(255 255 255 / 35%);
-  }
+  .label { font-weight: 700; letter-spacing: 0.3px; }
+  .dot { width: 7px; height: 7px; background: var(--el-color-success); border-radius: 50%; box-shadow: 0 0 0 3px rgb(255 255 255 / 24%); animation: ai-pulse 1.8s ease-out infinite; }
+}
+
+@media (width <= 600px) {
+  .ai-entry { right: 16px; bottom: 18px; width: 48px; padding: 0; justify-content: center; border-radius: 50%; }
+  .ai-entry .label { display: none; }
 }
 </style>
 
@@ -490,6 +496,15 @@ function clearSession() {
 @keyframes ai-blink {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes ai-pulse {
+  70% {
+    box-shadow: 0 0 0 7px rgb(255 255 255 / 0%);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0%);
   }
 }
 

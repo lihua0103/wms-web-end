@@ -70,14 +70,16 @@ export function useNav() {
   });
 
   const title = computed(() => {
-    return $config.Title;
+    // Title 允许配 i18n key（如 app.title），翻译不存在则原样返回
+    return transformI18n($config.Title);
   });
 
   /** 动态title */
   function changeTitle(meta: routeMetaType) {
     const Title = getConfig().Title;
     const routeTitle = transformI18n(meta.title);
-    if (Title) document.title = `${routeTitle} | ${Title}`;
+    const brand = transformI18n(Title);
+    if (brand) document.title = `${routeTitle} | ${brand}`;
     else document.title = routeTitle;
   }
 

@@ -98,7 +98,6 @@ const {
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           border
-          align-whole="center"
           row-key="id"
           show-overflow-tooltip
           :data="dataList"
@@ -107,7 +106,7 @@ const {
           :loading="loading"
           :size="size"
           adaptive
-          :adaptiveConfig="{ offsetBottom: 120 }"
+          :adaptiveConfig="{ offsetBottom: 140 }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         />
