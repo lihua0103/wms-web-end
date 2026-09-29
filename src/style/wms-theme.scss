@@ -2,8 +2,9 @@
    WMS 专属设计系统 —— 「深海藏青 × 远航青」
    一块品牌画布（深海藏青）贯穿登录页与侧边栏，远航青主色承担全部交互态，
    信号青作为唯一点缀色（航线/指示条/脉冲）。工作区为中性冷灰卡片化布局，
-   语义色整体降饱和一档。仅作用域 light 模式与 default 侧边栏，不侵入 dark
-   模式与 pure-admin 主题切换机制；颜色一律取主题变量（见文件末注释）。
+   语义色整体降饱和一档。工作区令牌（--wms-*）在 dark 模式下取 element-plus
+   暗色变量同源值，页面样式一律取令牌、明暗自动切换；其余区块仅作用域 light
+   模式与 default 侧边栏，不侵入 pure-admin 主题切换机制（见文件末注释）。
    设计规范文档见 docs/UI设计规范.md
    ========================================================================== */
 
@@ -70,6 +71,16 @@ html:not(.dark) {
 
   /* 控件圆角 */
   --el-border-radius-base: 6px;
+}
+
+/* ---------- 1b. 深色模式令牌（与 element-plus dark 变量同源） ---------- */
+html.dark {
+  --wms-bg: var(--el-bg-color-page);
+  --wms-card: var(--el-bg-color);
+  --wms-border: var(--el-border-color-light);
+  --wms-card-shadow: none;
+  --wms-text-title: var(--el-text-color-primary);
+  --wms-text-secondary: var(--el-text-color-secondary);
 }
 
 /* 主色系 light/dark 派生（与 #0E7490 匹配，运行时会被主题机制内联覆盖） */
@@ -592,73 +603,73 @@ html:not(.dark) {
 
 /* ---------- 7. KPI 统计卡（工作台/看板） ---------- */
 
-/* 国际物流平台用色：鲜活渐变图标底座，参考 Dify/Flexport 的色彩表现力 */
-html:not(.dark) {
-  .wms-kpi-card {
-    border: 1px solid var(--wms-border);
-    border-radius: var(--wms-radius-card);
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+/* 国际物流平台用色：鲜活渐变图标底座，参考 Dify/Flexport 的色彩表现力。
+   卡片底/边框走 --wms-* 令牌，明暗模式各自取值。 */
+.wms-kpi-card {
+  background: var(--wms-card);
+  border: 1px solid var(--wms-border);
+  border-radius: var(--wms-radius-card);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-    &:hover {
-      box-shadow:
-        0 4px 10px rgb(15 30 60 / 6%),
-        0 12px 28px -8px rgb(15 30 60 / 14%);
-      transform: translateY(-2px);
+  &:hover {
+    box-shadow:
+      0 4px 10px rgb(15 30 60 / 6%),
+      0 12px 28px -8px rgb(15 30 60 / 14%);
+    transform: translateY(-2px);
+  }
+
+  .wms-kpi-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px -2px rgb(15 30 60 / 22%);
+
+    &.blue {
+      background: linear-gradient(
+        135deg,
+        var(--el-color-primary),
+        var(--el-color-primary-light-3)
+      );
     }
 
-    .wms-kpi-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px -2px rgb(15 30 60 / 22%);
-
-      &.blue {
-        background: linear-gradient(
-          135deg,
-          var(--el-color-primary),
-          var(--el-color-primary-light-3)
-        );
-      }
-
-      &.green {
-        background: linear-gradient(
-          135deg,
-          var(--el-color-success),
-          var(--el-color-success-light-3)
-        );
-      }
-
-      &.orange {
-        background: linear-gradient(135deg, #f97316, #fb923c);
-      }
-
-      &.red {
-        background: linear-gradient(
-          135deg,
-          var(--el-color-danger),
-          var(--el-color-danger-light-3)
-        );
-      }
+    &.green {
+      background: linear-gradient(
+        135deg,
+        var(--el-color-success),
+        var(--el-color-success-light-3)
+      );
     }
 
-    .wms-kpi-title {
-      font-size: 13px;
-      color: var(--wms-text-secondary);
+    &.orange {
+      background: linear-gradient(135deg, #f97316, #fb923c);
     }
 
-    .wms-kpi-value {
-      font-size: 26px;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.2;
-      color: var(--wms-text-title);
+    &.red {
+      background: linear-gradient(
+        135deg,
+        var(--el-color-danger),
+        var(--el-color-danger-light-3)
+      );
     }
+  }
+
+  .wms-kpi-title {
+    font-size: 13px;
+    color: var(--wms-text-secondary);
+  }
+
+  .wms-kpi-value {
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    color: var(--wms-text-title);
   }
 }
 

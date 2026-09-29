@@ -152,6 +152,8 @@
 
     .el-menu {
       height: 100%;
+      /* 收窄基础缩进，保证 232px 宽度下最长英文菜单名不截断 */
+      --el-menu-base-level-padding: 14px;
       background-color: transparent !important;
       border: none;
     }
@@ -568,7 +570,7 @@
 }
 
 body[layout="vertical"] {
-  $sideBarWidth: 220px;
+  $sideBarWidth: 232px;
 
   @include merge-style($sideBarWidth);
 
@@ -666,7 +668,7 @@ body[layout="horizontal"] {
 }
 
 body[layout="mix"] {
-  $sideBarWidth: 220px;
+  $sideBarWidth: 232px;
 
   @include merge-style($sideBarWidth);
 

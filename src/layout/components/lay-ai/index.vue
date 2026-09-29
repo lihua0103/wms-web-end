@@ -432,7 +432,21 @@ function clearSession() {
 </template>
 
 <style lang="scss" scoped>
-/* 悬浮智能体入口：保持常驻可见，但不占用顶栏操作区 */
+@media (width <= 600px) {
+  .ai-entry {
+    right: 16px;
+    bottom: 18px;
+    justify-content: center;
+    width: 48px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .ai-entry .label {
+    display: none;
+  }
+}
+
 .ai-entry {
   position: fixed;
   right: 26px;
@@ -447,13 +461,20 @@ function clearSession() {
   color: #fff;
   cursor: pointer;
   background: var(--el-color-primary);
-  border: 2px solid color-mix(in srgb, var(--pure-theme-menu-active-before) 75%, #fff);
+  border: 2px solid
+    color-mix(in srgb, var(--pure-theme-menu-active-before) 75%, #fff);
   border-radius: 30px;
-  box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--el-color-primary) 80%, transparent), 0 0 0 5px color-mix(in srgb, var(--el-color-primary) 12%, transparent);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow:
+    0 12px 28px -10px
+      color-mix(in srgb, var(--el-color-primary) 80%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--el-color-primary) 12%, transparent);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
-    box-shadow: 0 14px 30px -10px color-mix(in srgb, var(--el-color-primary) 82%, transparent);
+    box-shadow: 0 14px 30px -10px
+      color-mix(in srgb, var(--el-color-primary) 82%, transparent);
     transform: translateY(-2px);
   }
 
@@ -463,23 +484,31 @@ function clearSession() {
     justify-content: center;
     width: 32px;
     height: 32px;
-    content: "AI";
     font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.5px;
     color: var(--el-color-primary);
+    letter-spacing: 0.5px;
+    content: "AI";
     background: #fff;
     border-radius: 50%;
   }
 
-  .label { font-weight: 700; letter-spacing: 0.3px; }
-  .dot { width: 7px; height: 7px; background: var(--el-color-success); border-radius: 50%; box-shadow: 0 0 0 3px rgb(255 255 255 / 24%); animation: ai-pulse 1.8s ease-out infinite; }
+  .label {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    background: var(--el-color-success);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 24%);
+    animation: ai-pulse 1.8s ease-out infinite;
+  }
 }
 
-@media (width <= 600px) {
-  .ai-entry { right: 16px; bottom: 18px; width: 48px; padding: 0; justify-content: center; border-radius: 50%; }
-  .ai-entry .label { display: none; }
-}
+/* 悬浮智能体入口：保持常驻可见，但不占用顶栏操作区 */
 </style>
 
 <style lang="scss">
@@ -503,6 +532,7 @@ function clearSession() {
   70% {
     box-shadow: 0 0 0 7px rgb(255 255 255 / 0%);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgb(255 255 255 / 0%);
   }
@@ -589,7 +619,7 @@ function clearSession() {
     flex: 1;
     padding: 16px;
     overflow-y: auto;
-    background: #f6f8fa;
+    background: var(--el-bg-color-page);
   }
 
   .ai-msg {
@@ -608,9 +638,9 @@ function clearSession() {
       justify-content: flex-start;
 
       .bubble {
-        color: #1e293b;
-        background: #fff;
-        border: 1px solid #e8ecf2;
+        color: var(--el-text-color-primary);
+        background: var(--el-bg-color);
+        border: 1px solid var(--el-border-color-light);
         border-top-left-radius: 4px;
       }
     }
@@ -637,9 +667,9 @@ function clearSession() {
       margin-bottom: 8px;
       font-size: 12px;
       font-style: italic;
-      color: #64748b;
+      color: var(--el-text-color-secondary);
       word-break: break-all;
-      background: #f1f5f9;
+      background: var(--el-fill-color);
       border-radius: 8px;
 
       .svg-icon,
@@ -660,10 +690,10 @@ function clearSession() {
         margin-bottom: 4px;
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 12px;
-        color: #475569;
+        color: var(--el-text-color-regular);
         word-break: break-all;
-        background: #f8fafc;
-        border: 1px dashed #e2e8f0;
+        background: var(--el-fill-color-light);
+        border: 1px dashed var(--el-border-color);
         border-radius: 999px;
 
         .name {
@@ -675,7 +705,7 @@ function clearSession() {
         }
 
         .done {
-          color: #16a34a;
+          color: var(--el-color-success);
         }
       }
     }
@@ -692,23 +722,23 @@ function clearSession() {
         align-items: center;
         padding: 3px 10px;
         font-size: 12px;
-        color: #475569;
-        background: #f1f5f9;
+        color: var(--el-text-color-regular);
+        background: var(--el-fill-color);
         border-radius: 999px;
 
         &.success {
-          color: #15803d;
-          background: #f0fdf4;
+          color: var(--el-color-success);
+          background: var(--el-color-success-light-9);
         }
 
         &.running {
-          color: #b45309;
-          background: #fffbeb;
+          color: var(--el-color-warning);
+          background: var(--el-color-warning-light-9);
         }
 
         &.failed {
-          color: #b91c1c;
-          background: #fef2f2;
+          color: var(--el-color-danger);
+          background: var(--el-color-danger-light-9);
         }
 
         .spin {
@@ -739,7 +769,7 @@ function clearSession() {
     .tokens {
       margin-top: 6px;
       font-size: 11px;
-      color: #94a3b8;
+      color: var(--el-text-color-secondary);
       text-align: right;
     }
   }
@@ -755,8 +785,9 @@ function clearSession() {
       font-size: 12.5px;
       color: var(--el-color-primary);
       cursor: pointer;
-      background: #fff;
-      border: 1px solid color-mix(in srgb, var(--el-color-primary) 35%, #fff);
+      background: var(--el-bg-color);
+      border: 1px solid
+        color-mix(in srgb, var(--el-color-primary) 35%, var(--el-bg-color));
       border-radius: 999px;
       transition:
         background-color 0.2s,
@@ -782,8 +813,8 @@ function clearSession() {
     align-items: center;
     padding: 11px 12px;
     cursor: pointer;
-    background: #fff;
-    border: 1px solid #e8ecf2;
+    background: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-light);
     border-radius: 10px;
     transition:
       border-color 0.2s,
@@ -818,7 +849,7 @@ function clearSession() {
     .t {
       font-size: 13.5px;
       font-weight: 600;
-      color: #1e293b;
+      color: var(--el-text-color-primary);
     }
   }
 
@@ -826,8 +857,8 @@ function clearSession() {
     display: flex;
     gap: 10px;
     padding: 14px 16px;
-    background: #fff;
-    border-top: 1px solid #e8ecf2;
+    background: var(--el-bg-color);
+    border-top: 1px solid var(--el-border-color-light);
 
     .el-input__wrapper {
       border-radius: 999px;

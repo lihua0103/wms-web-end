@@ -1,8 +1,16 @@
-import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
+import {
+  computed,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  watch
+} from "vue";
 import * as echarts from "echarts";
 import { getDashboardData } from "@/api/report";
 import type { DashboardData } from "@/api/report";
 import { $t } from "@/plugins/i18n";
+import { isDark, chartPalette, chartTooltip } from "@/utils/chart-theme";
 
 export function useReportDashboard() {
   const data = ref<DashboardData>();
@@ -40,16 +48,27 @@ export function useReportDashboard() {
   });
 
   function initCharts() {
+    /** 图表配色取 element-plus 令牌，随明暗模式自动切换 */
+    const p = chartPalette();
+    const axisStyles = {
+      axisLine: { lineStyle: { color: p.axisLine } },
+      axisLabel: { color: p.axisLabel }
+    };
     if (categoryRef.value && data.value) {
       categoryChart = echarts.init(categoryRef.value);
       categoryChart.setOption({
-        tooltip: { trigger: "axis" },
+        tooltip: chartTooltip("axis"),
         grid: { left: 70, right: 20, top: 30, bottom: 30 },
         xAxis: {
           type: "category",
-          data: data.value.categoryStock.map(i => i.name)
+          data: data.value.categoryStock.map(i => i.name),
+          ...axisStyles
         },
-        yAxis: { type: "value" },
+        yAxis: {
+          type: "value",
+          splitLine: { lineStyle: { color: p.splitLine } },
+          ...axisStyles
+        },
         series: [
           {
             type: "bar",
@@ -63,15 +82,15 @@ export function useReportDashboard() {
     if (warehouseRef.value && data.value) {
       warehouseChart = echarts.init(warehouseRef.value);
       warehouseChart.setOption({
-        tooltip: { trigger: "item" },
-        legend: { bottom: 0 },
+        tooltip: chartTooltip("item"),
+        legend: { bottom: 0, textStyle: { color: p.legendText } },
         series: [
           {
             type: "pie",
             radius: ["40%", "65%"],
             center: ["50%", "45%"],
             data: data.value.warehouseStock,
-            label: { formatter: "{b}: {c}" }
+            label: { formatter: "{b}: {c}", color: p.axisLabel }
           }
         ]
       });
@@ -79,10 +98,18 @@ export function useReportDashboard() {
     if (ageRef.value && data.value) {
       ageChart = echarts.init(ageRef.value);
       ageChart.setOption({
-        tooltip: { trigger: "axis" },
+        tooltip: chartTooltip("axis"),
         grid: { left: 70, right: 20, top: 30, bottom: 30 },
-        xAxis: { type: "category", data: data.value.stockAge.map(i => i.name) },
-        yAxis: { type: "value" },
+        xAxis: {
+          type: "category",
+          data: data.value.stockAge.map(i => i.name),
+          ...axisStyles
+        },
+        yAxis: {
+          type: "value",
+          splitLine: { lineStyle: { color: p.splitLine } },
+          ...axisStyles
+        },
         series: [
           {
             type: "bar",
@@ -100,10 +127,18 @@ export function useReportDashboard() {
         (a, b) => a.turnover - b.turnover
       );
       turnoverChart.setOption({
-        tooltip: { trigger: "axis" },
+        tooltip: chartTooltip("axis"),
         grid: { left: 90, right: 40, top: 30, bottom: 30 },
-        xAxis: { type: "value" },
-        yAxis: { type: "category", data: top.map(i => i.name) },
+        xAxis: {
+          type: "value",
+          splitLine: { lineStyle: { color: p.splitLine } },
+          ...axisStyles
+        },
+        yAxis: {
+          type: "category",
+          data: top.map(i => i.name),
+          ...axisStyles
+        },
         series: [
           {
             type: "bar",
@@ -114,6 +149,14 @@ export function useReportDashboard() {
         ]
       });
     }
+  }
+
+  function disposeCharts() {
+    categoryChart?.dispose();
+    warehouseChart?.dispose();
+    ageChart?.dispose();
+    turnoverChart?.dispose();
+    categoryChart = warehouseChart = ageChart = turnoverChart = null;
   }
 
   function resizeCharts() {
@@ -131,12 +174,17 @@ export function useReportDashboard() {
     window.addEventListener("resize", resizeCharts);
   });
 
+  /** 明暗模式切换：取新令牌重建图表 */
+  watch(isDark, () => {
+    nextTick(() => {
+      disposeCharts();
+      initCharts();
+    });
+  });
+
   onBeforeUnmount(() => {
     window.removeEventListener("resize", resizeCharts);
-    categoryChart?.dispose();
-    warehouseChart?.dispose();
-    ageChart?.dispose();
-    turnoverChart?.dispose();
+    disposeCharts();
   });
 
   return {

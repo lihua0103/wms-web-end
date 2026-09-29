@@ -163,7 +163,9 @@ const {
       </el-descriptions>
       <div class="mt-4">
         <div class="mb-2 font-bold">{{ $t("system.notice.contentTitle") }}</div>
-        <p class="leading-6 whitespace-pre-wrap text-gray-600">
+        <p
+          class="leading-6 whitespace-pre-wrap text-gray-600 dark:text-gray-300"
+        >
           {{ currentRow?.content || "-" }}
         </p>
       </div>

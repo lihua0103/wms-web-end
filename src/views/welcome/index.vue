@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  watch
+} from "vue";
 import { useRouter } from "vue-router";
 import * as echarts from "echarts";
 import { Download, Upload, Box, Coin } from "@element-plus/icons-vue";
 import { getDashboardStats } from "@/api/system";
 import { $t, transformI18n } from "@/plugins/i18n";
 import type { DashboardStats } from "@/api/system";
+import { isDark, chartPalette, chartTooltip } from "@/utils/chart-theme";
 
 defineOptions({ name: "Welcome" });
 
@@ -80,26 +88,29 @@ const quickActions = [
 
 function initCharts() {
   if (trendRef.value && stats.value) {
+    /** 图表配色取 element-plus 令牌，随明暗模式自动切换 */
+    const p = chartPalette();
     trendChart = echarts.init(trendRef.value);
     trendChart.setOption({
-      tooltip: { trigger: "axis" },
+      tooltip: chartTooltip("axis"),
       legend: {
         data: [$t("welcome.chart.inbound"), $t("welcome.chart.outbound")],
         bottom: 0,
-        icon: "roundRect"
+        icon: "roundRect",
+        textStyle: { color: p.legendText }
       },
       grid: { left: 44, right: 16, top: 30, bottom: 44 },
       xAxis: {
         type: "category",
         boundaryGap: false,
         data: stats.value.trend.map(t => t.date),
-        axisLine: { lineStyle: { color: "#e2e8f0" } },
-        axisLabel: { color: "#64748b" }
+        axisLine: { lineStyle: { color: p.axisLine } },
+        axisLabel: { color: p.axisLabel }
       },
       yAxis: {
         type: "value",
-        splitLine: { lineStyle: { color: "#eef1f7" } },
-        axisLabel: { color: "#64748b" }
+        splitLine: { lineStyle: { color: p.splitLine } },
+        axisLabel: { color: p.axisLabel }
       },
       series: [
         {
@@ -136,17 +147,26 @@ function initCharts() {
     });
   }
   if (pieRef.value && stats.value) {
+    const p = chartPalette();
     pieChart = echarts.init(pieRef.value);
     pieChart.setOption({
-      tooltip: { trigger: "item" },
-      legend: { bottom: 0, icon: "circle" },
+      tooltip: chartTooltip("item"),
+      legend: {
+        bottom: 0,
+        icon: "circle",
+        textStyle: { color: p.legendText }
+      },
       color: PIE_PALETTE,
       series: [
         {
           type: "pie",
           radius: ["48%", "70%"],
           center: ["50%", "44%"],
-          itemStyle: { borderRadius: 4, borderColor: "#fff", borderWidth: 2 },
+          itemStyle: {
+            borderRadius: 4,
+            borderColor: p.cardBg,
+            borderWidth: 2
+          },
           label: { show: false },
           data: stats.value.warehouseStock.map(w => ({
             ...w,
@@ -156,7 +176,8 @@ function initCharts() {
             label: {
               show: true,
               formatter: "{b}\n{c}",
-              fontWeight: 600
+              fontWeight: 600,
+              color: p.textColor
             }
           }
         }
@@ -169,6 +190,17 @@ function resizeCharts() {
   trendChart?.resize();
   pieChart?.resize();
 }
+
+/** 明暗模式切换：取新令牌重建图表 */
+watch(isDark, () => {
+  nextTick(() => {
+    trendChart?.dispose();
+    pieChart?.dispose();
+    trendChart = null;
+    pieChart = null;
+    initCharts();
+  });
+});
 
 onMounted(async () => {
   const { data } = await getDashboardStats();
@@ -232,7 +264,7 @@ onBeforeUnmount(() => {
     <!-- KPI 指标卡 -->
     <el-row :gutter="12" class="mb-3">
       <el-col v-for="card in kpiCards" :key="card.title" :xs="12" :sm="6">
-        <div class="wms-kpi-card bg-white p-4">
+        <div class="wms-kpi-card p-4">
           <div class="flex items-center justify-between">
             <div>
               <div class="wms-kpi-title">{{ card.title }}</div>
@@ -241,15 +273,11 @@ onBeforeUnmount(() => {
                 <span class="wms-kpi-unit">{{ card.unit }}</span>
               </div>
               <div v-if="card.delta !== undefined" class="mt-1 text-xs">
-                <span
-                  :class="card.delta >= 0 ? 'text-[#059669]' : 'text-[#dc2626]'"
-                >
+                <span :class="card.delta >= 0 ? 'v-success' : 'v-danger'">
                   {{ card.delta >= 0 ? "↑" : "↓" }}
                   {{ Math.abs(card.delta) }}%
                 </span>
-                <span class="text-[#94a3b8] ml-1">
-                  {{ $t("welcome.vsYesterday") }}
-                </span>
+                <span class="v-dim ml-1">{{ $t("welcome.vsYesterday") }}</span>
               </div>
             </div>
             <div class="wms-kpi-icon" :class="card.tone">
@@ -265,7 +293,11 @@ onBeforeUnmount(() => {
     <!-- 待办事项：登录后第一优先级 -->
     <el-row :gutter="12" class="mb-3">
       <el-col :span="24">
-        <el-card shadow="never" class="todo-card" :header="$t('welcome.todoTitle')">
+        <el-card
+          shadow="never"
+          class="todo-card"
+          :header="$t('welcome.todoTitle')"
+        >
           <el-row :gutter="12">
             <el-col
               v-for="todo in stats?.todos || []"
@@ -274,10 +306,16 @@ onBeforeUnmount(() => {
               :sm="6"
             >
               <div class="todo-item" @click="router.push(todo.path)">
-                <div class="text-[#64748b] text-sm">{{ transformI18n(todo.title) }}</div>
+                <div class="v-secondary text-sm">
+                  {{ transformI18n(todo.title) }}
+                </div>
                 <div class="text-xl font-semibold mt-1 tabular-nums">
-                  <span :class="todo.count > 0 ? 'text-[#dc2626]' : 'text-[#059669]'">{{ todo.count }}</span>
-                  <span class="text-xs text-[#94a3b8] ml-1">{{ $t("welcome.todoPending") }}</span>
+                  <span :class="todo.count > 0 ? 'v-danger' : 'v-success'">{{
+                    todo.count
+                  }}</span>
+                  <span class="v-dim text-xs ml-1">{{
+                    $t("welcome.todoPending")
+                  }}</span>
                 </div>
               </div>
             </el-col>
@@ -289,10 +327,21 @@ onBeforeUnmount(() => {
     <!-- 快捷操作 -->
     <el-row :gutter="12" class="mb-3">
       <el-col :span="24">
-        <el-card shadow="never" :header="$t('welcome.quickTitle')" body-style="padding: 12px 16px">
+        <el-card
+          shadow="never"
+          :header="$t('welcome.quickTitle')"
+          body-style="padding: 12px 16px"
+        >
           <div class="flex flex-wrap gap-2.5">
-            <div v-for="action in quickActions" :key="action.title" class="quick-action" @click="router.push(action.path)">
-              <el-icon :size="15" :class="`tone-${action.tone}`"><component :is="action.icon" /></el-icon>
+            <div
+              v-for="action in quickActions"
+              :key="action.title"
+              class="quick-action"
+              @click="router.push(action.path)"
+            >
+              <el-icon :size="15" :class="`tone-${action.tone}`"
+                ><component :is="action.icon"
+              /></el-icon>
               {{ action.title }}
             </div>
           </div>
@@ -313,11 +362,27 @@ onBeforeUnmount(() => {
         </el-card>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <style scoped lang="scss">
+/* 语义文字色：走 element-plus 令牌，明暗模式自动切换 */
+.v-success {
+  color: var(--el-color-success);
+}
+
+.v-danger {
+  color: var(--el-color-danger);
+}
+
+.v-secondary {
+  color: var(--el-text-color-secondary);
+}
+
+.v-dim {
+  color: var(--el-text-color-placeholder);
+}
+
 .page-head {
   display: flex;
   align-items: flex-end;
@@ -328,14 +393,14 @@ onBeforeUnmount(() => {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--wms-text-title);
     letter-spacing: 0.3px;
   }
 
   p {
     margin: 4px 0 0;
     font-size: 12.5px;
-    color: #94a3b8;
+    color: var(--wms-text-secondary);
   }
 }
 
@@ -343,7 +408,7 @@ onBeforeUnmount(() => {
   margin-left: 2px;
   font-size: 12px;
   font-weight: 400;
-  color: #94a3b8;
+  color: var(--wms-text-secondary);
 }
 
 .quick-action {
@@ -351,10 +416,10 @@ onBeforeUnmount(() => {
   align-items: center;
   padding: 9px 16px;
   font-size: 13.5px;
-  color: #334155;
+  color: var(--el-text-color-regular);
   cursor: pointer;
-  background: #fff;
-  border: 1px solid #e8ecf2;
+  background: var(--wms-card);
+  border: 1px solid var(--wms-border);
   border-radius: 8px;
   transition: all 0.2s;
 
